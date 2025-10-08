@@ -234,6 +234,7 @@ const Header = () => {
           ? "bg-[#0A2342]/80 backdrop-blur-lg shadow-lg"
           : "bg-[#0A2342]"
       }`}
+      
     >
       <div className="container mx-auto px-6 lg:px-8 flex justify-between items-center py-4">
         <div className="h-[80px] w-[95px] p-3">
