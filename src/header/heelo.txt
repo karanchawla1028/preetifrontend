@@ -1,0 +1,131 @@
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import logo from "../assets/logo.png";
+
+const navItems = [
+  { name: "Service", content: <div className="p-6">Service Content</div> },
+  {
+    name: "Destination",
+    content: <div className="p-6">Destination Content</div>,
+  },
+  { name: "Booking", content: <div className="p-6">Booking Content</div> },
+  { name: "About", content: <div className="p-6">About Content</div> },
+];
+
+const Header = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [activePopover, setActivePopover] = useState(null);
+  const [anchorRect, setAnchorRect] = useState(null);
+  const [popoverStyle, setPopoverStyle] = useState({});
+  const headerRef = useRef(null);
+  const popoverRef = useRef(null);
+  const closeTimeout = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handleMouseEnter = (name, e) => {
+    clearTimeout(closeTimeout.current);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setAnchorRect(rect);
+    setActivePopover(name);
+  };
+
+  const startClose = () => {
+    clearTimeout(closeTimeout.current);
+    closeTimeout.current = setTimeout(() => {
+      setActivePopover(null);
+    }, 180);
+  };
+
+  const cancelClose = () => {
+    clearTimeout(closeTimeout.current);
+  };
+
+  useLayoutEffect(() => {
+    if (
+      !activePopover ||
+      !anchorRect ||
+      !headerRef.current ||
+      !popoverRef.current
+    )
+      return;
+
+    const headerRect = headerRef.current.getBoundingClientRect();
+    const popEl = popoverRef.current;
+
+    const naturalWidth = popEl.offsetWidth || 400;
+    const maxAvailable = Math.min(700, headerRect.width - 20);
+    const popoverWidth = Math.min(naturalWidth, maxAvailable);
+
+    let left =
+      anchorRect.left +
+      anchorRect.width / 2 -
+      popoverWidth / 2 -
+      headerRect.left;
+    left = Math.max(10, Math.min(left, headerRect.width - popoverWidth - 10));
+
+    const top = anchorRect.bottom - headerRect.top + 8;
+
+    setPopoverStyle({
+      left: `${left}px`,
+      top: `${top}px`,
+      width: `${popoverWidth}px`,
+    });
+  }, [activePopover, anchorRect]);
+
+  return (
+    <header
+      ref={headerRef}
+      className={`sticky top-0 w-full z-40 transition-all duration-500 ${
+        scrolled ? "backdrop-blur-3xl bg-white/30 shadow-md" : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        {/* Logo */}
+        <div className="h-[64px] w-[95px] p-1">
+          <img
+            src={logo}
+            alt="logo"
+            className="h-full w-full rounded-2xl object-contain"
+          />
+        </div>
+
+        {/* Navigation */}
+        <ul className="flex gap-6 items-center">
+          {navItems.map((item, idx) => (
+            <li
+              key={idx}
+              className="relative"
+              onMouseEnter={(e) => handleMouseEnter(item.name, e)}
+              onMouseLeave={startClose}
+            >
+              <button className="font-medium px-3 py-2 hover:text-blue-600 transition">
+                {item.name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Popover */}
+      {activePopover && (
+        <div
+          ref={popoverRef}
+          onMouseEnter={cancelClose}
+          onMouseLeave={startClose}
+          style={popoverStyle}
+          className="absolute z-50 bg-white/90 backdrop-blur-3xl rounded-2xl shadow-lg transition-all duration-300 ease-in-out max-w-[95vw] overflow-hidden"
+        >
+          {navItems.find((n) => n.name === activePopover)?.content}
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
