@@ -141,33 +141,6 @@ const HomePage = () => {
 
   return (
     <main className="relative">
-      {/* <section
-        className="h-[90vh] relative flex items-center justify-center"
-        style={{
-          backgroundImage: `url(${hero})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-white"></div>
-
-        <div className="w-[80%] relative z-10">
-          <h4 className="text-3xl text-red-400 font-bold drop-shadow-lg">
-            Best Destinations around the world
-          </h4>
-          <h1 className="text-7xl font-bold text-orange-500 drop-shadow-lg leading-tight m-0">
-            Travel, enjoy <br />
-            and live a new <br />
-            and full life
-          </h1>
-          <p className="text-xl text-neutral-900 font-medium">
-            Built Wicket longer admire do barton vanity itself do in it.
-            <br />
-            Preferred to sportsmen it engrossed listening. Park gate <br /> sell
-            they west hard for the.
-          </p>
-        </div>
-      </section> */}
       <div
         className="relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImageUrl})` }}
@@ -176,59 +149,6 @@ const HomePage = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/50 via-transparent to-transparent"></div>
 
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
-          {/* <header className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold tracking-wider text-white">
-              Your<span className="text-[#D4AF37]">Logo</span>
-            </h1>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a
-                href="#"
-                className="text-white hover:text-[#D4AF37] transition duration-300"
-              >
-                Home
-              </a>
-              <a
-                href="#"
-                className="text-white hover:text-[#D4AF37] transition duration-300"
-              >
-                Bookings
-              </a>
-              <a
-                href="#"
-                className="text-white hover:text-[#D4AF37] transition duration-300"
-              >
-                About Us
-              </a>
-              <a
-                href="#"
-                className="text-white hover:text-[#D4AF37] transition duration-300"
-              >
-                Contact
-              </a>
-            </nav>
-            <button className="hidden md:block bg-[#D4AF37] text-[#0A2342] font-bold py-2 px-6 rounded-lg hover:bg-yellow-400 transition duration-300">
-              Sign In
-            </button>
-            <button className="md:hidden text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            </button>
-          </header> */}
-
-          {/* Hero Content */}
           <div className="text-center pt-24 pb-48 md:pt-32 md:pb-64">
             <h2 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
               Seamless Business Travel,

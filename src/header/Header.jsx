@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PlaneIcon = () => (
   <svg
@@ -76,7 +77,7 @@ const navItems = [
       <div className="p-2">
         <ul className="flex flex-col gap-1">
           <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
+            <a href="/service" className="block text-gray-800 font-medium">
               <HotelIcon />
               Hotel Reservations
             </a>
@@ -176,12 +177,14 @@ const navItems = [
 
 // --- Sticky Header Component ---
 const Header = () => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePopover, setActivePopover] = useState(null);
   const [popoverStyle, setPopoverStyle] = useState({});
   const headerRef = useRef(null);
   const popoverRef = useRef(null);
   const closeTimeout = useRef(null);
+  const path = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -226,15 +229,19 @@ const Header = () => {
   };
   const cancelClose = () => clearTimeout(closeTimeout.current);
 
+
+  console.log('dkjhkdjhdkdjhjhdh',path)
+
   return (
     <header
       ref={headerRef}
       className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-[#0A2342]/80 backdrop-blur-lg shadow-lg"
-          : "bg-[#0A2342]"
+          : path?.pathname === "/"
+          ? "bg-transparent"
+          : "bg-[#0a2342]"
       }`}
-      
     >
       <div className="container mx-auto px-6 lg:px-8 flex justify-between items-center py-4">
         <div className="h-[80px] w-[95px] p-3">
@@ -276,7 +283,10 @@ const Header = () => {
           )}
 
         <div className="flex items-center">
-          <button className="hidden md:block bg-[#D4AF37] text-[#0A2342] font-bold py-2 px-6 rounded-lg hover:bg-yellow-400 transition duration-300">
+          <button
+            onClick={() => navigate("/login")}
+            className="hidden cursor-pointer md:block bg-[#D4AF37] text-[#0A2342] font-bold py-2 px-6 rounded-lg hover:bg-yellow-400 transition duration-300"
+          >
             Sign In
           </button>
           <button className="md:hidden text-white">

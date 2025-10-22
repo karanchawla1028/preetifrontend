@@ -1,30 +1,48 @@
 import React, { useState } from "react";
-import { Home, Settings, LogOut, HandHelping } from "lucide-react";
-import logo from "../../assets/logo.png"; // Replace with your logo
+import { Home, Settings, LogOut, HandHelping, User } from "lucide-react";
+import logo from "../../assets/logo_preeti.png";
+import { Link, Outlet } from "react-router-dom";
 
 const Layouts = ({ children }) => {
   const [activeLink, setActiveLink] = useState("Dashboard");
 
   const navLinks = [
-    { name: "Dashboard", icon: <Home className="w-5 h-5" /> },
-    { name: "Services", icon: <HandHelping className="w-5 h-5" /> },
-    { name: "Settings", icon: <Settings className="w-5 h-5" /> },
+    { name: "Dashboard", icon: <Home className="w-5 h-5" />, url: "dashboard" },
+    {
+      name: "Category",
+      icon: <HandHelping className="w-5 h-5" />,
+      url: "category",
+    },
+    {
+      name: "Users",
+      icon: <User className="w-5 h-5" />,
+      url: "users",
+    },
+    {
+      name: "Settings",
+      icon: <Settings className="w-5 h-5" />,
+      url: "settings",
+    },
     { name: "Logout", icon: <LogOut className="w-5 h-5" /> },
   ];
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-blue-600 text-white flex flex-col">
-        {/* Logo */}
-        <div className="flex items-center h-20 border-b border-blue-500 pl-5">
-          <img src={logo} alt="Logo" className="h-12 w-auto" />
+      <aside className="w-46 bg-[#0a2342] text-white flex flex-col">
+        <div className="w-full flex items-center">
+          <div className="flex items-center justify-center h-14 w-32 p-2 bg-transparent">
+            <img
+              src={logo}
+              alt="Company Logo"
+              className="h-full w-auto object-contain bg-transparent"
+              draggable="false"
+            />
+          </div>
         </div>
-
-        {/* Navigation Links */}
-        <nav className="flex-1 px-4 py-6 flex flex-col gap-2">
+        <nav className="flex-1 px-2 flex flex-col gap-2">
           {navLinks.map((link) => (
-            <button
+            <Link
+              to={link.url}
               key={link.name}
               onClick={() => setActiveLink(link.name)}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-500 transition ${
@@ -33,25 +51,12 @@ const Layouts = ({ children }) => {
             >
               {link.icon}
               <span className="font-medium">{link.name}</span>
-            </button>
+            </Link>
           ))}
         </nav>
       </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-8 overflow-auto">
-        <header className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">{activeLink}</h1>
-        </header>
-
-        {/* Render page content */}
-        <div className="bg-white p-6 rounded-xl shadow-md min-h-[70vh]">
-          {children || (
-            <p className="text-gray-600">
-              Welcome to the admin panel. Select a menu item to get started.
-            </p>
-          )}
-        </div>
+      <main className="flex-1 p-2 overflow-auto">
+        <Outlet />
       </main>
     </div>
   );
