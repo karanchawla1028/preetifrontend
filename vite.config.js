@@ -8,13 +8,11 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      // 👇 When your frontend makes a request to /api/...,
-      // it will be proxied to your backend.
       "/api": {
-        target: "http://localhost:8080", // your backend server URL
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""), // remove /api prefix if needed
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
