@@ -1,54 +1,72 @@
 import { useEffect, useRef, useState } from "react";
-import logo from "../assets/logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 
+// ===== Icons =====
 const PlaneIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="mr-3 h-5 w-5 inline-block"
+    className="mr-2 inline-block"
   >
-    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
   </svg>
 );
-
 const HotelIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="mr-3 h-5 w-5 inline-block"
+    className="mr-2 inline-block"
   >
-    <path d="M10 22v-6.57" />
-    <path d="M12 11h.01" />
-    <path d="M12 7h.01" />
-    <path d="M14 22v-6.57" />
-    <path d="M12 15h.01" />
-    <path d="M2 22h20" />
-    <path d="M5 22V7.52c0-.88.45-1.69 1.17-2.14L12 2l5.83 3.38c.72.45 1.17 1.26 1.17 2.14V22" />
-    <path d="M17 15h.01" />
-    <path d="M17 11h.01" />
-    <path d="M17 7h.01" />
-    <path d="M7 15h.01" />
-    <path d="M7 11h.01" />
-    <path d="M7 7h.01" />
+    <path d="M2 22h20M5 22V7.5L12 2l7 5.5V22M10 22v-6M14 22v-6M12 7h.01M12 11h.01M12 15h.01" />
   </svg>
 );
-
 const CarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="mr-2 inline-block"
+  >
+    <path d="M18 13a4.5 4.5 0 0 0-4-4H8a4.5 4.5 0 0 0-4.5 4.5V17a3.5 3.5 0 0 0 3.5 3.5h11A3.5 3.5 0 0 0 21.5 17v-2.5a4.5 4.5 0 0 0-3.5-4.5Z" />
+  </svg>
+);
+const ChevronDownIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+const CloseIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -59,256 +77,267 @@ const CarIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="mr-3 h-5 w-5 inline-block"
   >
-    <path d="M14 16.5 19 21l-7-4" />
-    <path d="m10.5 16.5.5-1.5 5 3-5.5 1.5Z" />
-    <path d="M14 19.5 9 15l-5 4.5" />
-    <path d="m9.5 12.5 5-3-5.5-1.5Z" />
-    <path d="M5 6.5 3 7l2 5" />
-    <path d="M18 13a4.4 4.4 0 0 0-4-4H8a4.5 4.5 0 0 0-4.5 4.5V17a3.5 3.5 0 0 0 3.5 3.5h11a3.5 3.5 0 0 0 3.5-3.5v-2.5a4.4 4.4 0 0 0-4-4Z" />
+    <path d="M18 6 6 18M6 6l12 12" />
   </svg>
 );
 
+// ===== Navigation Items =====
 const navItems = [
   {
     name: "Services",
     content: (
-      <div className="p-2">
+      <div className="p-3">
         <ul className="flex flex-col gap-1">
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="/service" className="block text-gray-800 font-medium">
-              <HotelIcon />
-              Hotel Reservations
+          <li className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
+            <a href="/service" className="flex items-center text-gray-800">
+              <HotelIcon /> Hotel Reservations
             </a>
           </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              <PlaneIcon />
-              Flight Booking
+          <li className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
+            <a href="#" className="flex items-center text-gray-800">
+              <PlaneIcon /> Flight Booking
             </a>
           </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              <CarIcon />
-              Car Rentals
+          <li className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
+            <a href="#" className="flex items-center text-gray-800">
+              <CarIcon /> Car Rentals
             </a>
           </li>
         </ul>
       </div>
     ),
   },
-  {
-    name: "Blogs",
-    content: (
-      <div className="p-2">
-        <ul className="flex flex-col gap-1">
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              <HotelIcon />
-              Hotel Reservations
-            </a>
-          </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              <PlaneIcon />
-              Flight Booking
-            </a>
-          </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              <CarIcon />
-              Car Rentals
-            </a>
-          </li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    name: "About Us",
-    content: (
-      <div className="p-2">
-        <ul className="flex flex-col gap-1">
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              Our Story
-            </a>
-          </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              Careers
-            </a>
-          </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              Press
-            </a>
-          </li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    name: "Contact",
-    content: (
-      <div className="p-2">
-        <ul className="flex flex-col gap-1">
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              Contact Form
-            </a>
-          </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              24/7 Support
-            </a>
-          </li>
-          <li className="transition-all duration-200 hover:bg-blue-100 hover:border-l-4 hover:border-yellow-500 px-4 py-3 cursor-pointer">
-            <a href="#" className="block text-gray-800 font-medium">
-              FAQs
-            </a>
-          </li>
-        </ul>
-      </div>
-    ),
-  },
+  { name: "Blogs", content: <div className="p-3 text-gray-800">Blog Content</div> },
+  { name: "About Us", content: <div className="p-3 text-gray-800">About Content</div> },
+  { name: "Contact", content: <div className="p-3 text-gray-800">Contact Info</div> },
 ];
 
-// --- Sticky Header Component ---
+// ===== Mobile Nav Data =====
+const mobileNavItems = [
+  {
+    title: "Services",
+    subTitles: [
+      { name: "Hotel Reservations", href: "/service" },
+      { name: "Flight Booking", href: "#" },
+      { name: "Car Rentals", href: "#" },
+    ],
+  },
+  { title: "Blogs", subTitles: [{ name: "Travel Guides", href: "#" }] },
+  { title: "About Us", subTitles: [{ name: "Our Story", href: "#" }] },
+  { title: "Contact", subTitles: [{ name: "Support", href: "#" }] },
+];
+
+// ===== Accordion for Mobile =====
+const AccordionItem = ({ item, isActive, onToggle }) => {
+  const contentRef = useRef(null);
+  return (
+    <div className="border-b border-blue-700">
+      <button
+        onClick={onToggle}
+        className="flex justify-between w-full items-center p-4 text-white"
+      >
+        <span>{item.title}</span>
+        <span
+          className={`transition-transform duration-300 ${
+            isActive ? "rotate-180" : ""
+          } text-[#D4AF37]`}
+        >
+          <ChevronDownIcon />
+        </span>
+      </button>
+      <div
+        ref={contentRef}
+        className="overflow-hidden transition-[max-height] duration-500 ease-in-out bg-blue-900/40"
+        style={{
+          maxHeight: isActive ? `${contentRef.current?.scrollHeight}px` : "0px",
+        }}
+      >
+        <ul className="pl-6 pb-2">
+          {item.subTitles.map((s) => (
+            <li key={s.name} className="py-2">
+              <a
+                href={s.href}
+                className="text-gray-300 hover:text-[#D4AF37] transition"
+              >
+                {s.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+// ===== Mobile Drawer =====
+const MobileDrawer = ({ isOpen, onClose, navigate }) => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
+    return () => (document.body.style.overflow = "unset");
+  }, [isOpen]);
+
+  useEffect(() => {
+    onClose();
+  }, [location.pathname]);
+
+  return (
+    <>
+      <div
+        onClick={onClose}
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      />
+      <div
+        className={`fixed top-0 right-0 h-full w-full max-w-full bg-[#0A2342] z-50 shadow-xl transform transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex justify-between items-center p-4 border-b border-blue-700">
+          <img src={logo} alt="Logo" className="h-10 w-auto rounded-lg" />
+          <button onClick={onClose} className="text-[#D4AF37] hover:text-white">
+            <CloseIcon />
+          </button>
+        </div>
+        <div className="overflow-y-auto flex-1">
+          {mobileNavItems.map((item, i) => (
+            <AccordionItem
+              key={item.title}
+              item={item}
+              isActive={activeIndex === i}
+              onToggle={() => setActiveIndex(activeIndex === i ? null : i)}
+            />
+          ))}
+          {/* <div className="p-4">
+            <button
+              onClick={() => navigate("/login")}
+              className="w-full bg-[#D4AF37] text-[#0A2342] font-semibold py-3 rounded-lg hover:bg-yellow-400 transition"
+            >
+              Sign In
+            </button>
+          </div> */}
+        </div>
+      </div>
+    </>
+  );
+};
+
+// ===== Main Header =====
 const Header = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePopover, setActivePopover] = useState(null);
   const [popoverStyle, setPopoverStyle] = useState({});
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const headerRef = useRef(null);
   const popoverRef = useRef(null);
   const closeTimeout = useRef(null);
   const path = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleMouseEnter = (name, e) => {
+  const handleEnter = (name, e) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
-    const item = navItems.find((item) => item.name === name);
-    if (!item || !item.content) {
-      setActivePopover(null);
-      return;
-    }
-
     const rect = e.currentTarget.getBoundingClientRect();
-
-    const popoverEl = popoverRef.current;
-    let popoverWidth = 300; // Default width
-    if (popoverEl) {
-      popoverEl.style.display = "block"; // Temporarily show to measure
-      popoverWidth = popoverEl.offsetWidth;
-      popoverEl.style.display = "";
-    }
-
     const headerRect = headerRef.current.getBoundingClientRect();
-    let left = rect.left + rect.width / 2 - popoverWidth / 2 - headerRect.left;
-    left = Math.max(10, Math.min(left, headerRect.width - popoverWidth - 10));
-    const top = rect.bottom - headerRect.top + 8;
-
-    setPopoverStyle({
-      left: `${left}px`,
-      top: `${top}px`,
-      width: `${popoverWidth}px`,
-    });
-
+    const width = 300;
+    const left = rect.left + rect.width / 2 - width / 2 - headerRect.left;
+    setPopoverStyle({ left: `${Math.max(10, left)}px`, top: "60px" });
     setActivePopover(name);
   };
-
-  const startClose = () => {
-    closeTimeout.current = setTimeout(() => setActivePopover(null), 200);
-  };
+  const startClose = () =>
+    (closeTimeout.current = setTimeout(() => setActivePopover(null), 200));
   const cancelClose = () => clearTimeout(closeTimeout.current);
 
-
-  console.log('dkjhkdjhdkdjhjhdh',path)
-
   return (
-    <header
-      ref={headerRef}
-      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-[#0A2342]/80 backdrop-blur-lg shadow-lg"
-          : path?.pathname === "/"
-          ? "bg-transparent"
-          : "bg-[#0a2342]"
-      }`}
-    >
-      <div className="container mx-auto px-6 lg:px-8 flex justify-between items-center py-4">
-        <div className="h-[80px] w-[95px] p-3">
-          <img
-            src={logo}
-            alt="preeti-nest"
-            className="h-auto w-full rounded-2xl"
-          />
-        </div>
+    <>
+      <header
+        ref={headerRef}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-[#0A2342]/80 backdrop-blur-md shadow-lg"
+            : path.pathname === "/"
+            ? "bg-transparent"
+            : "bg-[#0A2342]"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center py-3">
+          <div className="h-14 w-20 p-2">
+            <img src={logo} alt="Logo" className="h-full w-auto rounded-lg" />
+          </div>
 
-        <nav className="hidden md:flex items-center space-x-8">
-          {navItems.map((item) => (
-            <div
-              key={item.name}
-              className="relative"
-              onMouseEnter={(e) => handleMouseEnter(item.name, e)}
-              onMouseLeave={startClose}
-            >
-              <a
-                href={item.href || "#"}
-                className="text-white hover:text-[#D4AF37] transition duration-300 pb-2"
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex gap-8 items-center text-white">
+            {navItems.map((item) => (
+              <div
+                key={item.name}
+                className="relative"
+                onMouseEnter={(e) => handleEnter(item.name, e)}
+                onMouseLeave={startClose}
               >
-                {item.name}
-              </a>
-            </div>
-          ))}
-        </nav>
-        {activePopover &&
-          navItems.find((n) => n.name === activePopover)?.content && (
+                <button className="hover:text-[#D4AF37] transition">
+                  {item.name}
+                </button>
+              </div>
+            ))}
+          </nav>
+
+          {activePopover && (
             <div
               ref={popoverRef}
               onMouseEnter={cancelClose}
               onMouseLeave={startClose}
               style={popoverStyle}
-              className="absolute bg-white/95 backdrop-blur-xl rounded-lg shadow-2xl transition-opacity duration-300 overflow-hidden"
+              className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
             >
-              {navItems.find((n) => n.name === activePopover)?.content}
+              {navItems.find((i) => i.name === activePopover)?.content}
             </div>
           )}
 
-        <div className="flex items-center">
-          <button
-            onClick={() => navigate("/login")}
-            className="hidden cursor-pointer md:block bg-[#D4AF37] text-[#0A2342] font-bold py-2 px-6 rounded-lg hover:bg-yellow-400 transition duration-300"
-          >
-            Sign In
-          </button>
-          <button className="md:hidden text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* Right Side */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/login")}
+              className="hidden md:block bg-[#D4AF37] text-[#0A2342] font-semibold py-2 px-5 rounded-md hover:bg-yellow-400 transition cursor-pointer"
             >
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
+              Sign In
+            </button>
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="md:hidden text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <MobileDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        navigate={navigate}
+      />
+    </>
   );
 };
 
