@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllServices } from "../toolkit/slices/serviceSlice";
 
 // ===== Icons =====
 const PlaneIcon = () => (
@@ -83,34 +85,35 @@ const CloseIcon = () => (
 );
 
 // ===== Navigation Items =====
-const navItems = [
+const navItems = (serviceList) => [
   {
     name: "Services",
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          <li className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
-            <a href="/service" className="flex items-center text-gray-800">
-              <HotelIcon /> Hotel Reservations
-            </a>
-          </li>
-          <li className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
-            <a href="#" className="flex items-center text-gray-800">
-              <PlaneIcon /> Flight Booking
-            </a>
-          </li>
-          <li className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
-            <a href="#" className="flex items-center text-gray-800">
-              <CarIcon /> Car Rentals
-            </a>
-          </li>
+          {serviceList||[]?.map((service) => (
+            <li key={service?.uuid} className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
+              <a href="/service" className="flex items-center text-gray-800">
+                {service?.name}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     ),
   },
-  { name: "Blogs", content: <div className="p-3 text-gray-800">Blog Content</div> },
-  { name: "About Us", content: <div className="p-3 text-gray-800">About Content</div> },
-  { name: "Contact", content: <div className="p-3 text-gray-800">Contact Info</div> },
+  {
+    name: "Blogs",
+    content: <div className="p-3 text-gray-800">Blog Content</div>,
+  },
+  {
+    name: "About Us",
+    content: <div className="p-3 text-gray-800">About Content</div>,
+  },
+  {
+    name: "Contact",
+    content: <div className="p-3 text-gray-800">Contact Info</div>,
+  },
 ];
 
 // ===== Mobile Nav Data =====
@@ -229,6 +232,8 @@ const MobileDrawer = ({ isOpen, onClose, navigate }) => {
 // ===== Main Header =====
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch=useDispatch()
+  const serviceList = useSelector((state) => state.service.serviceList);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePopover, setActivePopover] = useState(null);
   const [popoverStyle, setPopoverStyle] = useState({});
@@ -257,6 +262,11 @@ const Header = () => {
     (closeTimeout.current = setTimeout(() => setActivePopover(null), 200));
   const cancelClose = () => clearTimeout(closeTimeout.current);
 
+
+  useEffect(()=>{
+    dispatch(getAllServices())
+  },[])
+
   return (
     <>
       <header
@@ -271,12 +281,14 @@ const Header = () => {
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center py-3">
           <div className="h-14 w-20 p-2">
-            <img src={logo} alt="Logo" className="h-full w-auto rounded-lg" />
+            <a href="/">
+              <img src={logo} alt="Logo" className="h-full w-auto rounded-lg" />
+            </a>
           </div>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex gap-8 items-center text-white">
-            {navItems.map((item) => (
+            {navItems(serviceList).map((item) => (
               <div
                 key={item.name}
                 className="relative"
@@ -298,7 +310,7 @@ const Header = () => {
               style={popoverStyle}
               className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
             >
-              {navItems.find((i) => i.name === activePopover)?.content}
+              {navItems(serviceList).find((i) => i.name === activePopover)?.content}
             </div>
           )}
 

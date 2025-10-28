@@ -24,7 +24,7 @@ const FloatingBtn = () => {
       {/* --- Floating Button --- */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg flex items-center justify-center z-[1000] transition"
+        className="fixed bottom-6 right-6 cursor-pointer bg-[#0A2342] hover:bg-blue-700 text-white p-4 rounded-full shadow-lg flex items-center justify-center z-[1000] transition"
       >
         <MessageSquareText className="w-6 h-6" />
       </button>
@@ -33,7 +33,7 @@ const FloatingBtn = () => {
       {open && (
         <div
           ref={popoverRef}
-          className="fixed bottom-20 right-6 w-80 bg-gray-200 text-gray-900 p-6 shadow-lg flex flex-col items-center justify-center z-[1000] rounded-4xl transition"
+          className="fixed bottom-20 right-6 w-80 bg-white text-gray-900 p-6 shadow-lg flex flex-col items-center justify-center z-[1000] rounded-4xl transition"
         >
           <h3 className="text-lg font-semibold mb-4">Enter Client Details</h3>
           <form className="flex flex-col gap-3 w-full">
@@ -64,7 +64,7 @@ const FloatingBtn = () => {
             />
             <button
               type="submit"
-              className="bg-blue-600 cursor-pointer text-white py-2 rounded hover:bg-blue-700 transition w-full"
+              className="bg-[#0A2342] cursor-pointer text-white py-2 rounded hover:bg-blue-700 transition w-full"
             >
               Submit
             </button>

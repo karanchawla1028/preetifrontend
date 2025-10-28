@@ -1,14 +1,16 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage"; // uses localStorage for web
+import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import authReducer from "./slices/authSlice";
-import enquiryReducer from './slices/enquirySlice'
-import serviceReducer from './slices/serviceSlice'
+import enquiryReducer from "./slices/enquirySlice";
+import serviceReducer from "./slices/serviceSlice";
+import blogReducer from "./slices/blogSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  enquiry:enquiryReducer,
-  service:serviceReducer
+  enquiry: enquiryReducer,
+  service: serviceReducer,
+  blogs: blogReducer,
 });
 
 const persistConfig = {
@@ -23,7 +25,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, 
+      serializableCheck: false,
     }),
 });
 
