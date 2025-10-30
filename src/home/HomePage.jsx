@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import hero from "../assets/ceoimg.png";
+// import hero from "../assets/ceoimg.png";
+import hero from "../assets/ceo.jpeg";
 import blog1 from "../assets/blog1.png";
 import FloatingBtn from "../features/components/FloatingBtn";
 
@@ -289,12 +290,13 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Image Column - now circular and slightly smaller */}
             <div className="flex justify-center">
-              <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-xl border-4 border-[#D4AF37] flex items-center justify-center">
+              <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-xl border-4 border-[#D4AF37]">
                 <img
                   src={hero}
                   alt="Karan Chawla, Founder of PreetiNest"
-                  // Use object-cover to ensure it fills the circle, and position it centrally
-                  className="absolute inset-0 w-full h-full object-cover"
+                  // Example: Centers horizontally, and positions 25% from the top vertically
+                  // You might need to experiment with '25%', '30%', '40%' etc.
+                  className="absolute inset-0 w-full h-full object-cover object-[20%_0%]"
                 />
               </div>
             </div>
