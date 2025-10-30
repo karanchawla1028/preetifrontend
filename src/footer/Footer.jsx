@@ -17,7 +17,13 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-gray-400 mt-2">
-            Premium travel solutions for modern businesses.
+            Your Corporate Meeting & Travel Partner. or Seamless Global Connect
+            for Business Success.
+          </p>
+          <p className="text-gray-400 mt-2 italic">
+            Helping businesses find the perfect venues, hotels, and travel
+            solutions for meetings, events, and corporate stays — across India
+            and Canada.
           </p>
 
           {/* Social Icons */}
@@ -57,12 +63,17 @@ const Footer = () => {
             </li>
             <li className="mb-2">
               <a href="#" className="hover:underline text-gray-300">
+                Our Story
+              </a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="hover:underline text-gray-300">
                 Careers
               </a>
             </li>
             <li className="mb-2">
               <a href="#" className="hover:underline text-gray-300">
-                Press
+                Contact Us
               </a>
             </li>
           </ul>
@@ -76,17 +87,27 @@ const Footer = () => {
           <ul>
             <li className="mb-2">
               <a href="#" className="hover:underline text-gray-300">
-                Hotel Bookings
+                Meeting Space Booking
               </a>
             </li>
             <li className="mb-2">
               <a href="#" className="hover:underline text-gray-300">
-                Flight Reservations
+                Hotel Reservations
               </a>
             </li>
             <li className="mb-2">
               <a href="#" className="hover:underline text-gray-300">
-                Car Rentals
+                Corporate Travel Management
+              </a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="hover:underline text-gray-300">
+                Event Coordination
+              </a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="hover:underline text-gray-300">
+                Group Bookings
               </a>
             </li>
           </ul>
@@ -95,11 +116,11 @@ const Footer = () => {
         {/* Newsletter */}
         <div>
           <h4 className="font-semibold text-lg mb-4 text-[#D4AF37]">
-            Newsletter
+            Connect / Newsletter
           </h4>
-          <p className="text-gray-400 mb-2">
-            Stay up to date with our latest offers.
-          </p>
+          <h6 className="font-medium text-sm mb-1 text-white">
+            Stay Connected
+          </h6>
           <div className="flex">
             <input
               type="email"
@@ -109,6 +130,10 @@ const Footer = () => {
             <button className="bg-[#D4AF37] text-[#0A2342] font-bold px-4 rounded-r-md">
               Go
             </button>
+          </div>
+          <div>
+            <p className="text-gray-400 mb-2">📧 info@preetinest.com</p>
+            <p className="text-gray-400 mb-2">📞 +1 (705) XXX-XXXX</p>
           </div>
         </div>
       </div>

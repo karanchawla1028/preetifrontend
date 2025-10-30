@@ -91,8 +91,17 @@ const navItems = (serviceList) => [
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {serviceList||[]?.map((service) => (
-            <li key={service?.uuid} className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all">
+          {[
+            { uuid:1, name: "Meeting Space Booking" },
+            { uuid:2, name: "Hotel Reservations" },
+            { uuid:3, name: "Corporate Travel Management" },
+            { uuid:4, name: "Event Coordination" },
+            { uuid:5, name: "Group Bookings" },
+          ]?.map((service) => (
+            <li
+              key={service?.uuid}
+              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+            >
               <a href="/service" className="flex items-center text-gray-800">
                 {service?.name}
               </a>
@@ -121,9 +130,11 @@ const mobileNavItems = [
   {
     title: "Services",
     subTitles: [
-      { name: "Hotel Reservations", href: "/service" },
-      { name: "Flight Booking", href: "#" },
-      { name: "Car Rentals", href: "#" },
+      { name: "Meeting Space Booking", href: "/service" },
+      { name: "Hotel Reservations", href: "#" },
+      { name: "Corporate Travel Management", href: "#" },
+      { name: "Event Coordination", href: "#" },
+      { name: "Group Bookings", href: "#" },
     ],
   },
   { title: "Blogs", subTitles: [{ name: "Travel Guides", href: "#" }] },
@@ -232,7 +243,7 @@ const MobileDrawer = ({ isOpen, onClose, navigate }) => {
 // ===== Main Header =====
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const serviceList = useSelector((state) => state.service.serviceList);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePopover, setActivePopover] = useState(null);
@@ -262,10 +273,9 @@ const Header = () => {
     (closeTimeout.current = setTimeout(() => setActivePopover(null), 200));
   const cancelClose = () => clearTimeout(closeTimeout.current);
 
-
-  useEffect(()=>{
-    dispatch(getAllServices())
-  },[])
+  useEffect(() => {
+    dispatch(getAllServices());
+  }, []);
 
   return (
     <>
@@ -295,7 +305,7 @@ const Header = () => {
                 onMouseEnter={(e) => handleEnter(item.name, e)}
                 onMouseLeave={startClose}
               >
-                <button className="hover:text-[#D4AF37] transition">
+                <button className="hover:text-[#D4AF37] transition font-medium">
                   {item.name}
                 </button>
               </div>
@@ -310,7 +320,10 @@ const Header = () => {
               style={popoverStyle}
               className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
             >
-              {navItems(serviceList).find((i) => i.name === activePopover)?.content}
+              {
+                navItems(serviceList).find((i) => i.name === activePopover)
+                  ?.content
+              }
             </div>
           )}
 

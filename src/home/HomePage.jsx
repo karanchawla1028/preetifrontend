@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import hero from "../assets/hero.png";
+import hero from "../assets/ceoimg.png";
 import blog1 from "../assets/blog1.png";
 import FloatingBtn from "../features/components/FloatingBtn";
 
@@ -103,7 +103,7 @@ const HomePage = () => {
     {
       title: "Exclusive Rates",
       description:
-        "Access corporate rates and special offers on flights and hotels.",
+        "Access corporate rates on meeting spaces and Hotel bookings",
       icon: "⭐",
     },
     {
@@ -143,7 +143,7 @@ const HomePage = () => {
     <main className="relative">
       <div
         className="relative bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImageUrl})` }}
+        style={{ backgroundImage: `url(${blog1})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342] via-[#0A2342]/80 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/50 via-transparent to-transparent"></div>
@@ -151,14 +151,10 @@ const HomePage = () => {
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
           <div className="text-center pt-24 pb-48 md:pt-32 md:pb-64">
             <h2 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
-              Seamless Business Travel,
+              Corporate events & <br /> hotel booking,
             </h2>
-            <p className="text-4xl md:text-6xl font-extrabold text-[#D4AF37] mb-8">
-              Unmatched Comfort.
-            </p>
-            <p className="max-w-3xl mx-auto text-lg text-gray-200">
-              We specialize in curating premium travel and accommodation
-              experiences for the modern professional. Your journey, simplified.
+            <p className="max-w-3xl mx-auto text-lg text-[#D4AF37]">
+              Your Complete Solution for Corporate Events & Stays.
             </p>
           </div>
         </div>
@@ -166,7 +162,6 @@ const HomePage = () => {
       <section className="relative -mt-24 z-20 pb-16">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="bg-white rounded-xl shadow-2xl p-4 md:p-6">
-            {/* Tabs */}
             <div className="flex border-b mb-4">
               <button
                 onClick={() => setActiveTab("hotel")}
@@ -199,8 +194,6 @@ const HomePage = () => {
                 <CarIcon /> Car Rentals
               </button>
             </div>
-
-            {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-end">
               <div className="lg:col-span-2">
                 <label className="text-sm font-medium text-gray-700">
@@ -288,6 +281,50 @@ const HomePage = () => {
                 </h3>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+      <section className="bg-gray-50 py-20">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Image Column - now circular and slightly smaller */}
+            <div className="flex justify-center">
+              <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-xl border-4 border-[#D4AF37] flex items-center justify-center">
+                <img
+                  src={hero}
+                  alt="Karan Chawla, Founder of PreetiNest"
+                  // Use object-cover to ensure it fills the circle, and position it centrally
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Text Column */}
+            <div>
+              <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
+                A Word From Our Founder
+              </h2>
+              <figure>
+                <blockquote className="text-lg text-gray-700 leading-relaxed italic border-l-4 border-[#D4AF37] pl-6 py-2">
+                  <p>
+                    "At PreetiNest, we specialize in helping businesses find the
+                    perfect space where ideas take shape and teams come
+                    together. From corporate meetings to training sessions, we
+                    make every detail seamless so you can focus on what truly
+                    matters - building relationships, driving results, and
+                    empowering your team."
+                  </p>
+                </blockquote>
+                <figcaption className="mt-6">
+                  <p className="text-xl font-semibold text-[#0A2342]">
+                    Karan Chawla
+                  </p>
+                  <p className="text-md text-gray-500">
+                    Founder, PreetiNest Global Connect
+                  </p>
+                </figcaption>
+              </figure>
+            </div>
           </div>
         </div>
       </section>
