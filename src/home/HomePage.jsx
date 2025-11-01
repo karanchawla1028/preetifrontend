@@ -142,8 +142,12 @@ const HomePage = () => {
   return (
     <main className="relative">
       <div
-        className="relative bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${blog1})` }}
+        className="relative bg-cover bg-center bg-no-repeat min-h-[80vh]"
+        style={{
+          backgroundImage: `url(${blog1})`,
+          backgroundAttachment: "scroll",
+          WebkitBackgroundSize: "cover",
+        }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342] via-[#0A2342]/80 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/50 via-transparent to-transparent"></div>
