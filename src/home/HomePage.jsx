@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+// import hero from "../assets/ceoimg.png";
 import hero from "../assets/ceo.jpeg";
 import blog1 from "../assets/blog1.png";
 import FloatingBtn from "../features/components/FloatingBtn";
 
-const PlaneIcon = () => (
+const SearchIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -14,84 +15,66 @@ const PlaneIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="mr-2 h-5 w-5"
+    className="h-5 w-5 text-gray-400"
   >
-    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
   </svg>
 );
 
-const HotelIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="mr-2 h-5 w-5"
-  >
-    <path d="M10 22v-6.57" />
-    <path d="M12 11h.01" />
-    <path d="M12 7h.01" />
-    <path d="M14 22v-6.57" />
-    <path d="M12 15h.01" />
-    <path d="M2 22h20" />
-    <path d="M5 22V7.52c0-.88.45-1.69 1.17-2.14L12 2l5.83 3.38c.72.45 1.17 1.26 1.17 2.14V22" />
-    <path d="M17 15h.01" />
-    <path d="M17 11h.01" />
-    <path d="M17 7h.01" />
-    <path d="M7 15h.01" />
-    <path d="M7 11h.01" />
-    <path d="M7 7h.01" />
-  </svg>
-);
-
-const CarIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="mr-2 h-5 w-5"
-  >
-    <path d="M14 16.5 19 21l-7-4" />
-    <path d="m10.5 16.5.5-1.5 5 3-5.5 1.5Z" />
-    <path d="M14 19.5 9 15l-5 4.5" />
-    <path d="m9.5 12.5 5-3-5.5-1.5Z" />
-    <path d="M5 6.5 3 7l2 5" />
-    <path d="M18 13a4.4 4.4 0 0 0-4-4H8a4.5 4.5 0 0 0-4.5 4.5V17a3.5 3.5 0 0 0 3.5 3.5h11a3.5 3.5 0 0 0 3.5-3.5v-2.5a4.4 4.4 0 0 0-4-4Z" />
-  </svg>
-);
-
-const ChevronDownIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="m6 9 6 6 6-6" />
-  </svg>
-);
+const wordsToType = [
+  "Corporate Events",
+  "Team Offsites",
+  "Hotel Bookings",
+  "Conference Venues",
+];
 
 const HomePage = () => {
   const heroImageUrl =
     "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   const [activeTab, setActiveTab] = useState("hotel");
+
+  // --- NEW Typing Effect State ---
+  const [wordIndex, setWordIndex] = useState(0);
+  const [text, setText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const typeSpeed = 150;
+    const deleteSpeed = 75;
+    const pauseTime = 2000;
+
+    const handleTyping = () => {
+      const currentWord = wordsToType[wordIndex];
+
+      if (isDeleting) {
+        // Deleting
+        setText(currentWord.substring(0, text.length - 1));
+        if (text === "") {
+          setIsDeleting(false);
+          setWordIndex((prevIndex) => (prevIndex + 1) % wordsToType.length);
+        }
+      } else {
+        // Typing
+        setText(currentWord.substring(0, text.length + 1));
+        if (text === currentWord) {
+          // Pause at end of word
+          setTimeout(() => setIsDeleting(true), pauseTime);
+        }
+      }
+    };
+
+    const speed = isDeleting ? deleteSpeed : typeSpeed;
+    // Set timeout to run the typing function
+    const timer = setTimeout(
+      handleTyping,
+      text === wordsToType[wordIndex] ? pauseTime : speed
+    );
+
+    // Cleanup timeout on component unmount or state change
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, wordIndex]);
 
   const features = [
     {
@@ -142,12 +125,8 @@ const HomePage = () => {
   return (
     <main className="relative">
       <div
-        className="relative bg-cover bg-center bg-no-repeat min-h-[80vh]"
-        style={{
-          backgroundImage: `url(${blog1})`,
-          backgroundAttachment: "scroll",
-          WebkitBackgroundSize: "cover",
-        }}
+        className="relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${blog1})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342] via-[#0A2342]/80 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/50 via-transparent to-transparent"></div>
@@ -158,85 +137,40 @@ const HomePage = () => {
               Corporate events & <br /> hotel booking,
             </h2>
             <p className="max-w-3xl mx-auto text-lg text-[#D4AF37]">
-              Experience seamless corporate travel and event management with our
-              premium hotel booking services — designed to deliver comfort,
-              convenience, and excellence for every business occasion.
+              Your Complete Solution for Corporate Events & Stays.
             </p>
           </div>
         </div>
       </div>
-      {/* <section className="relative -mt-24 z-20 pb-16">
+      <section className="relative -mt-24 z-20 pb-16">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-2xl p-4 md:p-6">
-            <div className="flex border-b mb-4">
-              <button
-                onClick={() => setActiveTab("hotel")}
-                className={`flex items-center py-3 px-4 md:px-6 text-sm md:text-base font-semibold transition-colors duration-300 ${
-                  activeTab === "hotel"
-                    ? "text-[#0A2342] border-b-2 border-[#D4AF37]"
-                    : "text-gray-500"
-                }`}
-              >
-                <HotelIcon /> Hotels
-              </button>
-              <button
-                onClick={() => setActiveTab("flight")}
-                className={`flex items-center py-3 px-4 md:px-6 text-sm md:text-base font-semibold transition-colors duration-300 ${
-                  activeTab === "flight"
-                    ? "text-[#0A2342] border-b-2 border-[#D4AF37]"
-                    : "text-gray-500"
-                }`}
-              >
-                <PlaneIcon /> Flights
-              </button>
-              <button
-                onClick={() => setActiveTab("car")}
-                className={`flex items-center py-3 px-4 md:px-6 text-sm md:text-base font-semibold transition-colors duration-300 ${
-                  activeTab === "car"
-                    ? "text-[#0A2342] border-b-2 border-[#D4AF37]"
-                    : "text-gray-500"
-                }`}
-              >
-                <CarIcon /> Car Rentals
-              </button>
+          <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8">
+            <div className="relative w-full max-w-2xl mx-auto">
+              <div className="absolute left-5 top-1/2 -translate-y-1/2">
+                <SearchIcon />
+              </div>
+              <input
+                type="text"
+                placeholder="Search for destinations, hotels, events..."
+                className="w-full py-4 pl-14 pr-6 bg-gray-50 border border-gray-300 text-gray-900 rounded-full outline-none transition-all duration-300
+                           focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] focus:bg-white
+                           placeholder:text-gray-500"
+              />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-end">
-              <div className="lg:col-span-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Destination
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., New York, London"
-                  className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Check-in
-                </label>
-                <input
-                  type="date"
-                  className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Check-out
-                </label>
-                <input
-                  type="date"
-                  className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent outline-none"
-                />
-              </div>
-              <button className="w-full bg-[#0A2342] text-white font-bold p-3 rounded-lg hover:bg-blue-900 transition-transform duration-300 text-lg h-[50px]">
-                Search
-              </button>
+
+            <div className="text-center mt-6 h-6">
+              <span className="text-gray-600">
+                e.g., <span className="text-[#0A2342] font-medium">{text}</span>
+                <span
+                  className="inline-block w-[2px] h-5 bg-[#D4AF37] ml-1 animate-pulse"
+                  style={{ verticalAlign: "middle" }}
+                ></span>
+              </span>
             </div>
           </div>
         </div>
-      </section> */}
-      <section className="py-20">
+      </section>
+      <section className="py-10">
         <div className="container mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-[#0A2342] mb-4">
             Why Travel With Us?
@@ -302,7 +236,6 @@ const HomePage = () => {
                 />
               </div>
             </div>
-
             <div>
               <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
                 A Word From Our Founder
