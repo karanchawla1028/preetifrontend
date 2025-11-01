@@ -13,6 +13,9 @@ import User from "./admin/adminfeatures/User";
 import { Provider } from "react-redux";
 import { persistor, store } from "./toolkit/store";
 import { PersistGate } from "redux-persist/integration/react";
+import ContactUs from "./features/contactus/ContactUs";
+import AboutUs from "./features/aboutus/AboutUs";
+import Careers from "./features/career/Careers";
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
             <Route path="/" element={<LandingPage />}>
               <Route index element={<HomePage />} />
               <Route path="/service" element={<Services />} />
+              <Route path="/contactus" element={<ContactUs />} />
+              <Route path="/aboutus" element={<AboutUs />} />
+              <Route path="/careers" element={<Careers />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="admin" element={<Layouts />}>

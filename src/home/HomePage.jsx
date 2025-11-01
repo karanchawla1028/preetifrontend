@@ -143,7 +143,7 @@ const HomePage = () => {
         </div>
       </div>
       <section className="relative -mt-24 z-20 pb-16">
-        <div className="container mx-auto px-6 lg:px-8">
+        <div className="container mx-auto px-6 lg:px-16 w-[60%]">
           <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8">
             <div className="relative w-full max-w-2xl mx-auto">
               <div className="absolute left-5 top-1/2 -translate-y-1/2">
