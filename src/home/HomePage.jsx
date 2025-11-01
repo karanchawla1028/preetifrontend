@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import hero from "../assets/ceoimg.png";
 import hero from "../assets/ceo.jpeg";
 import blog1 from "../assets/blog1.png";
 import FloatingBtn from "../features/components/FloatingBtn";
@@ -155,12 +154,14 @@ const HomePage = () => {
               Corporate events & <br /> hotel booking,
             </h2>
             <p className="max-w-3xl mx-auto text-lg text-[#D4AF37]">
-              Your Complete Solution for Corporate Events & Stays.
+              Experience seamless corporate travel and event management with our
+              premium hotel booking services — designed to deliver comfort,
+              convenience, and excellence for every business occasion.
             </p>
           </div>
         </div>
       </div>
-      <section className="relative -mt-24 z-20 pb-16">
+      {/* <section className="relative -mt-24 z-20 pb-16">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="bg-white rounded-xl shadow-2xl p-4 md:p-6">
             <div className="flex border-b mb-4">
@@ -230,7 +231,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       <section className="py-20">
         <div className="container mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-[#0A2342] mb-4">
@@ -288,20 +289,16 @@ const HomePage = () => {
       <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Image Column - now circular and slightly smaller */}
             <div className="flex justify-center">
               <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-xl border-4 border-[#D4AF37]">
                 <img
                   src={hero}
                   alt="Karan Chawla, Founder of PreetiNest"
-                  // Example: Centers horizontally, and positions 25% from the top vertically
-                  // You might need to experiment with '25%', '30%', '40%' etc.
                   className="absolute inset-0 w-full h-full object-cover object-[20%_0%]"
                 />
               </div>
             </div>
 
-            {/* Text Column */}
             <div>
               <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
                 A Word From Our Founder
