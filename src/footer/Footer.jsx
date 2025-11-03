@@ -42,8 +42,7 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-gray-400 mt-2 italic text-sm">
-            Your Corporate Meeting & Travel Partner. or Seamless Global Connect
-            for Business Success.
+            Your Corporate Meeting & Travel Partner.
           </p>
         </div>
 
@@ -128,7 +127,7 @@ const Footer = () => {
           </div>
           <div>
             <p className="text-gray-400 mb-2">📧 info@preetinest.com</p>
-            <p className="text-gray-400 mb-2">📞 +1 (705) XXX-XXXX</p>
+            <p className="text-gray-400 mb-2">📞 +1 7052070182</p>
           </div>
         </div>
       </div>

@@ -92,17 +92,17 @@ const navItems = (serviceList) => [
       <div className="p-3">
         <ul className="flex flex-col gap-1">
           {[
-            { uuid:1, name: "Meeting Space Booking" },
-            { uuid:2, name: "Hotel Reservations" },
-            { uuid:3, name: "Corporate Travel Management" },
-            { uuid:4, name: "Event Coordination" },
-            { uuid:5, name: "Group Bookings" },
+            { uuid: 1, name: "Meeting Space Booking", url: "/service" },
+            { uuid: 2, name: "Hotel Reservations", url: "/service" },
+            { uuid: 3, name: "Corporate Travel Management", url: "/service" },
+            { uuid: 4, name: "Event Coordination", url: "/service" },
+            { uuid: 5, name: "Group Bookings", url: "/service" },
           ]?.map((service) => (
             <li
               key={service?.uuid}
               className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
             >
-              <a href="/service" className="flex items-center text-gray-800">
+              <a href={service.url} className="flex items-center text-gray-800">
                 {service?.name}
               </a>
             </li>
@@ -113,15 +113,69 @@ const navItems = (serviceList) => [
   },
   {
     name: "Blogs",
-    content: <div className="p-3 text-gray-800">Blog Content</div>,
+    content: (
+      <div className="p-3">
+        <ul className="flex flex-col gap-1">
+          {[
+            { uuid: 1, name: "Blog 1", url: "/blogs" },
+            { uuid: 2, name: "Blog 2", url: "/blogs" },
+            { uuid: 3, name: "Blog 3", url: "/blogs" },
+          ]?.map((service) => (
+            <li
+              key={service?.uuid}
+              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+            >
+              <a href={service.url} className="flex items-center text-gray-800">
+                {service?.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ),
   },
   {
     name: "About Us",
-    content: <div className="p-3 text-gray-800">About Content</div>,
+    content: (
+      <div className="p-3">
+        <ul className="flex flex-col gap-1">
+          {[{ uuid: 1, name: "About", url: "/aboutus" }]?.map((service) => (
+            <li
+              key={service?.uuid}
+              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+            >
+              <a href={service.url} className="flex items-center text-gray-800">
+                {service?.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ),
   },
   {
     name: "Contact",
-    content: <div className="p-3 text-gray-800">Contact Info</div>,
+    content: (
+      <div className="p-3">
+        <ul className="flex flex-col gap-1">
+          {[{ uuid: 1, name: "Contact us", url: "/contactus" }]?.map(
+            (service) => (
+              <li
+                key={service?.uuid}
+                className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+              >
+                <a
+                  href={service.url}
+                  className="flex items-center text-gray-800"
+                >
+                  {service?.name}
+                </a>
+              </li>
+            )
+          )}
+        </ul>
+      </div>
+    ),
   },
 ];
 
@@ -137,7 +191,7 @@ const mobileNavItems = [
       { name: "Group Bookings", href: "#" },
     ],
   },
-  { title: "Blogs", subTitles: [{ name: "Travel Guides", href: "#" }] },
+  { title: "Blogs", subTitles: [{ name: "Travel Guides", href: "/blogs" }] },
   { title: "About Us", subTitles: [{ name: "Our Story", href: "#" }] },
   { title: "Contact", subTitles: [{ name: "Support", href: "#" }] },
 ];

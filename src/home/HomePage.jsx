@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 // import hero from "../assets/ceoimg.png";
 import hero from "../assets/ceo.jpeg";
-import blog1 from "../assets/blog1.png";
+import blog1 from "../assets/heroimage.png";
+import meetingSpace from "../assets/meetingSpace.png";
+import corporateHotel from "../assets/corporateHotel.png";
+import eventPlanning from "../assets/eventplanning.png";
+import corporateTravel from "../assets/corporateTravel.png";
 import FloatingBtn from "../features/components/FloatingBtn";
 
 const SearchIcon = () => (
@@ -103,22 +107,30 @@ const HomePage = () => {
     },
   ];
 
-  const destinations = [
+  const solutions = [
     {
-      name: "New York",
-      img: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=2070&auto=format&fit=crop",
+      name: "Meeting Space Booking",
+      description:
+        "Find and reserve the perfect venue for your corporate meetings or training sessions — anywhere in the world.",
+      img: meetingSpace, // Placeholder for a modern conference room
     },
     {
-      name: "London",
-      img: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2070&auto=format&fit=crop",
+      name: "Corporate Hotel Stays",
+      description:
+        "Exclusive rates and group bookings tailored to your company’s travel needs.",
+      img: corporateHotel, // Placeholder for a luxury hotel room
     },
     {
-      name: "Tokyo",
-      img: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=2070&auto=format&fit=crop",
+      name: "Event Planning & Coordination",
+      description:
+        "From catering to AV setup — we handle the details so your event runs smoothly.",
+      img: eventPlanning, // Placeholder for a large event setup or launch
     },
     {
-      name: "Singapore",
-      img: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?q=80&w=1974&auto=format&fit=crop",
+      name: "Corporate Travel Management",
+      description:
+        "Streamlined flight and transportation planning for your team or executives.",
+      img: corporateTravel, // Placeholder for a business lounge or airport
     },
   ];
 
@@ -128,15 +140,18 @@ const HomePage = () => {
         className="relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${blog1})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342] via-[#0A2342]/80 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/50 via-transparent to-transparent"></div>
+        {/* TOP OVERLAY: Start with transparent dark blue, fade to highly transparent gray/white */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342]/40 via-transparent to-transparent"></div>
+
+        {/* BOTTOM OVERLAY: Light transparent gray/blue bottom fade (to keep text legible) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/20 via-transparent to-transparent"></div>
 
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
           <div className="text-center pt-24 pb-48 md:pt-32 md:pb-64">
-            <h2 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
-              Corporate events & <br /> hotel booking,
+            <h2 className="text-4xl md:text-6xl font-extrabold text-[#fafafa] leading-tight mb-4">
+              Corporate events & <br /> hotel booking.
             </h2>
-            <p className="max-w-3xl mx-auto text-lg text-[#D4AF37]">
+            <p className="max-w-3xl mx-auto text-lg text-[#0A2342] font-medium">
               Your Complete Solution for Corporate Events & Stays.
             </p>
           </div>
@@ -198,27 +213,39 @@ const HomePage = () => {
       <section className="bg-white py-20">
         <div className="container mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-[#0A2342] mb-4">
-            Top Business Destinations
+            Our Corporate Solutions
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-12">
-            Explore premier locations for your next corporate event or business
-            trip.
+            Simplify your business travel and event planning with PreetiNest -
+            your trusted partner for seamless coordination.
           </p>
+
+          {/* Use the new 'solutions' array */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {destinations.map((dest) => (
+            {solutions.map((solution) => (
               <div
-                key={dest.name}
-                className="relative rounded-lg overflow-hidden shadow-lg group"
+                key={solution.name}
+                className="relative rounded-lg overflow-hidden shadow-xl group hover:shadow-2xl transition duration-300"
               >
+                {/* Image */}
                 <img
-                  src={dest.img}
-                  alt={dest.name}
-                  className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                  src={solution.img}
+                  alt={solution.name}
+                  className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-black/40"></div>
-                <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white">
-                  {dest.name}
-                </h3>
+
+                {/* Gradient Overlay for Text Visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+
+                {/* Text Content */}
+                <div className="absolute bottom-0 left-0 p-4 text-left w-full">
+                  <h3 className="text-xl font-bold text-white mb-1">
+                    {solution.name}
+                  </h3>
+                  <p className="text-sm text-gray-200">
+                    {solution.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

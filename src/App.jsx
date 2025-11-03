@@ -16,6 +16,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import ContactUs from "./features/contactus/ContactUs";
 import AboutUs from "./features/aboutus/AboutUs";
 import Careers from "./features/career/Careers";
+import BlogPost from "./features/blogs/BlogPost";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/contactus" element={<ContactUs />} />
               <Route path="/aboutus" element={<AboutUs />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/blogs" element={<BlogPost />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="admin" element={<Layouts />}>
