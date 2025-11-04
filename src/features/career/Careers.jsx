@@ -152,7 +152,9 @@ const Careers = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
             {/* Culture */}
             <div className="p-6 rounded-lg shadow-lg">
-              <HeartIcon />
+              <div className="w-full flex justify-center">
+                <HeartIcon />
+              </div>
               <h3 className="text-xl font-semibold text-[#0A2342] mb-3">
                 Collaborative Culture
               </h3>
@@ -163,18 +165,22 @@ const Careers = () => {
             </div>
             {/* Global Reach */}
             <div className="p-6 rounded-lg shadow-lg">
-              <GlobeIcon />
+              <div className="w-full flex justify-center">
+                <GlobeIcon />
+              </div>
               <h3 className="text-xl font-semibold text-[#0A2342] mb-3">
                 Global Impact
-              </h3 >
+              </h3>
               <p className="text-gray-600">
-                Help coordinate events and travel across the globe, expanding your
-                professional horizon.
+                Help coordinate events and travel across the globe, expanding
+                your professional horizon.
               </p>
             </div>
             {/* Flexibility */}
             <div className="p-6 rounded-lg shadow-lg">
-              <ClockIcon />
+              <div className="w-full flex justify-center">
+                <ClockIcon />
+              </div>
               <h3 className="text-xl font-semibold text-[#0A2342] mb-3">
                 Flexibility & Balance
               </h3>
@@ -185,12 +191,15 @@ const Careers = () => {
             </div>
             {/* Compensation */}
             <div className="p-6 rounded-lg shadow-lg">
-              <DollarSignIcon />
+              <div className="w-full flex justify-center">
+                <DollarSignIcon />
+              </div>
               <h3 className="text-xl font-semibold text-[#0A2342] mb-3">
                 Competitive Compensation
               </h3>
               <p className="text-gray-600">
-                Receive industry-leading salary packages and comprehensive benefits.
+                Receive industry-leading salary packages and comprehensive
+                benefits.
               </p>
             </div>
           </div>
@@ -203,7 +212,7 @@ const Careers = () => {
           <h2 className="text-3xl font-bold text-[#0A2342] text-center mb-12">
             Current Job Openings
           </h2>
-          
+
           <div className="max-w-4xl mx-auto space-y-4">
             {jobOpenings.map((job) => (
               <div
@@ -211,7 +220,9 @@ const Careers = () => {
                 className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-md border-l-4 border-[#D4AF37] hover:shadow-lg transition duration-300"
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-[#0A2342]">{job.title}</h3>
+                  <h3 className="text-xl font-semibold text-[#0A2342]">
+                    {job.title}
+                  </h3>
                   <div className="mt-1 text-gray-500 text-sm space-x-4">
                     <span className="font-medium">{job.location}</span>
                     <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-gray-200 text-gray-700">
@@ -242,7 +253,7 @@ const Careers = () => {
                 </Link>
               </div>
             ))}
-            
+
             {/* No Openings Message */}
             {jobOpenings.length === 0 && (
               <div className="text-center p-10 bg-white rounded-xl shadow-md">
@@ -250,12 +261,14 @@ const Careers = () => {
                   We don't have any open positions right now, but we are always
                   on the lookout for great talent!
                 </p>
-                <Link to="/contact" className="mt-4 inline-block text-[#D4AF37] font-semibold hover:underline">
+                <Link
+                  to="/contact"
+                  className="mt-4 inline-block text-[#D4AF37] font-semibold hover:underline"
+                >
                   Send us your CV
                 </Link>
               </div>
             )}
-            
           </div>
         </div>
       </section>

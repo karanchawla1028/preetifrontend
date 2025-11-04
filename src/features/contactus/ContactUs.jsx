@@ -144,13 +144,13 @@ const ContactUs = () => {
   return (
     <main className="relative">
       {/* --- Hero Section --- */}
-      <div className="relative bg-[#0A2342] pt-32 pb-24 md:pt-40 md:pb-32">
+      <div className="relative pt-32 pb-24 md:pt-40 md:pb-32">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent"></div>
         <div className="relative z-10 container mx-auto px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-[#0A2342] leading-tight">
             Get In Touch
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-300">
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-[#D4AF37]">
             We're here to help. Whether you have a question about our services
             or want to start planning your next event, reach out to us.
           </p>

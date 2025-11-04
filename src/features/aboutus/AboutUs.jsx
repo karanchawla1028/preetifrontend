@@ -45,13 +45,13 @@ const AboutUs = () => {
   return (
     <main className="relative">
       {/* --- Hero Section --- */}
-      <div className="relative bg-[#0A2342] pt-32 pb-24 md:pt-40 md:pb-32">
+      <div className="relative pt-32 pb-24 md:pt-40 md:pb-32">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent"></div>
         <div className="relative z-10 container mx-auto px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-[#0A2342] leading-tight">
             About PreetiNest Global Connect
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-300">
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-[#D4AF37]">
             Connecting businesses, curating exceptional experiences.
           </p>
         </div>
@@ -78,14 +78,14 @@ const AboutUs = () => {
               <p className="text-gray-700 text-lg leading-relaxed mb-4">
                 Founded on the principle of seamless service, PreetiNest Global
                 Connect was born from a desire to transform the corporate travel
-                and event landscape. We saw a need for a partner that doesn't just
-                book venues, but understands the strategic importance of every
-                meeting, conference, and business trip.
+                and event landscape. We saw a need for a partner that doesn't
+                just book venues, but understands the strategic importance of
+                every meeting, conference, and business trip.
               </p>
               <p className="text-gray-700 text-lg leading-relaxed">
                 Today, we are a leading provider of premium hotel bookings and
-                event management, dedicated to helping businesses find the perfect
-                space where ideas flourish and teams come together.
+                event management, dedicated to helping businesses find the
+                perfect space where ideas flourish and teams come together.
               </p>
             </div>
           </div>
@@ -174,17 +174,17 @@ const AboutUs = () => {
       </section>
 
       {/* --- CTA Section --- */}
-      <section className="bg-[#0A2342] py-20">
+      <section className="py-20">
         <div className="container mx-auto px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
+          <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
             Ready to Elevate Your Next Event?
           </h2>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-[#D4AF37] text-lg max-w-2xl mx-auto mb-8">
             Let our team handle the details. Get in touch with us today to start
             planning your next seamless corporate experience.
           </p>
           <Link
-            to="/contact"
+            to="/contactus"
             className="inline-block cursor-pointer bg-[#D4AF37] text-[#0A2342] font-bold py-3 px-8 
                        rounded-lg hover:bg-yellow-400 transition duration-300 text-lg"
           >
