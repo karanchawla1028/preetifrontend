@@ -235,7 +235,7 @@ const ContactUs = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full cursor-pointer bg-[#D4AF37] text-[#0A2342] font-bold py-3 px-6 
+                    className="w-full cursor-pointer bg-[#0A2342] text-white font-bold py-3 px-6 
                                rounded-lg hover:bg-yellow-400 transition duration-300 text-lg"
                   >
                     Send Enquiry

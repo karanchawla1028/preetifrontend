@@ -185,7 +185,7 @@ const AboutUs = () => {
           </p>
           <Link
             to="/contactus"
-            className="inline-block cursor-pointer bg-[#D4AF37] text-[#0A2342] font-bold py-3 px-8 
+            className="inline-block cursor-pointer bg-[#0A2342] text-white font-bold py-3 px-8 
                        rounded-lg hover:bg-yellow-400 transition duration-300 text-lg"
           >
             Get Started
