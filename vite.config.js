@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3000,
 
     // 👇 Allow specific production domains
-    allowedHosts: ["www.preetinest.cn", "preetinest.cn"],
+    allowedHosts: ["www.preetinest.ca", "preetinest.ca"],
 
     proxy: {
       "/api": {
