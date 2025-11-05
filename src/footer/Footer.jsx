@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 const Footer = () => {
   return (
     <footer className="bg-[#0A2342] text-white pt-2 pb-8">
-      <div className="flex items-center gap-1 px-10 mx-auto">
+      <div className="flex items-center gap-1 px-6 mx-auto">
         <h4>Follow us :</h4>
         <div className="flex space-x-4">
           <a
@@ -133,7 +133,7 @@ const Footer = () => {
       </div>
       <p className="text-gray-400 mt-2 italic px-16">
         Helping businesses find the perfect venues, hotels, and travel solutions
-        for meetings, events, and corporate stays — across India and Canada.
+        for meetings, events, and corporate stays.
       </p>
 
       {/* Footer Bottom */}

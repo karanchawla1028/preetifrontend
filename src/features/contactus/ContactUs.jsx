@@ -144,7 +144,7 @@ const ContactUs = () => {
   return (
     <main className="relative">
       {/* --- Hero Section --- */}
-      <div className="relative pt-32 pb-24 md:pt-40 md:pb-32">
+      <div className="relative pt-32 pb-24 md:pt-40 md:pb-28">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent"></div>
         <div className="relative z-10 container mx-auto px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold text-[#0A2342] leading-tight">
@@ -158,7 +158,7 @@ const ContactUs = () => {
       </div>
 
       {/* --- Main Content Section (Form & Details) --- */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-10">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             
@@ -257,7 +257,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h4 className="text-lg font-semibold text-gray-800">Phone</h4>
-                      <p className="text-gray-600">+1 (555) 123-4567</p>
+                      <p className="text-gray-600">+1 7052070182</p>
                     </div>
                   </li>
                   <li className="flex items-start space-x-4">
@@ -266,20 +266,20 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h4 className="text-lg font-semibold text-gray-800">Email</h4>
-                      <p className="text-gray-600">contact@preetiglobal.com</p>
+                      <p className="text-gray-600">info@preetinest.com</p>
                     </div>
                   </li>
                   <li className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 pt-1">
+                    {/* <div className="flex-shrink-0 pt-1">
                       <MapPinIcon />
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                       <h4 className="text-lg font-semibold text-gray-800">Address</h4>
                       <p className="text-gray-600">
                         123 Business Bay, Suite 456, <br />
                         New York, NY 10001
                       </p>
-                    </div>
+                    </div> */}
                   </li>
                 </ul>
               </div>
@@ -308,7 +308,7 @@ const ContactUs = () => {
       </section>
 
       {/* --- FAQ Section --- */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-10">
         <div className="container mx-auto px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[#0A2342] text-center mb-12">
             Frequently Asked Questions

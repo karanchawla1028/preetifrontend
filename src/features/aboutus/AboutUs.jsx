@@ -45,7 +45,7 @@ const AboutUs = () => {
   return (
     <main className="relative">
       {/* --- Hero Section --- */}
-      <div className="relative pt-32 pb-24 md:pt-40 md:pb-32">
+      <div className="relative pt-32 pb-16 md:pt-40 md:pb-28">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent"></div>
         <div className="relative z-10 container mx-auto px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold text-[#0A2342] leading-tight">
@@ -58,7 +58,7 @@ const AboutUs = () => {
       </div>
 
       {/* --- Our Story Section --- */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-10">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Image Column */}
@@ -133,15 +133,15 @@ const AboutUs = () => {
       </section>
 
       {/* --- Meet Our Founder Section --- */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-10">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Image Column */}
             <div className="flex justify-center">
-              <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-xl border-4 border-[#D4AF37]">
+              <div className="relative w-60 h-60 lg:w-80 lg:h-80 rounded-full overflow-hidden shadow-xl border-4 border-[#D4AF37]">
                 <img
                   src={hero}
-                  alt="Karan Chawla, Founder of PreetiNest"
+                  alt="Karan Chawla, Founder and CEO of PreetiNest"
                   className="absolute inset-0 w-full h-full object-cover object-top"
                 />
               </div>
@@ -149,7 +149,7 @@ const AboutUs = () => {
             {/* Text Column */}
             <div>
               <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
-                Meet Our Founder
+                Meet Our Founder and CEO
               </h2>
               <figure>
                 <blockquote className="text-lg text-gray-700 leading-relaxed italic border-l-4 border-[#D4AF37] pl-6 py-2">
@@ -164,7 +164,7 @@ const AboutUs = () => {
                     Karan Chawla
                   </p>
                   <p className="text-md text-gray-500">
-                    Founder, PreetiNest Global Connect
+                    Founder and CEO, PreetiNest Global Connect
                   </p>
                 </figcaption>
               </figure>
@@ -174,7 +174,7 @@ const AboutUs = () => {
       </section>
 
       {/* --- CTA Section --- */}
-      <section className="py-20">
+      <section className="py-10">
         <div className="container mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
             Ready to Elevate Your Next Event?
