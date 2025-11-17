@@ -12,8 +12,8 @@ dist
 dist-ssr
 *.local
 
-src/vite.config.js
-src/httpcommon.js
+src/vite.config
+src/httpcommon
 
 # Editor directories and files
 .vscode/*
