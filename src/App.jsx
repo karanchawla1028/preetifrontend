@@ -26,14 +26,14 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />}>
               <Route index element={<HomePage />} />
-              <Route path="/service" element={<Services />} />
+              <Route path=":slugName/service" element={<Services />} />
               <Route path="/contactus" element={<ContactUs />} />
               <Route path="/aboutus" element={<AboutUs />} />
               <Route path="/careers" element={<Careers />} />
-              <Route path="/blogs" element={<BlogPost />} />
+              <Route path=":blogSlug/blogs" element={<BlogPost />} />
             </Route>
             <Route path="/login" element={<Login />} />
-            <Route path="admin" element={<Layouts />}>
+            <Route path=":userId/admin" element={<Layouts />}>
               <Route index path="dashboard" element={<Dashboard />} />
               <Route path="category" element={<Category />} />
               <Route

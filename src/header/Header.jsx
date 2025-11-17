@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllServices } from "../toolkit/slices/serviceSlice";
+import { getBlogsList } from "../toolkit/slices/blogSlice";
 
 // ===== Icons =====
 const PlaneIcon = () => (
@@ -85,24 +86,21 @@ const CloseIcon = () => (
 );
 
 // ===== Navigation Items =====
-const navItems = (serviceList) => [
+const navItems = (serviceList, blogList) => [
   {
     name: "Services",
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {[
-            { uuid: 1, name: "Meeting Space Booking", url: "/service" },
-            { uuid: 2, name: "Hotel Reservations", url: "/service" },
-            { uuid: 3, name: "Corporate Travel Management", url: "/service" },
-            { uuid: 4, name: "Event Coordination", url: "/service" },
-            { uuid: 5, name: "Group Bookings", url: "/service" },
-          ]?.map((service) => (
+          {serviceList?.map((service) => (
             <li
               key={service?.uuid}
               className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
             >
-              <a href={service.url} className="flex items-center text-gray-800">
+              <a
+                href={`/${service.slug}/service`}
+                className="flex items-center text-gray-800"
+              >
                 {service?.name}
               </a>
             </li>
@@ -116,17 +114,16 @@ const navItems = (serviceList) => [
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {[
-            { uuid: 1, name: "Blog 1", url: "/blogs" },
-            { uuid: 2, name: "Blog 2", url: "/blogs" },
-            { uuid: 3, name: "Blog 3", url: "/blogs" },
-          ]?.map((service) => (
+          {blogList?.map((blog) => (
             <li
-              key={service?.uuid}
+              key={blog?.uuid}
               className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
             >
-              <a href={service.url} className="flex items-center text-gray-800">
-                {service?.name}
+              <a
+                href={`/${blog.slug}/blogs`}
+                className="flex items-center text-gray-800"
+              >
+                {blog?.title}
               </a>
             </li>
           ))}
@@ -299,6 +296,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const serviceList = useSelector((state) => state.service.serviceList);
+  const blogList = useSelector((state) => state.blogs.blogList);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePopover, setActivePopover] = useState(null);
   const [popoverStyle, setPopoverStyle] = useState({});
@@ -329,6 +327,7 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(getAllServices());
+    dispatch(getBlogsList());
   }, []);
 
   return (
@@ -352,7 +351,7 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex gap-8 items-center text-white">
-            {navItems(serviceList).map((item) => (
+            {navItems(serviceList, blogList).map((item) => (
               <div
                 key={item.name}
                 className="relative"
@@ -375,7 +374,7 @@ const Header = () => {
               className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
             >
               {
-                navItems(serviceList).find((i) => i.name === activePopover)
+                navItems(serviceList,blogList).find((i) => i.name === activePopover)
                   ?.content
               }
             </div>

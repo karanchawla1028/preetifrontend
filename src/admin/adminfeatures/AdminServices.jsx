@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchInput from "../components/SearchInput";
 import Button from "../components/Button";
 import DynamicTable from "../components/DynamicTable";
 import { services } from "../../commons";
 import { ArrowLeft } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { addService, getAllServices } from "../../toolkit/slices/serviceSlice";
+import { useParams } from "react-router-dom";
 
 const AdminServices = ({ onSubmit }) => {
+  const dispatch = useDispatch();
+  const { subcategoryId, userId } = useParams();
+  const serviceList = useSelector((state) => state.service.serviceList);
   const [isForm, setIsForm] = useState(false);
   const [service, setService] = useState({
     name: "",
     description: "",
-    subCategoryId: 0,
+    subCategoryId: subcategoryId,
     iconUrl: "",
     image: "",
     metaTitle: "",
@@ -22,6 +28,10 @@ const AdminServices = ({ onSubmit }) => {
     displayStatus: true,
     showOnHome: true,
   });
+
+  useEffect(() => {
+    dispatch(getAllServices());
+  }, []);
 
   // Handle changes for all fields
   const handleChange = (e) => {
@@ -67,7 +77,28 @@ const AdminServices = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Service Data:", service);
-    if (onSubmit) onSubmit(service);
+    dispatch(addService({ userId, data: service })).then((resp) => {
+      if (resp.meta.requestStatus === "fulfilled") {
+        alert("Service added successfully !.");
+        dispatch(getAllServices());
+        setIsForm(false);
+        setService({
+          name: "",
+          description: "",
+          subCategoryId: subcategoryId,
+          iconUrl: "",
+          image: "",
+          metaTitle: "",
+          metaKeyword: "",
+          metaDescription: "",
+          slug: "",
+          active: true,
+          inactive: true,
+          displayStatus: true,
+          showOnHome: true,
+        });
+      }
+    });
   };
 
   return (
@@ -79,12 +110,16 @@ const AdminServices = ({ onSubmit }) => {
             <SearchInput />
             <Button onClick={() => setIsForm(true)}>Add Service</Button>
           </div>
-          <DynamicTable columns={columns} data={services} />
+          <DynamicTable columns={columns} data={serviceList} />
         </>
       ) : (
         <div className="p-8">
           <div className="flex items-center gap-0.5">
-            <Button className="px-1.5 py-1" variant="ghost" onClick={() => setIsForm(false)}>
+            <Button
+              className="px-1.5 py-1"
+              variant="ghost"
+              onClick={() => setIsForm(false)}
+            >
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <h1 className="font-semibold font-sans text-2xl">Add Service</h1>

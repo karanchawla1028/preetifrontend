@@ -40,6 +40,14 @@ export const deleteBlogById = createAsyncThunk("deleteBlogById", async (id) => {
   return response.data;
 });
 
+export const getBlogDetailBySlugName = createAsyncThunk(
+  "getBlogDetailBySlugName",
+  async (slugName) => {
+    const response = await api.get(`/api/blogs/slug/${slugName}`);
+    return response.data;
+  }
+);
+
 const blogSlice = createSlice({
   name: "blogs",
   initialState: {
@@ -79,6 +87,17 @@ const blogSlice = createSlice({
       state.blogDetail = action.payload;
     });
     builder.addCase(getBlogById.rejected, (state) => {
+      state.loading = "rejected";
+    });
+
+    builder.addCase(getBlogDetailBySlugName.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getBlogDetailBySlugName.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.blogDetail = action.payload;
+    });
+    builder.addCase(getBlogDetailBySlugName.rejected, (state) => {
       state.loading = "rejected";
     });
   },

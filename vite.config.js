@@ -7,11 +7,19 @@ export default defineConfig({
   server: {
     port: 3000,
     allowedHosts: ["www.preetinest.ca", "preetinest.ca"],
+    // proxy: {
+    //   "/api": {
+    //     target: "http://localhost:8080",
+    //     changeOrigin: true,
+    //     secure: false,
+    //   },
+    // },
     proxy: {
       "/api": {
-        target: "http://localhost:8080",
+        target: "https://preetinest.ca",
         changeOrigin: true,
-        secure: false,
+        secure: true, // because your server uses HTTPS
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

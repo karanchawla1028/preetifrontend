@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getServiceDetailBySlugName } from "../../toolkit/slices/serviceSlice";
+import { useParams } from "react-router-dom";
 
 // --- Hotels Section Component ---
 const Services = () => {
+  const dispatch = useDispatch();
+  const { slugName } = useParams();
+  const detail = useSelector((state) => state.service.serviceDetailBySlug);
+
+  useEffect(() => {
+    dispatch(getServiceDetailBySlugName(slugName));
+  }, [slugName]);
+
   const canadianHotels = [
     {
       name: "Fairmont Banff Springs",
@@ -31,13 +42,12 @@ const Services = () => {
 
   return (
     <section className="bg-gray-50 py-20">
-      <div className="container mx-auto px-6 lg:px-8 text-center">
+      <div className="container mx-auto px-6 lg:px-8 text-center py-6">
         <h2 className="text-3xl font-bold text-[#0A2342] mb-4">
-          Featured Hotels in Canada
+          {detail?.name}
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto mb-12">
-          Discover unparalleled luxury and comfort in Canada's most iconic
-          hotels.
+         {detail?.metaTitle}
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {canadianHotels.map((hotel) => (
