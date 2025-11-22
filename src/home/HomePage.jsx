@@ -7,6 +7,8 @@ import corporateHotel from "../assets/corporateHotel.png";
 import eventPlanning from "../assets/eventplanning.png";
 import corporateTravel from "../assets/corporateTravel.png";
 import FloatingBtn from "../features/components/FloatingBtn";
+import { useDispatch, useSelector } from "react-redux";
+import { getBlogsList } from "../toolkit/slices/blogSlice";
 
 const SearchIcon = () => (
   <svg
@@ -34,15 +36,51 @@ const wordsToType = [
 ];
 
 const HomePage = () => {
+  const dispatch = useDispatch();
   const heroImageUrl =
     "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  // const blogs = useSelector((state) => state.blogs.blogList);
+  const blogs = [
+    {
+      title: "How Same-Day Boardroom Booking Boosts Productivity",
+      slug: "same-day-boardroom-booking-productivity",
+      excerpt:
+        "Discover how quick access to conference rooms improves workflow efficiency.",
+      image:
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      title: "Corporate Event Planning – Ultimate Guide 2025",
+      slug: "corporate-event-planning-guide",
+      excerpt: "Everything you need to know to plan seamless corporate events.",
+      image:
+        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
+    },
+    {
+      title: "Managing Multi-City Conferences Effectively",
+      slug: "multi-city-conference-management",
+      excerpt:
+        "A step-by-step guide to coordinating events across multiple cities.",
+      image:
+        "https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
+    },
+    {
+      title: "Benefits of Executive Travel Itinerary Management",
+      slug: "executive-travel-itinerary-benefits",
+      excerpt: "Learn why CEOs rely on itinerary management services.",
+      image:
+        "https://images.unsplash.com/photo-1444201983204-c43cbd584d93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhvdGVsJTIwYm9va2luZ3xlbnwwfHwwfHx8MA%3D%3D",
+    },
+  ];
 
   const [activeTab, setActiveTab] = useState("hotel");
-
-  // --- NEW Typing Effect State ---
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    dispatch(getBlogsList());
+  }, []);
 
   useEffect(() => {
     const typeSpeed = 150;
@@ -140,10 +178,7 @@ const HomePage = () => {
         className="relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${blog1})` }}
       >
-        {/* TOP OVERLAY: Start with transparent dark blue, fade to highly transparent gray/white */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342]/40 via-transparent to-transparent"></div>
-
-        {/* BOTTOM OVERLAY: Light transparent gray/blue bottom fade (to keep text legible) */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/20 via-transparent to-transparent"></div>
 
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
@@ -248,6 +283,44 @@ const HomePage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+      <section className="bg-white py-16 overflow-hidden">
+        <div className="container mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-[#0A2342] text-center mb-6">
+            Latest Blogs
+          </h2>
+          <p className="text-gray-600 text-center max-w-2xl mx-auto mb-12">
+            Stay updated with our latest insights, travel tips, and corporate
+            service updates.
+          </p>
+
+          {/* Carousel Wrapper */}
+          <div className="relative w-full overflow-hidden">
+            <div className="flex gap-6 w-[200%] scroll-animation">
+              {[...blogs, ...blogs].map((blog, idx) => (
+                <a
+                  key={idx}
+                  href={`/blog/${blog.slug}`}
+                  className="min-w-[280px] max-w-[280px] bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
+                >
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-[#0A2342]">
+                      {blog.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                      {blog.excerpt}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>

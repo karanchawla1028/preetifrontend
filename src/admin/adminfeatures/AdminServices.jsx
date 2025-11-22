@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addService, getAllServices } from "../../toolkit/slices/serviceSlice";
 import { useParams } from "react-router-dom";
+import TextEditor from "../../features/components/TextEditor";
 
 const AdminServices = ({ onSubmit }) => {
   const dispatch = useDispatch();
@@ -96,6 +97,7 @@ const AdminServices = ({ onSubmit }) => {
           inactive: true,
           displayStatus: true,
           showOnHome: true,
+          content:""
         });
       }
     });
@@ -293,6 +295,14 @@ const AdminServices = ({ onSubmit }) => {
                 />
                 <span className="text-gray-700">Show on Home</span>
               </label>
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-1">Content</label>
+              <TextEditor
+                value={service.content}
+                onChange={(e) => setService((prev) => ({ ...prev, content: e }))}
+              />
             </div>
 
             {/* Submit Button */}

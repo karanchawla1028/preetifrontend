@@ -4,27 +4,21 @@ import SearchInput from "../components/SearchInput";
 import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlogs, getBlogsList } from "../../toolkit/slices/blogSlice";
-import RichTextEditor from "../components/RichTextEditor";
 import TextEditor from "../../features/components/TextEditor";
+import { useParams } from "react-router-dom";
 
-const Blog = ({ onSubmit }) => {
+const BlogsDetail = ({ onSubmit }) => {
   const dispatch = useDispatch();
+  const { blogId } = useParams();
   const blogList = useSelector((state) => state.blogs.blogList);
   const [isForm, setIsForm] = useState(false);
-  const [blog, setBlog] = useState({
-    title: "",
-    excerpt: "",
-    metaTitle: "",
-    metaKeyword: "",
-    metaDescription: "",
-    slug: "",
-    thumbnailUrl: "",
+  const [blogDetail, setBlogDetail] = useState({
+    heading: "",
+    content: "",
+    imageUrl: "",
+    displayOrder: 0,
+    blogId: 0,
     active: true,
-    showOnHome: true,
-    categoryId: 0,
-    subCategoryId: 0,
-    serviceId: 0,
-    content: "<p></p>",
   });
 
   useEffect(() => {
@@ -37,32 +31,20 @@ const Blog = ({ onSubmit }) => {
       dataIndex: "id",
     },
     {
-      title: "Title",
-      dataIndex: "title",
+      title: "Heading",
+      dataIndex: "heading",
       render: (value, rowData) => <p>{value}</p>,
     },
     {
-      title: "Meta title",
-      dataIndex: "metaTitle",
-    },
-    {
-      title: "Meta keyword",
-      dataIndex: "metaKeyword",
-    },
-    {
-      title: "Slug",
-      dataIndex: "slug",
-    },
-    {
-      title: "Description",
-      dataIndex: "metaDescription",
+      title: "Content",
+      dataIndex: "content",
     },
   ];
 
   // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setBlog((prev) => ({
+    setBlogDetail((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -77,19 +59,13 @@ const Blog = ({ onSubmit }) => {
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           alert("Blog posted successfully.");
-          setBlog({
-            title: "",
-            excerpt: "",
-            metaTitle: "",
-            metaKeyword: "",
-            metaDescription: "",
-            slug: "",
-            thumbnailUrl: "",
+          setBlogDetail({
+            heading: "",
+            content: "",
+            imageUrl: "",
+            displayOrder: 0,
+            blogId: 0,
             active: true,
-            showOnHome: true,
-            categoryId: 0,
-            subCategoryId: 0,
-            serviceId: 0,
           });
           setIsForm(false);
         } else {
@@ -103,27 +79,27 @@ const Blog = ({ onSubmit }) => {
     <div className="flex flex-col gap-2">
       {!isForm ? (
         <>
-          <h2 className="font-semibold font-sans text-xl">Blogs</h2>
+          <h2 className="font-semibold font-sans text-xl">Blog details</h2>
           <div className="flex justify-between items-center">
             <SearchInput />
-            <Button onClick={() => setIsForm(true)}>Add blog</Button>
+            <Button onClick={() => setIsForm(true)}>Add blog details</Button>
           </div>
           <DynamicTable columns={columns} data={blogList} />
         </>
       ) : (
         <div className="w-[80%] mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
           <h2 className="text-2xl font-semibold mb-4 text-center">
-            Create Blog
+            Create Blog Details
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4 w-full">
             {/* Title */}
             <div>
-              <label className="block text-gray-700 mb-1">Title</label>
+              <label className="block text-gray-700 mb-1">Heading</label>
               <input
                 type="text"
-                name="title"
-                value={blog.title}
+                name="heading"
+                value={blogDetail.title}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter blog title"
@@ -131,26 +107,13 @@ const Blog = ({ onSubmit }) => {
               />
             </div>
 
-            {/* Excerpt */}
-            <div>
-              <label className="block text-gray-700 mb-1">Excerpt</label>
-              <textarea
-                name="excerpt"
-                value={blog.excerpt}
-                onChange={handleChange}
-                rows="2"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Short summary of the blog"
-              />
-            </div>
-
             {/* Meta Title */}
             <div>
-              <label className="block text-gray-700 mb-1">Meta Title</label>
+              <label className="block text-gray-700 mb-1">Image url</label>
               <input
                 type="text"
-                name="metaTitle"
-                value={blog.metaTitle}
+                name="imageUrl"
+                value={blogDetail.imageUrl}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter meta title"
@@ -159,11 +122,11 @@ const Blog = ({ onSubmit }) => {
 
             {/* Meta Keyword */}
             <div>
-              <label className="block text-gray-700 mb-1">Meta Keyword</label>
+              <label className="block text-gray-700 mb-1">Display order</label>
               <input
                 type="text"
-                name="metaKeyword"
-                value={blog.metaKeyword}
+                name="displayOrder"
+                value={blogDetail.displayOrder}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter meta keywords (comma separated)"
@@ -216,74 +179,19 @@ const Blog = ({ onSubmit }) => {
               <input
                 type="checkbox"
                 name="active"
-                checked={blog.active}
+                checked={blogDetail.active}
                 onChange={handleChange}
                 className="w-5 h-5 text-blue-600"
               />
               <label className="text-gray-700">Active</label>
             </div>
 
-            {/* Show on Home Checkbox */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="showOnHome"
-                checked={blog.showOnHome}
-                onChange={handleChange}
-                className="w-5 h-5 text-blue-600"
-              />
-              <label className="text-gray-700">Show on Home Page</label>
-            </div>
-
-            {/* Category ID */}
-            <div>
-              <label className="block text-gray-700 mb-1">Category ID</label>
-              <input
-                type="number"
-                name="categoryId"
-                value={blog.categoryId}
-                onChange={handleChange}
-                min="0"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter category ID"
-              />
-            </div>
-
-            {/* Sub Category ID */}
-            <div>
-              <label className="block text-gray-700 mb-1">
-                Sub Category ID
-              </label>
-              <input
-                type="number"
-                name="subCategoryId"
-                value={blog.subCategoryId}
-                onChange={handleChange}
-                min="0"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter sub category ID"
-              />
-            </div>
-
-            {/* Service ID */}
-            <div>
-              <label className="block text-gray-700 mb-1">Service ID</label>
-              <input
-                type="number"
-                name="serviceId"
-                value={blog.serviceId}
-                onChange={handleChange}
-                min="0"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter service ID"
-              />
-            </div>
 
             <div>
               <label className="block text-gray-700 mb-1">Content</label>
               <TextEditor
-                value={blog.content}
-                onChange={(e) => setBlog((prev) => ({ ...prev, content: e }))}
+                value={blogDetail.content}
+                onChange={(e) => setBlogDetail((prev) => ({ ...prev, content: e }))}
               />
             </div>
 
@@ -301,4 +209,4 @@ const Blog = ({ onSubmit }) => {
   );
 };
 
-export default Blog;
+export default BlogsDetail;

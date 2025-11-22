@@ -3,14 +3,20 @@ import { api } from "../../httpcommon";
 
 export const addBlogs = createAsyncThunk(
   "addBlogs",
-  async ({ userId, data }) => {
-    const response = await api.post(`/api/blogs?userId=${userId}`, data);
-    return response.data;
+  async ({ userId, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`/blogs?userId=${userId}`, data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response?.data || err.message); // ⬅ real error shown here
+      return rejectWithValue(err.response?.data);
+    }
   }
 );
 
+
 export const getBlogsList = createAsyncThunk("getBlogsList", async () => {
-  const response = await api.get(`/api/blogs`);
+  const response = await api.get(`/blogs`);
   return response.data;
 });
 
@@ -47,6 +53,7 @@ export const getBlogDetailBySlugName = createAsyncThunk(
     return response.data;
   }
 );
+
 
 const blogSlice = createSlice({
   name: "blogs",

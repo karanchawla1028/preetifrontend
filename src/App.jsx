@@ -17,6 +17,7 @@ import ContactUs from "./features/contactus/ContactUs";
 import AboutUs from "./features/aboutus/AboutUs";
 import Careers from "./features/career/Careers";
 import BlogPost from "./features/blogs/BlogPost";
+import Blog from "./admin/adminfeatures/Blog";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 path="category/:categoryId/subcategory/:subcategoryId/services"
                 element={<AdminServices />}
               />
+              <Route path="blogs" element={<Blog />} />
               <Route path="users" element={<User />} />
               <Route path="settings" element={<Settings />} />
             </Route>
