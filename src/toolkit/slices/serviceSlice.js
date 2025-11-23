@@ -2,14 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../httpcommon";
 
 export const getAllServices = createAsyncThunk("getAllServices", async () => {
-  const response = await api.get(`/api/services`);
+  const response = await api.get(`/services`);
   return response.data;
 });
 
 export const getSingleServiceById = createAsyncThunk(
   "getSingleServiceById",
   async (id) => {
-    const response = await api.get(`/api/services/${id}`);
+    const response = await api.get(`/services/${id}`);
     return response.data;
   }
 );
@@ -17,7 +17,7 @@ export const getSingleServiceById = createAsyncThunk(
 export const deleteSingleService = createAsyncThunk(
   "deleteSingleService",
   async ({ id, userId }) => {
-    const response = await api.delete(`/api/services/${id}?userId=${userId}`);
+    const response = await api.delete(`/services/${id}?userId=${userId}`);
     return response.data;
   }
 );
@@ -27,7 +27,7 @@ export const deleteSingleService = createAsyncThunk(
 export const addService = createAsyncThunk(
   "addService",
   async ({ data, userId }) => {
-    const response = await api.post(`/api/services?userId=${userId}`, data);
+    const response = await api.post(`/services?userId=${userId}`, data);
     return response.data;
   }
 );
@@ -35,13 +35,13 @@ export const addService = createAsyncThunk(
 export const updateService = createAsyncThunk(
   "updateService",
   async ({ id, userId }) => {
-    const response = await api.put(`/api/services/${id}?userId=${userId}`);
+    const response = await api.put(`/services/${id}?userId=${userId}`);
     return response.data;
   }
 );
 
 export const getServiceDetailBySlugName=createAsyncThunk('getServiceDetailBySlugName',async(slug)=>{
-  const response=await api.get(`/api/services/slug/${slug}`)
+  const response=await api.get(`/services/slug/${slug}`)
   return response.data
 })
 

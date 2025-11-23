@@ -5,21 +5,21 @@ export const getAllEnquiries = createAsyncThunk(
   "getAllEnquiries",
   async ({ userId, page, size }) => {
     const response = await api.get(
-      `/api/inquiries?userId=${userId}&page=${page}&size=${size}`
+      `/inquiries?userId=${userId}&page=${page}&size=${size}`
     );
     return response.data;
   }
 );
 
 export const addEnquiry = createAsyncThunk("addEnquiry", async (data) => {
-  const response = await api.post(`/api/inquiries`, data);
+  const response = await api.post(`/inquiries`, data);
   return response.data;
 });
 
 export const getSingleEnquiryById = createAsyncThunk(
   "getSingleEnquiryById",
   async (id) => {
-    const response = await api.get(`/api/inquiries/${id}`);
+    const response = await api.get(`/inquiries/${id}`);
     return response.data;
   }
 );
@@ -27,7 +27,7 @@ export const getSingleEnquiryById = createAsyncThunk(
 export const deleteEnquiryById = createAsyncThunk(
   "deleteEnquiryById",
   async (id) => {
-    const response = await api.delete(`/api/inquiries/${id}`);
+    const response = await api.delete(`/inquiries/${id}`);
     return response.data;
   }
 );
@@ -35,7 +35,7 @@ export const deleteEnquiryById = createAsyncThunk(
 export const updateEnquiryById = createAsyncThunk(
   "updateEnquiryById",
   async (id) => {
-    const response = await api.put(`/api/inquiries/${id}`);
+    const response = await api.put(`/inquiries/${id}`);
     return response.data;
   }
 );

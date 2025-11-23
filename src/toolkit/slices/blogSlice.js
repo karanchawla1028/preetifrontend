@@ -23,7 +23,7 @@ export const getBlogsList = createAsyncThunk("getBlogsList", async () => {
 export const getBlogListByServiceId = createAsyncThunk(
   "getBlogListByServiceId",
   async (serviceId) => {
-    const response = await api.get(`/api/blogs/service/${serviceId}`);
+    const response = await api.get(`/blogs/service/${serviceId}`);
     return response.data;
   }
 );
@@ -31,25 +31,25 @@ export const getBlogListByServiceId = createAsyncThunk(
 export const updateBlogById = createAsyncThunk(
   "updateBlogById",
   async ({ id, userId }) => {
-    const response = await api.put(`/api/blogs/${id}?userId=${userId}`);
+    const response = await api.put(`/blogs/${id}?userId=${userId}`);
     return response.data;
   }
 );
 
 export const getBlogById = createAsyncThunk("getBlogById", async (id) => {
-  const response = await api.get(`/api/blogs/${id}`);
+  const response = await api.get(`/blogs/${id}`);
   return response.data;
 });
 
 export const deleteBlogById = createAsyncThunk("deleteBlogById", async (id) => {
-  const response = await api.delete(`/api/blogs/${id}`);
+  const response = await api.delete(`/blogs/${id}`);
   return response.data;
 });
 
 export const getBlogDetailBySlugName = createAsyncThunk(
   "getBlogDetailBySlugName",
   async (slugName) => {
-    const response = await api.get(`/api/blogs/slug/${slugName}`);
+    const response = await api.get(`/blogs/slug/${slugName}`);
     return response.data;
   }
 );

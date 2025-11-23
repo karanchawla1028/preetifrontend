@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Home, Settings, LogOut, HandHelping, User, Blocks } from "lucide-react";
+import {
+  Home,
+  Settings,
+  LogOut,
+  HandHelping,
+  User,
+  Blocks,
+  SquareMenu,
+} from "lucide-react";
 import logo from "../../assets/logo_preeti.png";
 import { Link, Outlet } from "react-router-dom";
 
@@ -17,6 +25,11 @@ const Layouts = ({ children }) => {
       name: "Blogs",
       icon: <Blocks className="w-5 h-5" />,
       url: "blogs",
+    },
+    {
+      name: "enquiries",
+      icon: <SquareMenu className="w-5 h-5" />,
+      url: "enquiries",
     },
     {
       name: "Users",

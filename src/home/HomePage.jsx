@@ -302,7 +302,7 @@ const HomePage = () => {
               {[...blogs, ...blogs].map((blog, idx) => (
                 <a
                   key={idx}
-                  href={`/blog/${blog.slug}`}
+                  href={`${blog.slug}/blogs`}
                   className="min-w-[280px] max-w-[280px] bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
                 >
                   <img

@@ -18,6 +18,8 @@ import AboutUs from "./features/aboutus/AboutUs";
 import Careers from "./features/career/Careers";
 import BlogPost from "./features/blogs/BlogPost";
 import Blog from "./admin/adminfeatures/Blog";
+import BlogsDetail from "./admin/adminfeatures/BlogsDetail";
+import Enquiry from "./features/enquiry/Enquiry";
 
 function App() {
   return (
@@ -46,6 +48,11 @@ function App() {
                 element={<AdminServices />}
               />
               <Route path="blogs" element={<Blog />} />
+              <Route
+                path="blogs/:blogId/blogDetail"
+                element={<BlogsDetail />}
+              />
+              <Route path="enquiries" element={<Enquiry />} />
               <Route path="users" element={<User />} />
               <Route path="settings" element={<Settings />} />
             </Route>

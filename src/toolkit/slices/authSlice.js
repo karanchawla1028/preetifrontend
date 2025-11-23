@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../httpcommon";
 
 export const userLogin = createAsyncThunk("userLogin", async () => {
-  const response = await api.post(`/api/login`);
+  const response = await api.post(`/login`);
   return response.data;
 });
 
