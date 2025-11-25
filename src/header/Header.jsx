@@ -131,73 +131,33 @@ const navItems = (serviceList, blogList) => [
       </div>
     ),
   },
-  {
-    name: "About Us",
-    content: (
-      <div className="p-3">
-        <ul className="flex flex-col gap-1">
-          {[{ uuid: 1, name: "About", url: "/aboutus" }]?.map((service) => (
-            <li
-              key={service?.uuid}
-              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
-            >
-              <a href={service.url} className="flex items-center text-gray-800">
-                {service?.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    ),
-  },
-  {
-    name: "Contact",
-    content: (
-      <div className="p-3">
-        <ul className="flex flex-col gap-1">
-          {[{ uuid: 1, name: "Contact us", url: "/contactus" }]?.map(
-            (service) => (
-              <li
-                key={service?.uuid}
-                className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
-              >
-                <a
-                  href={service.url}
-                  className="flex items-center text-gray-800"
-                >
-                  {service?.name}
-                </a>
-              </li>
-            )
-          )}
-        </ul>
-      </div>
-    ),
-  },
 ];
 
 // ===== Mobile Nav Data =====
-const mobileNavItems = [
+const mobileNavItems = (serviceList, blogList) => [
   {
     title: "Services",
-    subTitles: [
-      { name: "Meeting Space Booking", href: "/service" },
-      { name: "Hotel Reservations", href: "#" },
-      { name: "Corporate Travel Management", href: "#" },
-      { name: "Event Coordination", href: "#" },
-      { name: "Group Bookings", href: "#" },
-    ],
+    subTitles: serviceList?.map((item) => ({
+      name: item?.name,
+      slug: item?.slug,
+    })),
   },
-  { title: "Blogs", subTitles: [{ name: "Travel Guides", href: "/blogs" }] },
-  { title: "About Us", subTitles: [{ name: "Our Story", href: "#" }] },
-  { title: "Contact", subTitles: [{ name: "Support", href: "#" }] },
+  {
+    title: "Blogs",
+    subTitles: blogList?.map((blog) => ({
+      name: blog?.title,
+      slug: blog?.slug,
+    })),
+  },
+  // { title: "About Us", subTitles: [{ name: "Our Story", href: "#" }] },
+  // { title: "Contact", subTitles: [{ name: "Support", href: "#" }] },
 ];
 
 // ===== Accordion for Mobile =====
-const AccordionItem = ({ item, isActive, onToggle }) => {
+const AccordionItem = ({ item, isActive, onToggle, key }) => {
   const contentRef = useRef(null);
   return (
-    <div className="border-b border-blue-700">
+    <div className="border-b border-blue-700" key={key}>
       <button
         onClick={onToggle}
         className="flex justify-between w-full items-center p-4 text-white"
@@ -222,7 +182,7 @@ const AccordionItem = ({ item, isActive, onToggle }) => {
           {item.subTitles.map((s) => (
             <li key={s.name} className="py-2">
               <a
-                href={s.href}
+                href={`/${s.slug}/blogs`}
                 className="text-gray-300 hover:text-[#D4AF37] transition"
               >
                 {s.name}
@@ -236,7 +196,7 @@ const AccordionItem = ({ item, isActive, onToggle }) => {
 };
 
 // ===== Mobile Drawer =====
-const MobileDrawer = ({ isOpen, onClose, navigate }) => {
+const MobileDrawer = ({ isOpen, onClose, navigate, serviceList, blogList }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const location = useLocation();
 
@@ -269,14 +229,26 @@ const MobileDrawer = ({ isOpen, onClose, navigate }) => {
           </button>
         </div>
         <div className="overflow-y-auto flex-1">
-          {mobileNavItems.map((item, i) => (
+          {mobileNavItems(serviceList, blogList).map((item, i) => (
             <AccordionItem
-              key={item.title}
+              key={item.slug}
               item={item}
               isActive={activeIndex === i}
               onToggle={() => setActiveIndex(activeIndex === i ? null : i)}
             />
           ))}
+          <a
+            href="/aboutus"
+            className="flex justify-between w-full items-center p-4 text-white"
+          >
+            About us
+          </a>
+          <a
+            href="/contactus"
+            className="flex justify-between w-full items-center p-4 text-white"
+          >
+            Contact us
+          </a>
           {/* <div className="p-4">
             <button
               onClick={() => navigate("/login")}
@@ -363,6 +335,22 @@ const Header = () => {
                 </button>
               </div>
             ))}
+            <div className="relative">
+              <a
+                href="/aboutus"
+                className="hover:text-[#D4AF37] transition font-medium cursor-pointer"
+              >
+                About us
+              </a>
+            </div>
+            <div className="relative">
+              <a
+                href="/contactus"
+                className="hover:text-[#D4AF37] transition font-medium cursor-pointer"
+              >
+                Contact us
+              </a>
+            </div>
           </nav>
 
           {activePopover && (
@@ -374,8 +362,9 @@ const Header = () => {
               className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
             >
               {
-                navItems(serviceList,blogList).find((i) => i.name === activePopover)
-                  ?.content
+                navItems(serviceList, blogList).find(
+                  (i) => i.name === activePopover
+                )?.content
               }
             </div>
           )}
@@ -414,6 +403,8 @@ const Header = () => {
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         navigate={navigate}
+        serviceList={serviceList}
+        blogList={blogList}
       />
     </>
   );

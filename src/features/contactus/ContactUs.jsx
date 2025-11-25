@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { addEnquiry } from "../../toolkit/slices/enquirySlice";
 
 // --- Icons ---
 const PhoneIcon = () => (
@@ -129,16 +131,49 @@ const AccordionItem = ({ item, isActive, onToggle }) => {
 
 // --- Contact Page Component ---
 const ContactUs = () => {
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
+  const [enquiry, setEnquiry] = useState({
+    name: "",
+    location: "",
+    message: "",
+    email: "",
+    phone: "",
+    slug: "",
+  });
 
   const handleToggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEnquiry((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submission logic here
-    console.log("Form submitted");
+    console.log("Enquiry Data:", enquiry);
+    dispatch(addEnquiry(enquiry))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          alert("Enquiry added successfully.");
+          setEnquiry({
+            name: "",
+            location: "",
+            message: "",
+            email: "",
+            phone: "",
+            slug: "",
+          });
+        } else {
+          alert("Something went wrong .");
+        }
+      })
+      .catch(() => alert("Something went wrong ."));
   };
 
   return (
@@ -161,7 +196,6 @@ const ContactUs = () => {
       <section className="bg-white py-10">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            
             {/* --- Enquiry Form --- */}
             <div>
               <h2 className="text-3xl font-bold text-[#0A2342] mb-6">
@@ -169,58 +203,99 @@ const ContactUs = () => {
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Full Name
                   </label>
                   <input
                     type="text"
                     id="name"
                     name="name"
+                    value={enquiry.name}
+                    onChange={handleChange}
                     required
                     className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Email
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
+                    onChange={handleChange}
+                    value={enquiry.email}
                     required
                     className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Phone Number
                   </label>
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
+                    onChange={handleChange}
+                    value={enquiry.phone}
                     className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   />
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                    Subject
+                  <label
+                    htmlFor="subject"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Location
                   </label>
                   <input
                     type="text"
                     id="subject"
-                    name="subject"
+                    name="location"
+                    onChange={handleChange}
+                    value={enquiry.location}
                     required
                     className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="slug"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Slug
+                  </label>
+                  <input
+                    type="text"
+                    id="slug"
+                    name="slug"
+                    onChange={handleChange}
+                    value={enquiry.slug}
+                    required
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
+                               focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Message
                   </label>
                   <textarea
@@ -228,6 +303,8 @@ const ContactUs = () => {
                     name="message"
                     rows="5"
                     required
+                    value={enquiry.message}
+                    onChange={handleChange}
                     className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   ></textarea>
@@ -256,7 +333,9 @@ const ContactUs = () => {
                       <PhoneIcon />
                     </div>
                     <div>
-                      <h4 className="text-lg font-semibold text-gray-800">Phone</h4>
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        Phone
+                      </h4>
                       <p className="text-gray-600">+1 7052070182</p>
                     </div>
                   </li>
@@ -265,7 +344,9 @@ const ContactUs = () => {
                       <EmailIcon />
                     </div>
                     <div>
-                      <h4 className="text-lg font-semibold text-gray-800">Email</h4>
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        Email
+                      </h4>
                       <p className="text-gray-600">info@preetinest.com</p>
                     </div>
                   </li>
@@ -301,7 +382,6 @@ const ContactUs = () => {
                   ></iframe>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

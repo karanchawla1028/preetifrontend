@@ -76,7 +76,7 @@ const FloatingBtn = () => {
           ref={popoverRef}
           className="fixed bottom-20 right-6 w-80 bg-white text-gray-900 p-6 shadow-lg flex flex-col items-center justify-center z-[1000] rounded-4xl transition"
         >
-          <h3 className="text-lg font-semibold mb-4">Enter Client Details</h3>
+          <h3 className="text-lg font-semibold mb-4">Send your enquiry</h3>
           <form className="flex flex-col gap-3 w-full" onSubmit={handleSubmit}>
             <input
               type="text"

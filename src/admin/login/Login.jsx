@@ -16,8 +16,8 @@ const Login = () => {
     e.preventDefault();
     dispatch(userLogin(detail)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
-        // alert("User logged in successfully !.");
-        // navigate(`/${resp.payload?.id}/admin/dashboard`);
+        alert("User logged in successfully !.");
+        navigate(`/${resp.payload?.id}/admin/dashboard`);
       }else{
         alert("something went wrong !.")
       }
