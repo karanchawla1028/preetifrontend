@@ -4,7 +4,6 @@ import SearchInput from "../components/SearchInput";
 import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlogs, getBlogsList } from "../../toolkit/slices/blogSlice";
-import RichTextEditor from "../components/RichTextEditor";
 import TextEditor from "../../features/components/TextEditor";
 
 const Blog = ({ onSubmit }) => {
