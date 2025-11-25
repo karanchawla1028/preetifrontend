@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import logo from "../assets/logo.png";
 
 const Footer = () => {
@@ -8,25 +8,31 @@ const Footer = () => {
         <h4>Follow us :</h4>
         <div className="flex space-x-4">
           <a
-            href="#"
+            href="https://www.facebook.com/profile.php?id=61583264045461"
+            target="_blank"
+            rel="noopener noreferrer"
             className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
             aria-label="Facebook"
           >
             <Facebook size={20} />
           </a>
           <a
-            href="#"
+            href="https://www.instagram.com/preetinest?igsh=MTJ5eTFidndsejgzMQ%3D%3D&utm_source=qr"
+            target="_blank"
+            rel="noopener noreferrer"
             className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
             aria-label="Instagram"
           >
             <Instagram size={20} />
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/company/103129295/admin/dashboard/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
             aria-label="Twitter / X"
           >
-            <Twitter size={20} />
+            <Linkedin size={20} />
           </a>
         </div>
       </div>

@@ -37,6 +37,23 @@ const AdminServices = ({ onSubmit }) => {
   // Handle changes for all fields
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    // Auto-generate slug when typing name
+    if (name === "name") {
+      const generatedSlug = value
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-") // replace spaces with hyphens
+        .replace(/[^a-z0-9\-]/g, ""); // remove special characters (optional)
+
+      setService((prev) => ({
+        ...prev,
+        name: value,
+        slug: generatedSlug,
+      }));
+      return;
+    }
+
     setService((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -78,29 +95,33 @@ const AdminServices = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Service Data:", service);
-    dispatch(addService({ userId, data: service })).then((resp) => {
-      if (resp.meta.requestStatus === "fulfilled") {
-        alert("Service added successfully !.");
-        dispatch(getAllServices());
-        setIsForm(false);
-        setService({
-          name: "",
-          description: "",
-          subCategoryId: subcategoryId,
-          iconUrl: "",
-          image: "",
-          metaTitle: "",
-          metaKeyword: "",
-          metaDescription: "",
-          slug: "",
-          active: true,
-          inactive: true,
-          displayStatus: true,
-          showOnHome: true,
-          content:""
-        });
-      }
-    });
+    dispatch(addService({ userId, data: service }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          alert("Service added successfully !.");
+          dispatch(getAllServices());
+          setIsForm(false);
+          setService({
+            name: "",
+            description: "",
+            subCategoryId: subcategoryId,
+            iconUrl: "",
+            image: "",
+            metaTitle: "",
+            metaKeyword: "",
+            metaDescription: "",
+            slug: "",
+            active: true,
+            inactive: true,
+            displayStatus: true,
+            showOnHome: true,
+            content: "",
+          });
+        } else {
+          alert("Something went wrong !.");
+        }
+      })
+      .catch(() => alert("Something went wrong !."));
   };
 
   return (
@@ -301,7 +322,9 @@ const AdminServices = ({ onSubmit }) => {
               <label className="block text-gray-700 mb-1">Content</label>
               <TextEditor
                 value={service.content}
-                onChange={(e) => setService((prev) => ({ ...prev, content: e }))}
+                onChange={(e) =>
+                  setService((prev) => ({ ...prev, content: e }))
+                }
               />
             </div>
 

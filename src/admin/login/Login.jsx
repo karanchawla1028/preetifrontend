@@ -67,15 +67,11 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Additional Links */}
-        <div className="flex justify-between mt-4 text-sm text-gray-500">
+        {/* <div className="flex justify-between mt-4 text-sm text-gray-500">
           <Link href="#" className="hover:text-blue-600">
             Forgot password?
           </Link>
-          {/* <a href="#" className="hover:text-blue-600">
-            Sign up
-          </a> */}
-        </div>
+        </div> */}
       </div>
     </div>
   );

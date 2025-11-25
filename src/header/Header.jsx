@@ -92,19 +92,20 @@ const navItems = (serviceList, blogList) => [
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {serviceList?.map((service) => (
-            <li
-              key={service?.uuid}
-              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
-            >
-              <a
-                href={`/${service.slug}/service`}
-                className="flex items-center text-gray-800"
+          {(serviceList?.length > 0 && serviceList) ||
+            []?.map((service) => (
+              <li
+                key={service?.uuid}
+                className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
               >
-                {service?.name}
-              </a>
-            </li>
-          ))}
+                <a
+                  href={`/${service.slug}/service`}
+                  className="flex items-center text-gray-800"
+                >
+                  {service?.name}
+                </a>
+              </li>
+            ))}
         </ul>
       </div>
     ),
@@ -114,19 +115,20 @@ const navItems = (serviceList, blogList) => [
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {blogList?.map((blog) => (
-            <li
-              key={blog?.uuid}
-              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
-            >
-              <a
-                href={`/${blog.slug}/blogs`}
-                className="flex items-center text-gray-800"
+          {(blogList?.length > 0 && blogList) ||
+            []?.map((blog) => (
+              <li
+                key={blog?.uuid}
+                className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
               >
-                {blog?.title}
-              </a>
-            </li>
-          ))}
+                <a
+                  href={`/${blog.slug}/blogs`}
+                  className="flex items-center text-gray-800"
+                >
+                  {blog?.title}
+                </a>
+              </li>
+            ))}
         </ul>
       </div>
     ),
@@ -137,20 +139,26 @@ const navItems = (serviceList, blogList) => [
 const mobileNavItems = (serviceList, blogList) => [
   {
     title: "Services",
-    subTitles: serviceList?.map((item) => ({
-      name: item?.name,
-      slug: item?.slug,
-    })),
+    subTitles:
+      serviceList?.length > 0
+        ? serviceList ||
+          []?.map((item) => ({
+            name: item?.name,
+            slug: item?.slug,
+          }))
+        : [],
   },
   {
     title: "Blogs",
-    subTitles: blogList?.map((blog) => ({
-      name: blog?.title,
-      slug: blog?.slug,
-    })),
+    subTitles:
+      blogList?.length > 0
+        ? blogList ||
+          []?.map((blog) => ({
+            name: blog?.title,
+            slug: blog?.slug,
+          }))
+        : [],
   },
-  // { title: "About Us", subTitles: [{ name: "Our Story", href: "#" }] },
-  // { title: "Contact", subTitles: [{ name: "Support", href: "#" }] },
 ];
 
 // ===== Accordion for Mobile =====
@@ -179,16 +187,17 @@ const AccordionItem = ({ item, isActive, onToggle, key }) => {
         }}
       >
         <ul className="pl-6 pb-2">
-          {item.subTitles.map((s) => (
-            <li key={s.name} className="py-2">
-              <a
-                href={`/${s.slug}/blogs`}
-                className="text-gray-300 hover:text-[#D4AF37] transition"
-              >
-                {s.name}
-              </a>
-            </li>
-          ))}
+          {item?.subTitles ||
+            []?.map((s) => (
+              <li key={s.name} className="py-2">
+                <a
+                  href={`/${s.slug}/blogs`}
+                  className="text-gray-300 hover:text-[#D4AF37] transition"
+                >
+                  {s.name}
+                </a>
+              </li>
+            ))}
         </ul>
       </div>
     </div>
@@ -229,14 +238,15 @@ const MobileDrawer = ({ isOpen, onClose, navigate, serviceList, blogList }) => {
           </button>
         </div>
         <div className="overflow-y-auto flex-1">
-          {mobileNavItems(serviceList, blogList).map((item, i) => (
-            <AccordionItem
-              key={item.slug}
-              item={item}
-              isActive={activeIndex === i}
-              onToggle={() => setActiveIndex(activeIndex === i ? null : i)}
-            />
-          ))}
+          {mobileNavItems(serviceList, blogList)?.length > 0 &&
+            mobileNavItems(serviceList, blogList)?.map((item, i) => (
+              <AccordionItem
+                key={item?.slug}
+                item={item}
+                isActive={activeIndex === i}
+                onToggle={() => setActiveIndex(activeIndex === i ? null : i)}
+              />
+            ))}
           <a
             href="/aboutus"
             className="flex justify-between w-full items-center p-4 text-white"
@@ -323,18 +333,19 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex gap-8 items-center text-white">
-            {navItems(serviceList, blogList).map((item) => (
-              <div
-                key={item.name}
-                className="relative"
-                onMouseEnter={(e) => handleEnter(item.name, e)}
-                onMouseLeave={startClose}
-              >
-                <button className="hover:text-[#D4AF37] transition font-medium">
-                  {item.name}
-                </button>
-              </div>
-            ))}
+            {navItems(serviceList, blogList)?.length > 0 &&
+              navItems(serviceList, blogList)?.map((item) => (
+                <div
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={(e) => handleEnter(item?.name, e)}
+                  onMouseLeave={startClose}
+                >
+                  <button className="hover:text-[#D4AF37] transition font-medium">
+                    {item?.name}
+                  </button>
+                </div>
+              ))}
             <div className="relative">
               <a
                 href="/aboutus"
@@ -362,7 +373,7 @@ const Header = () => {
               className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
             >
               {
-                navItems(serviceList, blogList).find(
+                navItems(serviceList, blogList)?.find(
                   (i) => i.name === activePopover
                 )?.content
               }
