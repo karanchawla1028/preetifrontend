@@ -20,6 +20,7 @@ import BlogPost from "./features/blogs/BlogPost";
 import Blog from "./admin/adminfeatures/Blog";
 import BlogsDetail from "./admin/adminfeatures/BlogsDetail";
 import Enquiry from "./features/enquiry/Enquiry";
+import BlogDetail from "./features/blogs/BlogDetail";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path="/aboutus" element={<AboutUs />} />
               <Route path="/careers" element={<Careers />} />
               <Route path=":blogSlug/blogs" element={<BlogPost />} />
+              <Route path=":blogSlug/detail" element={<BlogDetail />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path=":userId/admin" element={<Layouts />}>

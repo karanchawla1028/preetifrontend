@@ -1,6 +1,39 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../httpcommon";
 
+export const getAllCategories = createAsyncThunk(
+  "getAllCategories",
+  async () => {
+    const response = await api.get("/categories");
+    return response.data;
+  }
+);
+
+export const addCategories = createAsyncThunk(
+  "addCategories",
+  async ({ userId, data }) => {
+    const response = await api.post(`/categories?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
+export const getAllSubCategories = createAsyncThunk(
+  "getAllSubCategories",
+  async () => {
+    const response = await api.get("/subcategories");
+    return response.data;
+  }
+);
+
+
+export const addSubCategories = createAsyncThunk(
+  "addSubCategories",
+  async ({ userId, data }) => {
+    const response = await api.post(`/subcategories?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
 export const getAllServices = createAsyncThunk("getAllServices", async () => {
   const response = await api.get(`/services`);
   return response.data;
@@ -22,8 +55,6 @@ export const deleteSingleService = createAsyncThunk(
   }
 );
 
-
-
 export const addService = createAsyncThunk(
   "addService",
   async ({ data, userId }) => {
@@ -40,10 +71,13 @@ export const updateService = createAsyncThunk(
   }
 );
 
-export const getServiceDetailBySlugName=createAsyncThunk('getServiceDetailBySlugName',async(slug)=>{
-  const response=await api.get(`/services/slug/${slug}`)
-  return response.data
-})
+export const getServiceDetailBySlugName = createAsyncThunk(
+  "getServiceDetailBySlugName",
+  async (slug) => {
+    const response = await api.get(`/services/slug/${slug}`);
+    return response.data;
+  }
+);
 
 const serviceSlice = createSlice({
   name: "service",
@@ -51,7 +85,9 @@ const serviceSlice = createSlice({
     loading: "",
     serviceList: [],
     serviceDetail: {},
-    serviceDetailBySlug:{}
+    serviceDetailBySlug: {},
+    categoriesList:[],
+    subCategoriesList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllServices.pending, (state) => {
@@ -78,7 +114,6 @@ const serviceSlice = createSlice({
       state.serviceDetail = {};
     });
 
-
     builder.addCase(getServiceDetailBySlugName.pending, (state) => {
       state.loading = "pending";
     });
@@ -89,6 +124,31 @@ const serviceSlice = createSlice({
     builder.addCase(getServiceDetailBySlugName.rejected, (state) => {
       state.loading = "rejected";
       state.serviceDetailBySlug = {};
+    });
+
+    builder.addCase(getAllCategories.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllCategories.fulfilled, (state, action) => {
+      state.loading = "pending";
+      state.categoriesList = action.payload;
+    });
+    builder.addCase(getAllCategories.rejected, (state) => {
+      state.loading = "rejected";
+      state.categoriesList = [];
+    });
+
+
+    builder.addCase(getAllSubCategories.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllSubCategories.fulfilled, (state, action) => {
+      state.loading = "pending";
+      state.subCategoriesList = action.payload;
+    });
+    builder.addCase(getAllSubCategories.rejected, (state) => {
+      state.loading = "rejected";
+      state.subCategoriesList = [];
     });
   },
 });

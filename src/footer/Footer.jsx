@@ -4,38 +4,6 @@ import logo from "../assets/logo.png";
 const Footer = () => {
   return (
     <footer className="bg-[#0A2342] text-white pt-2 pb-8">
-      <div className="flex items-center gap-1 px-6 mx-auto">
-        <h4>Follow us :</h4>
-        <div className="flex space-x-4">
-          <a
-            href="https://www.facebook.com/profile.php?id=61583264045461"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
-            aria-label="Facebook"
-          >
-            <Facebook size={20} />
-          </a>
-          <a
-            href="https://www.instagram.com/preetinest?igsh=MTJ5eTFidndsejgzMQ%3D%3D&utm_source=qr"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
-            aria-label="Instagram"
-          >
-            <Instagram size={20} />
-          </a>
-          <a
-            href="https://www.linkedin.com/company/103129295/admin/dashboard/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
-            aria-label="Twitter / X"
-          >
-            <Linkedin size={20} />
-          </a>
-        </div>
-      </div>
       <div className="container mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <div className="h-[80px] w-[95px] p-3">
@@ -50,6 +18,38 @@ const Footer = () => {
           <p className="text-gray-400 mt-2 italic text-sm">
             Your Corporate Meeting & Travel Partner.
           </p>
+          <div className="flex flex-col gap-1 mx-auto mt-2">
+            <h4 className="font-medium">Follow us :</h4>
+            <div className="flex space-x-4">
+              <a
+                href="https://www.facebook.com/profile.php?id=61583264045461"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
+                aria-label="Facebook"
+              >
+                <Facebook size={20} />
+              </a>
+              <a
+                href="https://www.instagram.com/preetinest?igsh=MTJ5eTFidndsejgzMQ%3D%3D&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
+                aria-label="Instagram"
+              >
+                <Instagram size={20} />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/103129295/admin/dashboard/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-blue-900/50 hover:bg-[#D4AF37] hover:text-[#0A2342] rounded-full transition-colors duration-300"
+                aria-label="Twitter / X"
+              >
+                <Linkedin size={20} />
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Company */}

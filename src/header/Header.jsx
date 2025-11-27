@@ -92,8 +92,9 @@ const navItems = (serviceList, blogList) => [
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {(serviceList?.length > 0 && serviceList) ||
-            []?.map((service) => (
+          {(serviceList?.length > 0 ? serviceList : [])?.map((service) => {
+            console.log("djbdjhdfj", service);
+            return (
               <li
                 key={service?.uuid}
                 className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
@@ -105,7 +106,8 @@ const navItems = (serviceList, blogList) => [
                   {service?.name}
                 </a>
               </li>
-            ))}
+            );
+          })}
         </ul>
       </div>
     ),
@@ -139,25 +141,17 @@ const navItems = (serviceList, blogList) => [
 const mobileNavItems = (serviceList, blogList) => [
   {
     title: "Services",
-    subTitles:
-      serviceList?.length > 0
-        ? serviceList ||
-          []?.map((item) => ({
-            name: item?.name,
-            slug: item?.slug,
-          }))
-        : [],
+    subTitles: (serviceList?.length > 0 ? serviceList : [])?.map((item) => ({
+      name: item?.name,
+      slug: item?.slug,
+    })),
   },
   {
     title: "Blogs",
-    subTitles:
-      blogList?.length > 0
-        ? blogList ||
-          []?.map((blog) => ({
-            name: blog?.title,
-            slug: blog?.slug,
-          }))
-        : [],
+    subTitles: (blogList?.length > 0 ? blogList : [])?.map((blog) => ({
+      name: blog?.title,
+      slug: blog?.slug,
+    })),
   },
 ];
 
@@ -186,7 +180,7 @@ const AccordionItem = ({ item, isActive, onToggle, key }) => {
           maxHeight: isActive ? `${contentRef.current?.scrollHeight}px` : "0px",
         }}
       >
-        <ul className="pl-6 pb-2">
+        {/* <ul className="pl-6 pb-2">
           {item?.subTitles ||
             []?.map((s) => (
               <li key={s.name} className="py-2">
@@ -198,7 +192,7 @@ const AccordionItem = ({ item, isActive, onToggle, key }) => {
                 </a>
               </li>
             ))}
-        </ul>
+        </ul> */}
       </div>
     </div>
   );
@@ -259,14 +253,6 @@ const MobileDrawer = ({ isOpen, onClose, navigate, serviceList, blogList }) => {
           >
             Contact us
           </a>
-          {/* <div className="p-4">
-            <button
-              onClick={() => navigate("/login")}
-              className="w-full bg-[#D4AF37] text-[#0A2342] font-semibold py-3 rounded-lg hover:bg-yellow-400 transition"
-            >
-              Sign In
-            </button>
-          </div> */}
         </div>
       </div>
     </>
@@ -281,8 +267,8 @@ const Header = () => {
   const blogList = useSelector((state) => state.blogs.blogList);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePopover, setActivePopover] = useState(null);
-  const [popoverStyle, setPopoverStyle] = useState({});
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const headerRef = useRef(null);
   const popoverRef = useRef(null);
   const closeTimeout = useRef(null);
@@ -296,13 +282,17 @@ const Header = () => {
 
   const handleEnter = (name, e) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
+
     const rect = e.currentTarget.getBoundingClientRect();
-    const headerRect = headerRef.current.getBoundingClientRect();
-    const width = 300;
-    const left = rect.left + rect.width / 2 - width / 2 - headerRect.left;
-    setPopoverStyle({ left: `${Math.max(10, left)}px`, top: "60px" });
+
+    setPopoverPosition({
+      left: rect.left + rect.width / 2, // center
+      top: rect.bottom + window.scrollY, // exactly below the item
+    });
+
     setActivePopover(name);
   };
+
   const startClose = () =>
     (closeTimeout.current = setTimeout(() => setActivePopover(null), 200));
   const cancelClose = () => clearTimeout(closeTimeout.current);
@@ -333,8 +323,8 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex gap-8 items-center text-white">
-            {navItems(serviceList, blogList)?.length > 0 &&
-              navItems(serviceList, blogList)?.map((item) => (
+            {navItems(serviceList || [], blogList || [])?.length > 0 &&
+              navItems(serviceList || [], blogList || [])?.map((item) => (
                 <div
                   key={item.name}
                   className="relative"
@@ -369,8 +359,14 @@ const Header = () => {
               ref={popoverRef}
               onMouseEnter={cancelClose}
               onMouseLeave={startClose}
-              style={popoverStyle}
-              className="absolute bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-300 p-2"
+              style={{
+                position: "absolute",
+                transform: "translateX(-50%)", // centers it perfectly
+                left: popoverPosition.left,
+                top: popoverPosition.top + 8, // small gap
+                zIndex: 9999,
+              }}
+              className="bg-white/95 backdrop-blur-lg rounded-lg shadow-xl transition-all duration-200 p-2"
             >
               {
                 navItems(serviceList, blogList)?.find(

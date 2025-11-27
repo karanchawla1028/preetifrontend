@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 // import hero from "../assets/ceoimg.png";
 import hero from "../assets/ceo.jpeg";
 import blog1 from "../assets/heroimage.png";
+import blog2 from "../assets/hero2.jpeg";
+import blog3 from "../assets/hero3.jpeg";
+import blog4 from "../assets/hero4.jpeg";
+import blog5 from "../assets/hero5.jpeg";
+import blog6 from "../assets/hero6.jpeg";
+import blog7 from "../assets/hero7.jpeg";
 import meetingSpace from "../assets/meetingSpace.png";
 import corporateHotel from "../assets/corporateHotel.png";
 import eventPlanning from "../assets/eventplanning.png";
@@ -9,24 +15,40 @@ import corporateTravel from "../assets/corporateTravel.png";
 import FloatingBtn from "../features/components/FloatingBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { getBlogsList } from "../toolkit/slices/blogSlice";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const SearchIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-5 w-5 text-gray-400"
-  >
-    <circle cx="11" cy="11" r="8"></circle>
-    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-  </svg>
-);
+const blogs = [
+  {
+    title: "How Same-Day Boardroom Booking Boosts Productivity",
+    slug: "same-day-boardroom-booking-productivity",
+    excerpt:
+      "Discover how quick access to conference rooms improves workflow efficiency.",
+    image:
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    title: "Corporate Event Planning – Ultimate Guide 2025",
+    slug: "corporate-event-planning-guide",
+    excerpt: "Everything you need to know to plan seamless corporate events.",
+    image:
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
+  },
+  {
+    title: "Managing Multi-City Conferences Effectively",
+    slug: "multi-city-conference-management",
+    excerpt:
+      "A step-by-step guide to coordinating events across multiple cities.",
+    image:
+      "https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
+  },
+  {
+    title: "Benefits of Executive Travel Itinerary Management",
+    slug: "executive-travel-itinerary-benefits",
+    excerpt: "Learn why CEOs rely on itinerary management services.",
+    image:
+      "https://images.unsplash.com/photo-1444201983204-c43cbd584d93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhvdGVsJTIwYm9va2luZ3xlbnwwfHwwfHx8MA%3D%3D",
+  },
+];
 
 const wordsToType = [
   "Corporate Events",
@@ -37,46 +59,20 @@ const wordsToType = [
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const heroImageUrl =
-    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-  // const blogs = useSelector((state) => state.blogs.blogList);
-  const blogs = [
-    {
-      title: "How Same-Day Boardroom Booking Boosts Productivity",
-      slug: "same-day-boardroom-booking-productivity",
-      excerpt:
-        "Discover how quick access to conference rooms improves workflow efficiency.",
-      image:
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "Corporate Event Planning – Ultimate Guide 2025",
-      slug: "corporate-event-planning-guide",
-      excerpt: "Everything you need to know to plan seamless corporate events.",
-      image:
-        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
-    },
-    {
-      title: "Managing Multi-City Conferences Effectively",
-      slug: "multi-city-conference-management",
-      excerpt:
-        "A step-by-step guide to coordinating events across multiple cities.",
-      image:
-        "https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
-    },
-    {
-      title: "Benefits of Executive Travel Itinerary Management",
-      slug: "executive-travel-itinerary-benefits",
-      excerpt: "Learn why CEOs rely on itinerary management services.",
-      image:
-        "https://images.unsplash.com/photo-1444201983204-c43cbd584d93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhvdGVsJTIwYm9va2luZ3xlbnwwfHwwfHx8MA%3D%3D",
-    },
-  ];
-
-  const [activeTab, setActiveTab] = useState("hotel");
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const images = [blog1, blog2, blog3, blog4, blog5, blog6, blog7]; // add any number of images here
+
+  const [current, setCurrent] = useState(0);
+
+  const prevSlide = () => {
+    setCurrent((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
 
   useEffect(() => {
     dispatch(getBlogsList());
@@ -175,53 +171,69 @@ const HomePage = () => {
   return (
     <main className="relative">
       <div
-        className="relative bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${blog1})` }}
+        className="relative bg-cover bg-center bg-no-repeat transition-all duration-700"
+        style={{ backgroundImage: `url(${images[current]})` }}
       >
+        {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342]/40 via-transparent to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/20 via-transparent to-transparent"></div>
 
+        {/* CONTENT */}
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
           <div className="text-center pt-24 pb-48 md:pt-32 md:pb-64">
             <h2 className="text-4xl md:text-6xl font-extrabold text-[#fafafa] leading-tight mb-4">
               Corporate events & <br /> hotel booking.
             </h2>
-            <p className="max-w-3xl mx-auto text-lg text-[#0A2342] font-medium">
+            <p className="max-w-3xl mx-auto text-lg text-[#D4AF37] font-medium">
               Your Complete Solution for Corporate Events & Stays.
             </p>
           </div>
         </div>
-      </div>
-      <section className="relative -mt-16 z-20 pb-16">
-        <div className="container mx-auto px-6 lg:px-16 w-[80%]">
-          <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8">
-            <div className="relative w-full max-w-2xl mx-auto">
-              <div className="absolute left-5 top-1/2 -translate-y-1/2">
-                <SearchIcon />
-              </div>
-              <input
-                type="text"
-                placeholder="Search for destinations, hotels, events..."
-                className="w-full py-4 pl-14 pr-6 bg-gray-50 border border-gray-300 text-gray-900 rounded-full outline-none transition-all duration-300
-                           focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] focus:bg-white
-                           placeholder:text-gray-500"
-              />
-            </div>
 
-            <div className="text-center mt-6 h-6">
-              <span className="text-gray-600">
-                e.g., <span className="text-[#0A2342] font-medium">{text}</span>
-                <span
-                  className="inline-block w-[2px] h-5 bg-[#D4AF37] ml-1 animate-pulse"
-                  style={{ verticalAlign: "middle" }}
-                ></span>
-              </span>
-            </div>
+        {/* NEXT / PREV BUTTON — Hidden on mobile */}
+        <button
+          onClick={prevSlide}
+          className="cursor-pointer hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 text-[#0A2342] p-3 rounded-full shadow hover:bg-white transition"
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        <button
+          onClick={nextSlide}
+          className="cursor-pointer hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 text-[#0A2342] p-3 rounded-full shadow hover:bg-white transition"
+        >
+          <ChevronRight size={24} />
+        </button>
+
+        {/* DOTS */}
+        <div className="absolute bottom-8 w-full flex justify-center gap-3">
+          {images.map((_, index) => (
+            <div
+              key={index}
+              onClick={() => setCurrent(index)}
+              className={`w-3 h-3 rounded-full cursor-pointer transition 
+              ${index === current ? "bg-[#0A2342]" : "bg-white/60"}`}
+            ></div>
+          ))}
+        </div>
+      </div>
+      {/* <section className="relative -mt-16 z-20 pb-16">
+        <div className="container mx-auto px-6 lg:px-16 w-[80%]">
+          <div className="bg-white rounded-xl shadow-2xl p-10 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold text-[#0A2342]">
+              Find the Perfect Space for Your Corporate Needs
+            </h3>
+
+            <p className="text-gray-600 mt-2 text-lg">
+              {text}
+              <span className="inline-block w-[2px] h-5 bg-[#D4AF37] ml-1 animate-pulse"></span>
+            </p>
           </div>
         </div>
-      </section>
+      </section> */}
+
       <section>
-        <div className="container mx-auto px-6 lg:px-8 text-center">
+        <div className="container mx-auto px-6 pt-12 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-[#0A2342] mb-4">
             Why Travel With Us?
           </h2>
@@ -298,11 +310,11 @@ const HomePage = () => {
 
           {/* Carousel Wrapper */}
           <div className="relative w-full overflow-hidden">
-            <div className="flex gap-6 w-[200%] scroll-animation">
+            <div className="flex gap-6 w-[200%] my-2 scroll-animation">
               {[...blogs, ...blogs].map((blog, idx) => (
                 <a
                   key={idx}
-                  href={`${blog.slug}/blogs`}
+                  href={`${blog.slug}/detail`}
                   className="min-w-[280px] max-w-[280px] bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
                 >
                   <img

@@ -273,7 +273,7 @@ const ContactUs = () => {
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label
                     htmlFor="slug"
                     className="block text-sm font-medium text-gray-700"
@@ -290,7 +290,7 @@ const ContactUs = () => {
                     className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3
                                focus:border-[#D4AF37] focus:ring focus:ring-[#D4AF37] focus:ring-opacity-50"
                   />
-                </div>
+                </div> */}
                 <div>
                   <label
                     htmlFor="message"
@@ -372,7 +372,7 @@ const ContactUs = () => {
                 </h2>
                 <div className="rounded-lg overflow-hidden shadow-xl border-4 border-gray-200">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.218550125865!2d-73.9882500845936!3d40.75723097932697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c64c237b%3A0xc6c7b91dce7d11f7!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1678888888888"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62753.78966155843!2d-81.0469247!3d46.4927424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4d2e4fdbf1bd6e6f%3A0x5037b28c7231070!2sSudbury%2C%20ON%2C%20Canada!5e0!3m2!1sen!2sca!4v1700140540000"
                     width="100%"
                     height="350"
                     style={{ border: 0 }}

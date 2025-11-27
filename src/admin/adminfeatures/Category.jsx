@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DynamicTable from "../components/DynamicTable";
 import { categoryData, data } from "../../commons";
 import SearchInput from "../components/SearchInput";
 import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCategories,
+  getAllCategories,
+} from "../../toolkit/slices/serviceSlice";
 
 const Category = () => {
+  const { userId } = useParams();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.service.categoriesList);
   const [isForm, setIsForm] = useState(false);
   const [category, setCategory] = useState({
     name: "",
@@ -17,6 +25,10 @@ const Category = () => {
     slug: "",
     active: true,
   });
+
+  useEffect(() => {
+    dispatch(getAllCategories());
+  }, []);
 
   // Handle input change
   const handleChange = (e) => {
@@ -60,8 +72,17 @@ const Category = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit(category);
-    console.log("Form Data:", category);
+    dispatch(addCategories({ userId, data:category }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          alert("Category added successfully !.");
+          setIsForm(false);
+          dispatch(getAllCategories());
+        } else {
+          alert("Something went wrong !.");
+        }
+      })
+      .catch(() => alert("Something went wrong !."));
   };
 
   return (
@@ -73,17 +94,21 @@ const Category = () => {
             <SearchInput />
             <Button onClick={() => setIsForm(true)}>Add Category</Button>
           </div>
-          <DynamicTable columns={columns} data={categoryData} />
+          <DynamicTable columns={columns} data={data} />
         </>
       ) : (
         <div className="p-8">
           <div className="flex items-center gap-0.5">
-            <Button className="px-1.5 py-1" variant="ghost" onClick={() => setIsForm(false)}>
+            <Button
+              className="px-1.5 py-1"
+              variant="ghost"
+              onClick={() => setIsForm(false)}
+            >
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <h1 className="font-semibold font-sans text-2xl">Add category</h1>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
             <div>

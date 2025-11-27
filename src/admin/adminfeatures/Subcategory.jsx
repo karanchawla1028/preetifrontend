@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import SearchInput from "../components/SearchInput";
 import DynamicTable from "../components/DynamicTable";
 import { data, subcategoryData } from "../../commons";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { addSubCategories, getAllSubCategories } from "../../toolkit/slices/serviceSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Subcategory = () => {
-  const { categoryId } = useParams();
+  const { categoryId, userId } = useParams();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.service.subCategoriesList);
   const [isForm, setIsForm] = useState(false);
   const [subCategory, setSubCategory] = useState({
     name: "",
@@ -18,8 +22,12 @@ const Subcategory = () => {
     slug: "",
     active: true,
     displayStatus: true,
-    categoryId: 0,
+    categoryId: categoryId,
   });
+
+  useEffect(() => {
+    dispatch(getAllSubCategories());
+  }, []);
 
   // Handle field change
   const handleChange = (e) => {
@@ -67,8 +75,17 @@ const Subcategory = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit(subCategory);
-    console.log("SubCategory Data:", subCategory);
+    dispatch(addSubCategories({ userId, data: subCategory }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          alert("Category added successfully !.");
+          setIsForm(false);
+          dispatch(getAllSubCategories());
+        } else {
+          alert("Something went wrong !.");
+        }
+      })
+      .catch(() => alert("Something went wrong !."));
   };
 
   return (
@@ -80,7 +97,7 @@ const Subcategory = () => {
             <SearchInput />
             <Button onClick={() => setIsForm(true)}>Add Sub Category</Button>
           </div>
-          <DynamicTable columns={columns} data={subcategoryData} />
+          <DynamicTable columns={columns} data={data} />
         </>
       ) : (
         <div className="p-8">
