@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import hero from "../assets/ceoimg.png";
 import hero from "../assets/ceo.jpeg";
 import blog1 from "../assets/heroimage.png";
 import blog2 from "../assets/hero2.jpeg";
@@ -59,11 +58,7 @@ const wordsToType = [
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const [wordIndex, setWordIndex] = useState(0);
-  const [text, setText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const images = [blog1, blog2, blog3, blog4, blog5, blog6, blog7]; // add any number of images here
-
+  const images = [blog1, blog2, blog3, blog4, blog5, blog6, blog7];
   const [current, setCurrent] = useState(0);
 
   const prevSlide = () => {
@@ -77,42 +72,6 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(getBlogsList());
   }, []);
-
-  useEffect(() => {
-    const typeSpeed = 150;
-    const deleteSpeed = 75;
-    const pauseTime = 2000;
-
-    const handleTyping = () => {
-      const currentWord = wordsToType[wordIndex];
-
-      if (isDeleting) {
-        // Deleting
-        setText(currentWord.substring(0, text.length - 1));
-        if (text === "") {
-          setIsDeleting(false);
-          setWordIndex((prevIndex) => (prevIndex + 1) % wordsToType.length);
-        }
-      } else {
-        // Typing
-        setText(currentWord.substring(0, text.length + 1));
-        if (text === currentWord) {
-          // Pause at end of word
-          setTimeout(() => setIsDeleting(true), pauseTime);
-        }
-      }
-    };
-
-    const speed = isDeleting ? deleteSpeed : typeSpeed;
-    // Set timeout to run the typing function
-    const timer = setTimeout(
-      handleTyping,
-      text === wordsToType[wordIndex] ? pauseTime : speed
-    );
-
-    // Cleanup timeout on component unmount or state change
-    return () => clearTimeout(timer);
-  }, [text, isDeleting, wordIndex]);
 
   const features = [
     {
@@ -146,39 +105,40 @@ const HomePage = () => {
       name: "Meeting Space Booking",
       description:
         "Find and reserve the perfect venue for your corporate meetings or training sessions — anywhere in the world.",
-      img: meetingSpace, // Placeholder for a modern conference room
+      img: meetingSpace,
     },
     {
       name: "Corporate Hotel Stays",
       description:
         "Exclusive rates and group bookings tailored to your company’s travel needs.",
-      img: corporateHotel, // Placeholder for a luxury hotel room
+      img: corporateHotel,
     },
     {
       name: "Event Planning & Coordination",
       description:
         "From catering to AV setup — we handle the details so your event runs smoothly.",
-      img: eventPlanning, // Placeholder for a large event setup or launch
+      img: eventPlanning,
     },
     {
       name: "Corporate Travel Management",
       description:
         "Streamlined flight and transportation planning for your team or executives.",
-      img: corporateTravel, // Placeholder for a business lounge or airport
+      img: corporateTravel,
     },
   ];
 
+
   return (
     <main className="relative">
-      <div
-        className="relative bg-cover bg-center bg-no-repeat transition-all duration-700"
-        style={{ backgroundImage: `url(${images[current]})` }}
-      >
-        {/* Gradient overlays */}
+      <section className="relative w-full h-[500px] md:h-[650px] overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
+          style={{ backgroundImage: `url(${images[current]})` }}
+        ></div>
+
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2342]/40 via-transparent to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2342]/20 via-transparent to-transparent"></div>
 
-        {/* CONTENT */}
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
           <div className="text-center pt-24 pb-48 md:pt-32 md:pb-64">
             <h2 className="text-4xl md:text-6xl font-extrabold text-[#fafafa] leading-tight mb-4">
@@ -190,47 +150,33 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* NEXT / PREV BUTTON — Hidden on mobile */}
         <button
-          onClick={prevSlide}
-          className="cursor-pointer hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 text-[#0A2342] p-3 rounded-full shadow hover:bg-white transition"
+          onClick={nextSlide}
+          className="hidden md:flex absolute right-5 top-1/2 -translate-y-1/2 bg-white/70 text-[#0A2342] p-3 rounded-full shadow hover:bg-white z-20"
         >
-          <ChevronLeft size={24} />
+          <ChevronRight size={26} />
         </button>
 
         <button
-          onClick={nextSlide}
-          className="cursor-pointer hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 text-[#0A2342] p-3 rounded-full shadow hover:bg-white transition"
+          onClick={prevSlide}
+          className="hidden md:flex absolute left-5 top-1/2 -translate-y-1/2 bg-white/70 text-[#0A2342] p-3 rounded-full shadow hover:bg-white z-20"
         >
-          <ChevronRight size={24} />
+          <ChevronLeft size={26} />
         </button>
 
         {/* DOTS */}
-        <div className="absolute bottom-8 w-full flex justify-center gap-3">
+        <div className="absolute bottom-8 w-full flex justify-center gap-3 z-20">
           {images.map((_, index) => (
-            <div
+            <button
               key={index}
               onClick={() => setCurrent(index)}
-              className={`w-3 h-3 rounded-full cursor-pointer transition 
-              ${index === current ? "bg-[#0A2342]" : "bg-white/60"}`}
-            ></div>
+              className={`w-3 h-3 rounded-full transition border ${
+                current === index ? "bg-[#0A2342]" : "bg-white/60"
+              }`}
+            ></button>
           ))}
         </div>
-      </div>
-      {/* <section className="relative -mt-16 z-20 pb-16">
-        <div className="container mx-auto px-6 lg:px-16 w-[80%]">
-          <div className="bg-white rounded-xl shadow-2xl p-10 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold text-[#0A2342]">
-              Find the Perfect Space for Your Corporate Needs
-            </h3>
-
-            <p className="text-gray-600 mt-2 text-lg">
-              {text}
-              <span className="inline-block w-[2px] h-5 bg-[#D4AF37] ml-1 animate-pulse"></span>
-            </p>
-          </div>
-        </div>
-      </section> */}
+      </section>
 
       <section>
         <div className="container mx-auto px-6 pt-12 lg:px-8 text-center">
@@ -281,10 +227,8 @@ const HomePage = () => {
                   className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
 
-                {/* Gradient Overlay for Text Visibility */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
 
-                {/* Text Content */}
                 <div className="absolute bottom-0 left-0 p-4 text-left w-full">
                   <h3 className="text-xl font-bold text-white mb-1">
                     {solution.name}
@@ -308,7 +252,6 @@ const HomePage = () => {
             service updates.
           </p>
 
-          {/* Carousel Wrapper */}
           <div className="relative w-full overflow-hidden">
             <div className="flex gap-6 w-[200%] my-2 scroll-animation">
               {[...blogs, ...blogs].map((blog, idx) => (
