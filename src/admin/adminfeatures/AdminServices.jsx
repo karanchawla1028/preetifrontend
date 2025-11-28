@@ -206,14 +206,18 @@ const AdminServices = ({ onSubmit }) => {
 
             {/* Image */}
             <div>
-              <label className="block text-gray-700 mb-1">Image URL</label>
+              <label className="block text-gray-700 mb-1"> Image</label>
               <input
-                type="text"
+                type="file"
                 name="image"
-                value={service.image}
-                onChange={handleChange}
-                placeholder="Enter main image URL"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  handleChange({
+                    target: { name: "image", value: file?.name },
+                  });
+                }}
+                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 "
               />
             </div>
 

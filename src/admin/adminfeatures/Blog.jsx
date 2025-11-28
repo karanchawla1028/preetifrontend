@@ -83,7 +83,7 @@ const Blog = ({ onSubmit }) => {
             metaKeyword: "",
             metaDescription: "",
             slug: "",
-            thumbnailUrl: "",
+            image: "",
             active: true,
             showOnHome: true,
             categoryId: 0,
@@ -97,6 +97,8 @@ const Blog = ({ onSubmit }) => {
       })
       .catch(() => alert("Something went wrong ."));
   };
+
+  console.log("jdhjdevfrfbr", blog);
 
   return (
     <div className="flex flex-col gap-2">
@@ -197,16 +199,19 @@ const Blog = ({ onSubmit }) => {
               />
             </div>
 
-            {/* Thumbnail URL */}
+            {/* Image */}
             <div>
-              <label className="block text-gray-700 mb-1">Thumbnail URL</label>
+              <label className="block text-gray-700 mb-1"> Image</label>
+
               <input
-                type="text"
-                name="thumbnailUrl"
-                value={blog.thumbnailUrl}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter image URL"
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  handleChange({ target: { name: "image", value: file?.name } });
+                }}
+                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 "
               />
             </div>
 
