@@ -62,11 +62,6 @@ const Footer = () => {
               </a>
             </li>
             <li className="mb-2">
-              <a href="#" className="hover:underline text-gray-300">
-                Our Story
-              </a>
-            </li>
-            <li className="mb-2">
               <a href="/careers" className="hover:underline text-gray-300">
                 Careers
               </a>
