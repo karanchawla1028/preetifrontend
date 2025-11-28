@@ -170,7 +170,7 @@ const HomePage = () => {
             <button
               key={index}
               onClick={() => setCurrent(index)}
-              className={`w-3 h-3 rounded-full transition border ${
+              className={`w-3 h-3 rounded-full transition ${
                 current === index ? "bg-[#0A2342]" : "bg-white/60"
               }`}
             ></button>
