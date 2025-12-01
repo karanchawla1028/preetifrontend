@@ -5,10 +5,25 @@ import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlogs, getBlogsList } from "../../toolkit/slices/blogSlice";
 import TextEditor from "../../features/components/TextEditor";
+import Select from "../../features/components/Select";
+import {
+  getAllCategories,
+  getServiceBySubCategoryId,
+  getSubCategoryListByCategoryId,
+} from "../../toolkit/slices/serviceSlice";
+import FileUploader from "../components/FileUploader";
 
 const Blog = ({ onSubmit }) => {
   const dispatch = useDispatch();
   const blogList = useSelector((state) => state.blogs.blogList);
+  const categoryList = useSelector((state) => state.service.categoriesList);
+  const subCategoryList = useSelector(
+    (state) => state.service.subCategoryListByCategoryId
+  );
+  const serviceList = useSelector(
+    (state) => state.service.serviceListBySubCategoryId
+  );
+
   const [isForm, setIsForm] = useState(false);
   const [blog, setBlog] = useState({
     title: "",
@@ -58,7 +73,10 @@ const Blog = ({ onSubmit }) => {
     },
   ];
 
-  // Handle input changes
+  useEffect(() => {
+    dispatch(getAllCategories());
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setBlog((prev) => ({
@@ -132,6 +150,50 @@ const Blog = ({ onSubmit }) => {
               />
             </div>
 
+            <div>
+              <label className="block text-gray-700 mb-1">Category</label>
+              <Select
+                options={categoryList}
+                labelKey="name"
+                valueKey="id"
+                value={blog?.categoryId}
+                onChange={(val) => {
+                  setBlog((prev) => ({ ...prev, categoryId: val }));
+                  dispatch(getSubCategoryListByCategoryId(val));
+                }}
+                placeholder="select category"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-1">Sub Category</label>
+              <Select
+                options={subCategoryList}
+                labelKey="name"
+                valueKey="id"
+                value={blog?.subCategoryId}
+                onChange={(val) => {
+                  setBlog((prev) => ({ ...prev, subCategoryId: val }));
+                  dispatch(getServiceBySubCategoryId(val));
+                }}
+                placeholder="select category"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-1">Services</label>
+              <Select
+                options={serviceList}
+                labelKey="name"
+                valueKey="id"
+                value={blog?.categoryId}
+                onChange={(val) =>
+                  setBlog((prev) => ({ ...prev, categoryId: val }))
+                }
+                placeholder="select service"
+              />
+            </div>
+
             {/* Excerpt */}
             <div>
               <label className="block text-gray-700 mb-1">Excerpt</label>
@@ -202,16 +264,11 @@ const Blog = ({ onSubmit }) => {
             {/* Image */}
             <div>
               <label className="block text-gray-700 mb-1"> Image</label>
-
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  handleChange({ target: { name: "image", value: file?.name } });
-                }}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 "
+              <FileUploader
+                value={blog.image}
+                onChange={(url) => {
+                  console.log("djhjdshjdh",url)
+                  setBlog((prev) => ({ ...prev, image: url }))}}
               />
             </div>
 
@@ -237,58 +294,6 @@ const Blog = ({ onSubmit }) => {
                 className="w-5 h-5 text-blue-600"
               />
               <label className="text-gray-700">Show on Home Page</label>
-            </div>
-
-            {/* Category ID */}
-            <div>
-              <label className="block text-gray-700 mb-1">Category ID</label>
-              <input
-                type="number"
-                name="categoryId"
-                value={blog.categoryId}
-                onChange={handleChange}
-                min="0"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter category ID"
-              />
-            </div>
-
-            {/* Sub Category ID */}
-            <div>
-              <label className="block text-gray-700 mb-1">
-                Sub Category ID
-              </label>
-              <input
-                type="number"
-                name="subCategoryId"
-                value={blog.subCategoryId}
-                onChange={handleChange}
-                min="0"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter sub category ID"
-              />
-            </div>
-
-            {/* Service ID */}
-            <div>
-              <label className="block text-gray-700 mb-1">Service ID</label>
-              <input
-                type="number"
-                name="serviceId"
-                value={blog.serviceId}
-                onChange={handleChange}
-                min="0"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter service ID"
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 mb-1">Content</label>
-              <TextEditor
-                value={blog.content}
-                onChange={(e) => setBlog((prev) => ({ ...prev, content: e }))}
-              />
             </div>
 
             {/* Submit Button */}

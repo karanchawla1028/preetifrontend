@@ -25,7 +25,6 @@ export const getAllSubCategories = createAsyncThunk(
   }
 );
 
-
 export const addSubCategories = createAsyncThunk(
   "addSubCategories",
   async ({ userId, data }) => {
@@ -79,6 +78,22 @@ export const getServiceDetailBySlugName = createAsyncThunk(
   }
 );
 
+export const getSubCategoryListByCategoryId = createAsyncThunk(
+  "getSubCategoryListByCategoryId",
+  async (id) => {
+    const response = await api.get(`/api/subcategories/${id}`);
+    return response.data;
+  }
+);
+
+export const getServiceBySubCategoryId = createAsyncThunk(
+  "getServiceBySubCategoryId",
+  async (id) => {
+    const response = await api.get(`/api/subcategories/${id}`);
+    return response.data;
+  }
+);
+
 const serviceSlice = createSlice({
   name: "service",
   initialState: {
@@ -86,15 +101,17 @@ const serviceSlice = createSlice({
     serviceList: [],
     serviceDetail: {},
     serviceDetailBySlug: {},
-    categoriesList:[],
-    subCategoriesList:[]
+    categoriesList: [],
+    subCategoriesList: [],
+    subCategoryListByCategoryId: [],
+    serviceListBySubCategoryId: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllServices.pending, (state) => {
       state.loading = "pending";
     });
     builder.addCase(getAllServices.fulfilled, (state, action) => {
-      state.loading = "pending";
+      state.loading = "success";
       state.serviceList = action.payload;
     });
     builder.addCase(getAllServices.rejected, (state) => {
@@ -106,7 +123,7 @@ const serviceSlice = createSlice({
       state.loading = "pending";
     });
     builder.addCase(getSingleServiceById.fulfilled, (state, action) => {
-      state.loading = "pending";
+      state.loading = "success";
       state.serviceDetail = action.payload;
     });
     builder.addCase(getSingleServiceById.rejected, (state) => {
@@ -118,7 +135,7 @@ const serviceSlice = createSlice({
       state.loading = "pending";
     });
     builder.addCase(getServiceDetailBySlugName.fulfilled, (state, action) => {
-      state.loading = "pending";
+      state.loading = "success";
       state.serviceDetailBySlug = action.payload;
     });
     builder.addCase(getServiceDetailBySlugName.rejected, (state) => {
@@ -130,7 +147,7 @@ const serviceSlice = createSlice({
       state.loading = "pending";
     });
     builder.addCase(getAllCategories.fulfilled, (state, action) => {
-      state.loading = "pending";
+      state.loading = "success";
       state.categoriesList = action.payload;
     });
     builder.addCase(getAllCategories.rejected, (state) => {
@@ -138,17 +155,43 @@ const serviceSlice = createSlice({
       state.categoriesList = [];
     });
 
-
     builder.addCase(getAllSubCategories.pending, (state) => {
       state.loading = "pending";
     });
     builder.addCase(getAllSubCategories.fulfilled, (state, action) => {
-      state.loading = "pending";
+      state.loading = "success";
       state.subCategoriesList = action.payload;
     });
     builder.addCase(getAllSubCategories.rejected, (state) => {
       state.loading = "rejected";
       state.subCategoriesList = [];
+    });
+
+    builder.addCase(getSubCategoryListByCategoryId.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(
+      getSubCategoryListByCategoryId.fulfilled,
+      (state, action) => {
+        state.loading = "success";
+        state.subCategoryListByCategoryId = action.payload;
+      }
+    );
+    builder.addCase(getSubCategoryListByCategoryId.rejected, (state) => {
+      state.loading = "rejected";
+      state.subCategoryListByCategoryId = [];
+    });
+
+    builder.addCase(getServiceBySubCategoryId.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getServiceBySubCategoryId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.serviceListBySubCategoryId = action.payload;
+    });
+    builder.addCase(getServiceBySubCategoryId.rejected, (state) => {
+      state.loading = "rejected";
+      state.serviceListBySubCategoryId = [];
     });
   },
 });
