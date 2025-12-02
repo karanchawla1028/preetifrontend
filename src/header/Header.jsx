@@ -5,55 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllServices } from "../toolkit/slices/serviceSlice";
 import { getBlogsList } from "../toolkit/slices/blogSlice";
 
-// ===== Icons =====
-const PlaneIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="mr-2 inline-block"
-  >
-    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
-  </svg>
-);
-const HotelIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="mr-2 inline-block"
-  >
-    <path d="M2 22h20M5 22V7.5L12 2l7 5.5V22M10 22v-6M14 22v-6M12 7h.01M12 11h.01M12 15h.01" />
-  </svg>
-);
-const CarIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="mr-2 inline-block"
-  >
-    <path d="M18 13a4.5 4.5 0 0 0-4-4H8a4.5 4.5 0 0 0-4.5 4.5V17a3.5 3.5 0 0 0 3.5 3.5h11A3.5 3.5 0 0 0 21.5 17v-2.5a4.5 4.5 0 0 0-3.5-4.5Z" />
-  </svg>
-);
 const ChevronDownIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +44,6 @@ const navItems = (serviceList, blogList) => [
       <div className="p-3">
         <ul className="flex flex-col gap-1">
           {(serviceList?.length > 0 ? serviceList : [])?.map((service) => {
-            console.log("djbdjhdfj", service);
             return (
               <li
                 key={service?.uuid}
@@ -117,20 +67,19 @@ const navItems = (serviceList, blogList) => [
     content: (
       <div className="p-3">
         <ul className="flex flex-col gap-1">
-          {(blogList?.length > 0 && blogList) ||
-            []?.map((blog) => (
-              <li
-                key={blog?.uuid}
-                className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+          {(blogList?.length > 0 ? blogList : [])?.map((blog) => (
+            <li
+              key={blog?.uuid}
+              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+            >
+              <a
+                href={`/${blog.slug}/blogs`}
+                className="flex items-center text-gray-800"
               >
-                <a
-                  href={`/${blog.slug}/blogs`}
-                  className="flex items-center text-gray-800"
-                >
-                  {blog?.title}
-                </a>
-              </li>
-            ))}
+                {blog?.title}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     ),
