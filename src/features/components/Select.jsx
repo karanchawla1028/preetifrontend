@@ -22,12 +22,12 @@ const Select = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredOptions = options.filter((item) =>
-    item[labelKey].toLowerCase().includes(search.toLowerCase())
+  const filteredOptions = options?.filter((item) =>
+    item[labelKey]?.toLowerCase()?.includes(search?.toLowerCase())
   );
 
   const selectedLabel =
-    options.find((item) => item[valueKey] === value)?.[labelKey] || placeholder;
+    options?.find((item) => item[valueKey] === value)?.[labelKey] || placeholder;
 
   return (
     <div className="relative w-full" ref={ref}>
@@ -53,8 +53,8 @@ const Select = ({
           />
 
           {/* List */}
-          {filteredOptions.length > 0 ? (
-            filteredOptions.map((item) => (
+          {filteredOptions?.length > 0 ? (
+            filteredOptions?.map((item) => (
               <div
                 key={item[valueKey]}
                 className="px-3 py-2 hover:bg-gray-100 cursor-pointer"

@@ -14,7 +14,6 @@ export const addBlogs = createAsyncThunk(
   }
 );
 
-
 export const getBlogsList = createAsyncThunk("getBlogsList", async () => {
   const response = await api.get(`/blogs`);
   return response.data;
@@ -28,10 +27,10 @@ export const getBlogListByServiceId = createAsyncThunk(
   }
 );
 
-export const updateBlogById = createAsyncThunk(
-  "updateBlogById",
-  async ({ id, userId }) => {
-    const response = await api.put(`/blogs/${id}?userId=${userId}`);
+export const updateBlog = createAsyncThunk(
+  "updateBlog",
+  async ({ id, data }) => {
+    const response = await api.put(`/api/blogs/${id}?userId=${userId}`, data);
     return response.data;
   }
 );
@@ -53,7 +52,6 @@ export const getBlogDetailBySlugName = createAsyncThunk(
     return response.data;
   }
 );
-
 
 const blogSlice = createSlice({
   name: "blogs",

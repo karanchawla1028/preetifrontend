@@ -81,15 +81,15 @@ export const getServiceDetailBySlugName = createAsyncThunk(
 export const getSubCategoryListByCategoryId = createAsyncThunk(
   "getSubCategoryListByCategoryId",
   async (id) => {
-    const response = await api.get(`/api/subcategories/${id}`);
+    const response = await api.get(`/subcategories/by-category/${id}`);
     return response.data;
   }
 );
 
 export const getServiceBySubCategoryId = createAsyncThunk(
   "getServiceBySubCategoryId",
-  async (id) => {
-    const response = await api.get(`/api/subcategories/${id}`);
+  async (subCategoryId) => {
+    const response = await api.get(`/services/by-subcategory/${subCategoryId}`);
     return response.data;
   }
 );

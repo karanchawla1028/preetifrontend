@@ -3,7 +3,11 @@ import Button from "../components/Button";
 import SearchInput from "../components/SearchInput";
 import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
-import { addBlogs, getBlogsList } from "../../toolkit/slices/blogSlice";
+import {
+  addBlogs,
+  getBlogsList,
+  updateBlog,
+} from "../../toolkit/slices/blogSlice";
 import TextEditor from "../../features/components/TextEditor";
 import Select from "../../features/components/Select";
 import {
@@ -12,9 +16,19 @@ import {
   getSubCategoryListByCategoryId,
 } from "../../toolkit/slices/serviceSlice";
 import FileUploader from "../components/FileUploader";
+import { useToast } from "../../features/components/ToastProvider";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "../components/Dropdown";
+import { MoreHorizontal } from "lucide-react";
+import ImageUploader from "../components/ImageUploader";
 
 const Blog = ({ onSubmit }) => {
   const dispatch = useDispatch();
+  const { showToast } = useToast();
   const blogList = useSelector((state) => state.blogs.blogList);
   const categoryList = useSelector((state) => state.service.categoriesList);
   const subCategoryList = useSelector(
@@ -24,7 +38,10 @@ const Blog = ({ onSubmit }) => {
     (state) => state.service.serviceListBySubCategoryId
   );
 
+  console.log("djhbdfbfgb",subCategoryList)
+
   const [isForm, setIsForm] = useState(false);
+  const [rowItem, setRowItem] = useState(null);
   const [blog, setBlog] = useState({
     title: "",
     excerpt: "",
@@ -38,12 +55,32 @@ const Blog = ({ onSubmit }) => {
     categoryId: 0,
     subCategoryId: 0,
     serviceId: 0,
-    content: "<p></p>",
   });
 
   useEffect(() => {
     dispatch(getBlogsList());
   }, []);
+
+  const handleEdit = (rowData) => {
+    dispatch(getSubCategoryListByCategoryId(rowData?.categoryId));
+    dispatch(getServiceBySubCategoryId(rowData?.subCategoryId));
+    setBlog({
+      title: rowData?.title,
+      excerpt: rowData?.excerpt,
+      metaTitle: rowData?.metaTitle,
+      metaKeyword: rowData?.metaKeyword,
+      metaDescription: rowData?.metaDescription,
+      slug: rowData?.slug,
+      thumbnailUrl: rowData?.thumbnailUrl,
+      active: rowData?.active,
+      showOnHome: rowData?.showOnHome,
+      categoryId: rowData?.categoryId,
+      subCategoryId: rowData?.subCategoryId,
+      serviceId: rowData?.serviceId,
+    });
+    setIsForm(true);
+    setRowItem(rowData);
+  };
 
   const columns = [
     {
@@ -71,6 +108,32 @@ const Blog = ({ onSubmit }) => {
       title: "Description",
       dataIndex: "metaDescription",
     },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (value, rowData) => {
+        return (
+          <div className="p-10 flex gap-4">
+            <Dropdown>
+              <DropdownTrigger>
+                <button className="p-2 rounded-lg bg-white hover:bg-gray-50 cursor-pointer">
+                  <MoreHorizontal />
+                </button>
+              </DropdownTrigger>
+
+              <DropdownMenu>
+                <DropdownItem key={"edit"} onClick={() => handleEdit(rowData)}>
+                  Edit
+                </DropdownItem>
+                <DropdownItem color="danger" key={"delete"}>
+                  Delete file
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        );
+      },
+    },
   ];
 
   useEffect(() => {
@@ -88,35 +151,90 @@ const Blog = ({ onSubmit }) => {
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit(blog);
-    console.log("Blog Data:", blog);
-    dispatch(addBlogs({ userId: 1, data: blog }))
-      .then((resp) => {
-        if (resp.meta.requestStatus === "fulfilled") {
-          alert("Blog posted successfully.");
-          setBlog({
-            title: "",
-            excerpt: "",
-            metaTitle: "",
-            metaKeyword: "",
-            metaDescription: "",
-            slug: "",
-            image: "",
-            active: true,
-            showOnHome: true,
-            categoryId: 0,
-            subCategoryId: 0,
-            serviceId: 0,
-          });
-          setIsForm(false);
-        } else {
-          alert("Something went wrong .");
-        }
-      })
-      .catch(() => alert("Something went wrong ."));
+    if (rowItem) {
+      dispatch(updateBlog({ id: rowItem?.id, userId: 1, data: blog }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            showToast({
+              title: "Blogs updated",
+              description: "Blog updated successfully !.",
+              status: "success",
+            });
+            setBlog({
+              title: "",
+              excerpt: "",
+              metaTitle: "",
+              metaKeyword: "",
+              metaDescription: "",
+              slug: "",
+              image: "",
+              active: true,
+              showOnHome: true,
+              categoryId: 0,
+              subCategoryId: 0,
+              serviceId: 0,
+            });
+            setIsForm(false);
+            dispatch(getAllCategories());
+            setRowItem(null);
+          } else {
+            showToast({
+              title: "Error",
+              description: "Something went wrong !.",
+              status: "error",
+            });
+          }
+        })
+        .catch(() =>
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          })
+        );
+    } else {
+      dispatch(addBlogs({ userId: 1, data: blog }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            alert("Blog posted successfully.");
+            showToast({
+              title: "Blogs added",
+              description: "Blog added successfully !.",
+              status: "success",
+            });
+            setBlog({
+              title: "",
+              excerpt: "",
+              metaTitle: "",
+              metaKeyword: "",
+              metaDescription: "",
+              slug: "",
+              image: "",
+              active: true,
+              showOnHome: true,
+              categoryId: 0,
+              subCategoryId: 0,
+              serviceId: 0,
+            });
+            setIsForm(false);
+            dispatch(getAllCategories());
+          } else {
+            showToast({
+              title: "Error",
+              description: "Something went wrong !.",
+              status: "error",
+            });
+          }
+        })
+        .catch(() =>
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          })
+        );
+    }
   };
-
-  console.log("jdhjdevfrfbr", blog);
 
   return (
     <div className="flex flex-col gap-2">
@@ -132,7 +250,7 @@ const Blog = ({ onSubmit }) => {
       ) : (
         <div className="w-[80%] mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
           <h2 className="text-2xl font-semibold mb-4 text-center">
-            Create Blog
+            {rowItem ? "Update blog" : "Create blog"}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4 w-full">
@@ -153,7 +271,7 @@ const Blog = ({ onSubmit }) => {
             <div>
               <label className="block text-gray-700 mb-1">Category</label>
               <Select
-                options={categoryList}
+                options={categoryList || []}
                 labelKey="name"
                 valueKey="id"
                 value={blog?.categoryId}
@@ -176,7 +294,7 @@ const Blog = ({ onSubmit }) => {
                   setBlog((prev) => ({ ...prev, subCategoryId: val }));
                   dispatch(getServiceBySubCategoryId(val));
                 }}
-                placeholder="select category"
+                placeholder="select subcategory"
               />
             </div>
 
@@ -186,9 +304,9 @@ const Blog = ({ onSubmit }) => {
                 options={serviceList}
                 labelKey="name"
                 valueKey="id"
-                value={blog?.categoryId}
+                value={blog?.serviceId}
                 onChange={(val) =>
-                  setBlog((prev) => ({ ...prev, categoryId: val }))
+                  setBlog((prev) => ({ ...prev, serviceId: val }))
                 }
                 placeholder="select service"
               />
@@ -264,12 +382,7 @@ const Blog = ({ onSubmit }) => {
             {/* Image */}
             <div>
               <label className="block text-gray-700 mb-1"> Image</label>
-              <FileUploader
-                value={blog.image}
-                onChange={(url) => {
-                  console.log("djhjdshjdh",url)
-                  setBlog((prev) => ({ ...prev, image: url }))}}
-              />
+              <ImageUploader/>
             </div>
 
             {/* Active Checkbox */}
