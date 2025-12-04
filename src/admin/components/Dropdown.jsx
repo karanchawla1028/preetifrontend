@@ -1,72 +1,129 @@
-import React, { useState, useRef, useEffect, createContext, useContext } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState, useRef, useEffect, cloneElement } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
-const DropdownContext = createContext();
+export default function Dropdown({
+  children,
+  items = [],
+  open: controlledOpen,
+  onOpenChange,
+}) {
+  const isControlled = controlledOpen !== undefined;
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
 
-export const Dropdown = ({ children }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
+  const setOpen = (value) => {
+    if (!isControlled) setUncontrolledOpen(value);
+    onOpenChange?.(value);
+  };
 
-  // outside click close
+  const triggerRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const [coords, setCoords] = useState({
+    top: 0,
+    left: 0,
+    placement: "bottom-left",
+  });
+
+  // ----------------- OUTSIDE CLICK -----------------
   useEffect(() => {
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
+    if (!open) return;
+
+    const handleClick = (e) => {
+      const triggerEl = triggerRef.current;
+      const menuEl = menuRef.current;
+
+      if (
+        menuEl &&
+        !menuEl.contains(e.target) &&
+        triggerEl &&
+        !triggerEl.contains(e.target)
+      ) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
-  return (
-    <DropdownContext.Provider value={{ open, setOpen }}>
-      <div className="relative inline-block" ref={ref}>{children}</div>
-    </DropdownContext.Provider>
-  );
-};
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
 
-export const DropdownTrigger = ({ children }) => {
-  const { setOpen, open } = useContext(DropdownContext);
-  return (
-    <div onClick={() => setOpen(!open)} className="cursor-pointer inline-block">
-      {children}
-    </div>
-  );
-};
+  // ----------------- AUTO PLACEMENT -----------------
+  useEffect(() => {
+    if (!open || !triggerRef.current || !menuRef.current) return;
 
-export const DropdownMenu = ({ children }) => {
-  const { open } = useContext(DropdownContext);
+    const trigger = triggerRef.current.getBoundingClientRect();
+    const menuHeight = menuRef.current.offsetHeight;
+    const menuWidth = menuRef.current.offsetWidth;
 
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, y: -8, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -8, scale: 0.98 }}
-          transition={{ duration: 0.18 }}
-          className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-xl shadow-lg py-2 z-[999]"
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
+    let placement = "bottom-left";
 
-export const DropdownItem = ({ children, color, onClick }) => {
-  const getColor = () => {
-    if (color === "danger") return "text-red-600 hover:bg-red-50";
-    if (color === "warning") return "text-yellow-600 hover:bg-yellow-50";
-    return "hover:bg-gray-100";
+    if (trigger.bottom + menuHeight > window.innerHeight) placement = "top-left";
+    if (trigger.left + menuWidth > window.innerWidth)
+      placement = placement.replace("left", "right");
+
+    const positions = {
+      "bottom-left": { top: trigger.bottom + 6, left: trigger.left },
+      "bottom-right": { top: trigger.bottom + 6, left: trigger.right - menuWidth },
+      "top-left": { top: trigger.top - menuHeight - 6, left: trigger.left },
+      "top-right": { top: trigger.top - menuHeight - 6, left: trigger.right - menuWidth },
+    };
+
+    setCoords({ ...positions[placement], placement });
+  }, [open]);
+
+  // ----------------- ITEM CLICK HANDLER -----------------
+  const handleItemClick = (item) => {
+    item.onClick?.();
+    // Only close if explicitly required
+    if (!item.noClose) setOpen(false);
   };
 
   return (
-    <div
-      onClick={onClick}
-      className={`px-4 py-2 text-sm cursor-pointer flex items-center gap-2 transition ${getColor()}`}
-    >
-      {children}
-    </div>
+    <>
+      {/* Trigger */}
+      <div ref={triggerRef} className="inline-block">
+        {cloneElement(children, {
+          onClick: (e) => {
+            e.stopPropagation(); // prevent immediate outside click
+            setOpen(!open);
+          },
+        })}
+      </div>
+
+      {/* Dropdown Portal */}
+      {createPortal(
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              ref={menuRef}
+              initial={{ opacity: 0, scale: 0.95, y: -4 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -4 }}
+              transition={{ duration: 0.16 }}
+              style={{
+                position: "fixed",
+                top: coords.top,
+                left: coords.left,
+                zIndex: 99999999,
+              }}
+              className="bg-gray-50 border border-gray-200 shadow-2xl rounded-lg p-1 w-48"
+              onClick={(e) => e.stopPropagation()} // keep dropdown open when clicking inside
+            >
+              {items.map((item) => (
+                <div
+                  key={item.key}
+                  onClick={() => handleItemClick(item)}
+                  className="px-3 py-2 cursor-pointer rounded-md hover:bg-gray-100"
+                >
+                  {item.label}
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
-};
+}

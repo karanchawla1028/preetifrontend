@@ -62,28 +62,28 @@ const navItems = (serviceList, blogList) => [
       </div>
     ),
   },
-  {
-    name: "Blogs",
-    content: (
-      <div className="p-3">
-        <ul className="flex flex-col gap-1">
-          {(blogList?.length > 0 ? blogList : [])?.map((blog) => (
-            <li
-              key={blog?.uuid}
-              className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
-            >
-              <a
-                href={`/${blog.slug}/blogs`}
-                className="flex items-center text-gray-800"
-              >
-                {blog?.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    ),
-  },
+  // {
+  //   name: "Blogs",
+  //   content: (
+  //     <div className="p-3">
+  //       <ul className="flex flex-col gap-1">
+  //         {(blogList?.length > 0 ? blogList : [])?.map((blog) => (
+  //           <li
+  //             key={blog?.uuid}
+  //             className="hover:bg-blue-50 px-4 py-2 rounded-md transition-all"
+  //           >
+  //             <a
+  //               href={`/${blog.slug}/blogs`}
+  //               className="flex items-center text-gray-800"
+  //             >
+  //               {blog?.title}
+  //             </a>
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     </div>
+  //   ),
+  // },
 ];
 
 // ===== Mobile Nav Data =====
@@ -95,13 +95,13 @@ const mobileNavItems = (serviceList, blogList) => [
       slug: item?.slug,
     })),
   },
-  {
-    title: "Blogs",
-    subTitles: (blogList?.length > 0 ? blogList : [])?.map((blog) => ({
-      name: blog?.title,
-      slug: blog?.slug,
-    })),
-  },
+  // {
+  //   title: "Blogs",
+  //   subTitles: (blogList?.length > 0 ? blogList : [])?.map((blog) => ({
+  //     name: blog?.title,
+  //     slug: blog?.slug,
+  //   })),
+  // },
 ];
 
 // ===== Accordion for Mobile =====
@@ -190,6 +190,12 @@ const MobileDrawer = ({ isOpen, onClose, navigate, serviceList, blogList }) => {
                 onToggle={() => setActiveIndex(activeIndex === i ? null : i)}
               />
             ))}
+          <a
+            href="/blogs"
+            className="flex justify-between w-full items-center p-4 text-white"
+          >
+            Blogs
+          </a>
           <a
             href="/aboutus"
             className="flex justify-between w-full items-center p-4 text-white"
@@ -286,6 +292,12 @@ const Header = () => {
                 </div>
               ))}
             <div className="relative">
+              <a
+                href="/blogs"
+                className="hover:text-[#D4AF37] transition font-medium cursor-pointer"
+              >
+                Blogs
+              </a>
               <a
                 href="/aboutus"
                 className="hover:text-[#D4AF37] transition font-medium cursor-pointer"

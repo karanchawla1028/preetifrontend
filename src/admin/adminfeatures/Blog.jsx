@@ -1,35 +1,29 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "../components/Button";
-import SearchInput from "../components/SearchInput";
-import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addBlogs,
   getBlogsList,
   updateBlog,
 } from "../../toolkit/slices/blogSlice";
-import TextEditor from "../../features/components/TextEditor";
 import Select from "../../features/components/Select";
 import {
   getAllCategories,
   getServiceBySubCategoryId,
   getSubCategoryListByCategoryId,
 } from "../../toolkit/slices/serviceSlice";
-import FileUploader from "../components/FileUploader";
 import { useToast } from "../../features/components/ToastProvider";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "../components/Dropdown";
-import { MoreHorizontal } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import ImageUploader from "../components/ImageUploader";
+import Table from "../components/Table";
+import PopConfirm from "../components/Popconfirm";
+import Input from "../components/Input";
+import Dropdown from "../components/Dropdown";
 
 const Blog = ({ onSubmit }) => {
   const dispatch = useDispatch();
   const { showToast } = useToast();
-  const blogList = useSelector((state) => state.blogs.blogList);
+  const data = useSelector((state) => state.blogs.blogList);
   const categoryList = useSelector((state) => state.service.categoriesList);
   const subCategoryList = useSelector(
     (state) => state.service.subCategoryListByCategoryId
@@ -37,9 +31,8 @@ const Blog = ({ onSubmit }) => {
   const serviceList = useSelector(
     (state) => state.service.serviceListBySubCategoryId
   );
-
-  console.log("djhbdfbfgb",subCategoryList)
-
+  const [search, setSearch] = useState("");
+  const [openDropdowns, setOpenDropdowns] = useState({});
   const [isForm, setIsForm] = useState(false);
   const [rowItem, setRowItem] = useState(null);
   const [blog, setBlog] = useState({
@@ -60,6 +53,15 @@ const Blog = ({ onSubmit }) => {
   useEffect(() => {
     dispatch(getBlogsList());
   }, []);
+
+  const filteredData = useMemo(() => {
+    if (!search) return data;
+    return data?.filter((item) =>
+      Object.values(item).join(" ").toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search, data]);
+
+  const handleDelete = () => {};
 
   const handleEdit = (rowData) => {
     dispatch(getSubCategoryListByCategoryId(rowData?.categoryId));
@@ -90,47 +92,60 @@ const Blog = ({ onSubmit }) => {
     {
       title: "Title",
       dataIndex: "title",
-      render: (value, rowData) => <p>{value}</p>,
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Meta title",
       dataIndex: "metaTitle",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Meta keyword",
       dataIndex: "metaKeyword",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Slug",
       dataIndex: "slug",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Description",
       dataIndex: "metaDescription",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
-      title: "Action",
-      dataIndex: "action",
-      render: (value, rowData) => {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (value, record, rowIndex) => {
+        const isOpen = openDropdowns[record.id] || false; // or record._id, whatever unique
         return (
-          <div className="p-10 flex gap-4">
-            <Dropdown>
-              <DropdownTrigger>
-                <button className="p-2 rounded-lg bg-white hover:bg-gray-50 cursor-pointer">
-                  <MoreHorizontal />
-                </button>
-              </DropdownTrigger>
-
-              <DropdownMenu>
-                <DropdownItem key={"edit"} onClick={() => handleEdit(rowData)}>
-                  Edit
-                </DropdownItem>
-                <DropdownItem color="danger" key={"delete"}>
-                  Delete file
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
+          <Dropdown
+            open={isOpen}
+            onOpenChange={(open) =>
+              setOpenDropdowns((prev) => ({ ...prev, [record.id]: open }))
+            }
+            items={[
+              { key: 1, label: "edit", onClick: () => handleEdit(record) },
+              {
+                key: 2,
+                label: (
+                  <PopConfirm
+                    title="Are you sure you want to delete?"
+                    onConfirm={() => handleDelete(record)}
+                    onCancel={() => console.log("Cancel")}
+                  >
+                    <div className="text-red-600">Delete</div>
+                  </PopConfirm>
+                ),
+                noClose: true,
+              },
+            ]}
+          >
+            <Button size="small" variant="secondary">
+              <EllipsisVertical />
+            </Button>
+          </Dropdown>
         );
       },
     },
@@ -236,16 +251,33 @@ const Blog = ({ onSubmit }) => {
     }
   };
 
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex justify-between items-center">
+        <Input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          showIcon
+          onChange={(e) => setSearch(e.target.value)}
+          wrapperClassName="w-80"
+        />
+        <Button onClick={() => setIsForm(true)}>Add blog</Button>
+      </div>
+    );
+  }, [search]);
+
   return (
     <div className="flex flex-col gap-2">
       {!isForm ? (
         <>
-          <h2 className="font-semibold font-sans text-xl">Blogs</h2>
-          <div className="flex justify-between items-center">
-            <SearchInput />
-            <Button onClick={() => setIsForm(true)}>Add blog</Button>
-          </div>
-          <DynamicTable columns={columns} data={blogList} />
+          <h2 className="text-lg font-semibold">Blogs list</h2>
+          <Table
+            columns={columns}
+            dataSource={filteredData}
+            topContent={topContent}
+            className="w-full"
+          />
         </>
       ) : (
         <div className="w-[80%] mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
@@ -382,7 +414,7 @@ const Blog = ({ onSubmit }) => {
             {/* Image */}
             <div>
               <label className="block text-gray-700 mb-1"> Image</label>
-              <ImageUploader/>
+              <ImageUploader />
             </div>
 
             {/* Active Checkbox */}
