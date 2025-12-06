@@ -3,9 +3,15 @@ import Button from "../components/Button";
 import SearchInput from "../components/SearchInput";
 import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
-import { addBlogs, getBlogsList } from "../../toolkit/slices/blogSlice";
+import {
+  addBlogs,
+  getBlogById,
+  getBlogsList,
+} from "../../toolkit/slices/blogSlice";
 import TextEditor from "../../features/components/TextEditor";
 import { useParams } from "react-router-dom";
+import ImageUploader from "../components/ImageUploader";
+import { ArrowLeft } from "lucide-react";
 
 const BlogsDetail = ({ onSubmit }) => {
   const dispatch = useDispatch();
@@ -22,8 +28,8 @@ const BlogsDetail = ({ onSubmit }) => {
   });
 
   useEffect(() => {
-    dispatch(getBlogsList());
-  }, []);
+    dispatch(getBlogById(blogId));
+  }, [blogId]);
 
   const columns = [
     {
@@ -53,9 +59,9 @@ const BlogsDetail = ({ onSubmit }) => {
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit(blog);
-    console.log("Blog Data:", blog);
-    dispatch(addBlogs({ userId: 1, data: blog }))
+    if (onSubmit) onSubmit(blogDetail);
+    console.log("blogDetail Data:", blogDetail);
+    dispatch(addBlogs({ userId: 1, data: blogDetail }))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           alert("Blog posted successfully.");
@@ -88,9 +94,18 @@ const BlogsDetail = ({ onSubmit }) => {
         </>
       ) : (
         <div className="w-[80%] mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
-          <h2 className="text-2xl font-semibold mb-4 text-center">
-            Create Blog Details
-          </h2>
+          <div className="flex items-center gap-0.5 mb-2">
+            <Button
+              className="px-1.5 py-1"
+              variant="ghost"
+              onClick={() => setIsForm(false)}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h2 className="text-2xl font-semibold mb-0 text-center">
+              Create Blog Details
+            </h2>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 w-full">
             {/* Title */}
@@ -110,13 +125,11 @@ const BlogsDetail = ({ onSubmit }) => {
             {/* Meta Title */}
             <div>
               <label className="block text-gray-700 mb-1">Image url</label>
-              <input
-                type="text"
-                name="imageUrl"
-                value={blogDetail.imageUrl}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter meta title"
+              <ImageUploader
+                value={blogDetail?.imageUrl}
+                onChange={(e) =>
+                  setBlogDetail((prev) => ({ ...prev, imageUrl: e?.name }))
+                }
               />
             </div>
 
@@ -140,7 +153,7 @@ const BlogsDetail = ({ onSubmit }) => {
               </label>
               <textarea
                 name="metaDescription"
-                value={blog.metaDescription}
+                value={blogDetail.metaDescription}
                 onChange={handleChange}
                 rows="2"
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
@@ -154,7 +167,7 @@ const BlogsDetail = ({ onSubmit }) => {
               <input
                 type="text"
                 name="slug"
-                value={blog.slug}
+                value={blogDetail.slug}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter blog slug (URL-friendly)"
@@ -164,13 +177,11 @@ const BlogsDetail = ({ onSubmit }) => {
             {/* Thumbnail URL */}
             <div>
               <label className="block text-gray-700 mb-1">Thumbnail URL</label>
-              <input
-                type="text"
-                name="thumbnailUrl"
-                value={blog.thumbnailUrl}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter image URL"
+              <ImageUploader
+                value={blogDetail?.thumbnailUrl}
+                onChange={(e) =>
+                  setBlogDetail((prev) => ({ ...prev, thumbnailUrl: e?.name }))
+                }
               />
             </div>
 
@@ -186,16 +197,16 @@ const BlogsDetail = ({ onSubmit }) => {
               <label className="text-gray-700">Active</label>
             </div>
 
-
             <div>
               <label className="block text-gray-700 mb-1">Content</label>
               <TextEditor
                 value={blogDetail.content}
-                onChange={(e) => setBlogDetail((prev) => ({ ...prev, content: e }))}
+                onChange={(e) =>
+                  setBlogDetail((prev) => ({ ...prev, content: e }))
+                }
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"

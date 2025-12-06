@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addBlogs,
+  deleteBlogById,
   getBlogsList,
   updateBlog,
 } from "../../toolkit/slices/blogSlice";
@@ -19,9 +20,30 @@ import Table from "../components/Table";
 import PopConfirm from "../components/Popconfirm";
 import Input from "../components/Input";
 import Dropdown from "../components/Dropdown";
+import { Link, useParams } from "react-router-dom";
+import Modal from "../components/Modal";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-const Blog = ({ onSubmit }) => {
+const blogSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  excerpt: z.string().optional(),
+  metaTitle: z.string().optional(),
+  metaKeyword: z.string().optional(),
+  metaDescription: z.string().optional(),
+  slug: z.string().optional(),
+  thumbnailUrl: z.string().optional(),
+  active: z.boolean().default(true),
+  showOnHome: z.boolean().default(true),
+  categoryId: z.number().min(1, "Select category"),
+  subCategoryId: z.number().min(1, "Select subcategory"),
+  serviceId: z.number().min(1, "Select service"),
+});
+
+const Blog = () => {
   const dispatch = useDispatch();
+  const { userId } = useParams();
   const { showToast } = useToast();
   const data = useSelector((state) => state.blogs.blogList);
   const categoryList = useSelector((state) => state.service.categoriesList);
@@ -35,20 +57,6 @@ const Blog = ({ onSubmit }) => {
   const [openDropdowns, setOpenDropdowns] = useState({});
   const [isForm, setIsForm] = useState(false);
   const [rowItem, setRowItem] = useState(null);
-  const [blog, setBlog] = useState({
-    title: "",
-    excerpt: "",
-    metaTitle: "",
-    metaKeyword: "",
-    metaDescription: "",
-    slug: "",
-    thumbnailUrl: "",
-    active: true,
-    showOnHome: true,
-    categoryId: 0,
-    subCategoryId: 0,
-    serviceId: 0,
-  });
 
   useEffect(() => {
     dispatch(getBlogsList());
@@ -61,27 +69,76 @@ const Blog = ({ onSubmit }) => {
     );
   }, [search, data]);
 
-  const handleDelete = () => {};
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(blogSchema),
+    defaultValues: {
+      title: "",
+      excerpt: "",
+      metaTitle: "",
+      metaKeyword: "",
+      metaDescription: "",
+      slug: "",
+      thumbnailUrl: "",
+      active: true,
+      showOnHome: true,
+      categoryId: 0,
+      subCategoryId: 0,
+      serviceId: 0,
+    },
+  });
+
+  const handleDelete = (rowData) => {
+    dispatch(deleteBlogById({ id: rowData?.id, userId }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          showToast({
+            title: "Success",
+            description: "Blog deleted successfully !.",
+            status: "success",
+          });
+          dispatch(getBlogsList());
+        } else {
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          });
+        }
+      })
+      .catch(() =>
+        showToast({
+          title: "Error",
+          description: "Something went wrong !.",
+          status: "error",
+        })
+      );
+  };
 
   const handleEdit = (rowData) => {
-    dispatch(getSubCategoryListByCategoryId(rowData?.categoryId));
-    dispatch(getServiceBySubCategoryId(rowData?.subCategoryId));
-    setBlog({
-      title: rowData?.title,
-      excerpt: rowData?.excerpt,
-      metaTitle: rowData?.metaTitle,
-      metaKeyword: rowData?.metaKeyword,
-      metaDescription: rowData?.metaDescription,
-      slug: rowData?.slug,
-      thumbnailUrl: rowData?.thumbnailUrl,
-      active: rowData?.active,
-      showOnHome: rowData?.showOnHome,
-      categoryId: rowData?.categoryId,
-      subCategoryId: rowData?.subCategoryId,
-      serviceId: rowData?.serviceId,
+    dispatch(getSubCategoryListByCategoryId(rowData.categoryId));
+    dispatch(getServiceBySubCategoryId(rowData.subCategoryId));
+    reset({
+      title: rowData.title,
+      excerpt: rowData.excerpt,
+      metaTitle: rowData.metaTitle,
+      metaKeyword: rowData.metaKeyword,
+      metaDescription: rowData.metaDescription,
+      slug: rowData.slug,
+      thumbnailUrl: rowData.thumbnailUrl,
+      active: rowData.active,
+      showOnHome: rowData.showOnHome,
+      categoryId: rowData.categoryId,
+      subCategoryId: rowData.subCategoryId,
+      serviceId: rowData.serviceId,
     });
-    setIsForm(true);
     setRowItem(rowData);
+    setIsForm(true);
   };
 
   const columns = [
@@ -92,7 +149,14 @@ const Blog = ({ onSubmit }) => {
     {
       title: "Title",
       dataIndex: "title",
-      render: (value, rowData) => <p className="text-wrap">{value}</p>,
+      render: (value, rowData) => (
+        <Link
+          to={`${rowData?.id}/blogDetail`}
+          className="text-wrap text-blue-600"
+        >
+          {value}
+        </Link>
+      ),
     },
     {
       title: "Meta title",
@@ -155,39 +219,17 @@ const Blog = ({ onSubmit }) => {
     dispatch(getAllCategories());
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setBlog((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
   // Submit handler
-  const handleSubmit = (e) => {
+  const handleformSubmit = (data) => {
     e.preventDefault();
     if (rowItem) {
-      dispatch(updateBlog({ id: rowItem?.id, userId: 1, data: blog }))
+      dispatch(updateBlog({ id: rowItem?.id, userId, data }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             showToast({
               title: "Blogs updated",
               description: "Blog updated successfully !.",
               status: "success",
-            });
-            setBlog({
-              title: "",
-              excerpt: "",
-              metaTitle: "",
-              metaKeyword: "",
-              metaDescription: "",
-              slug: "",
-              image: "",
-              active: true,
-              showOnHome: true,
-              categoryId: 0,
-              subCategoryId: 0,
-              serviceId: 0,
             });
             setIsForm(false);
             dispatch(getAllCategories());
@@ -208,28 +250,13 @@ const Blog = ({ onSubmit }) => {
           })
         );
     } else {
-      dispatch(addBlogs({ userId: 1, data: blog }))
+      dispatch(addBlogs({ userId, data }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
-            alert("Blog posted successfully.");
             showToast({
               title: "Blogs added",
               description: "Blog added successfully !.",
               status: "success",
-            });
-            setBlog({
-              title: "",
-              excerpt: "",
-              metaTitle: "",
-              metaKeyword: "",
-              metaDescription: "",
-              slug: "",
-              image: "",
-              active: true,
-              showOnHome: true,
-              categoryId: 0,
-              subCategoryId: 0,
-              serviceId: 0,
             });
             setIsForm(false);
             dispatch(getAllCategories());
@@ -269,188 +296,255 @@ const Blog = ({ onSubmit }) => {
 
   return (
     <div className="flex flex-col gap-2">
-      {!isForm ? (
-        <>
-          <h2 className="text-lg font-semibold">Blogs list</h2>
-          <Table
-            columns={columns}
-            dataSource={filteredData}
-            topContent={topContent}
-            className="w-full"
-          />
-        </>
-      ) : (
-        <div className="w-[80%] mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
-          <h2 className="text-2xl font-semibold mb-4 text-center">
-            {rowItem ? "Update blog" : "Create blog"}
-          </h2>
+      <h2 className="text-lg font-semibold">Blogs list</h2>
+      <Table
+        columns={columns}
+        dataSource={filteredData}
+        topContent={topContent}
+        className="w-full"
+      />
 
-          <form onSubmit={handleSubmit} className="space-y-4 w-full">
-            {/* Title */}
-            <div>
-              <label className="block text-gray-700 mb-1">Title</label>
-              <input
-                type="text"
-                name="title"
-                value={blog.title}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter blog title"
-                required
-              />
-            </div>
+      <Modal
+        title={rowItem ? "Update blog" : "Create blog"}
+        width={"70%"}
+        open={isForm}
+        onCancel={() => setIsForm(false)}
+        onOk={handleSubmit(handleformSubmit)}
+      >
+        <form className="space-y-4 max-h-[70vh] overflow-auto">
+          {/* TITLE */}
 
-            <div>
-              <label className="block text-gray-700 mb-1">Category</label>
-              <Select
-                options={categoryList || []}
-                labelKey="name"
-                valueKey="id"
-                value={blog?.categoryId}
-                onChange={(val) => {
-                  setBlog((prev) => ({ ...prev, categoryId: val }));
-                  dispatch(getSubCategoryListByCategoryId(val));
-                }}
-                placeholder="select category"
-              />
-            </div>
+          <div className="flex flex-col">
+            <label className="mb-1">Title</label>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => (
+                <Input placeholder="Enter blog title" {...field} />
+              )}
+            />
+            {errors.title && <p className="text-red-600 text-sm">Required</p>}
+          </div>
 
-            <div>
-              <label className="block text-gray-700 mb-1">Sub Category</label>
-              <Select
-                options={subCategoryList}
-                labelKey="name"
-                valueKey="id"
-                value={blog?.subCategoryId}
-                onChange={(val) => {
-                  setBlog((prev) => ({ ...prev, subCategoryId: val }));
-                  dispatch(getServiceBySubCategoryId(val));
-                }}
-                placeholder="select subcategory"
-              />
-            </div>
+          {/* CATEGORY */}
 
-            <div>
-              <label className="block text-gray-700 mb-1">Services</label>
-              <Select
-                options={serviceList}
-                labelKey="name"
-                valueKey="id"
-                value={blog?.serviceId}
-                onChange={(val) =>
-                  setBlog((prev) => ({ ...prev, serviceId: val }))
-                }
-                placeholder="select service"
-              />
-            </div>
+          <div className="flex flex-col">
+            <label className="mb-1">Category</label>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={
+                    categoryList?.length > 0
+                      ? categoryList?.map((item) => ({
+                          label: item?.name,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  value={field.value}
+                  onChange={(val) => {
+                    field.onChange(val);
+                    dispatch(getSubCategoryListByCategoryId(val));
+                  }}
+                />
+              )}
+            />
+            {errors.categoryId && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
 
-            {/* Excerpt */}
-            <div>
-              <label className="block text-gray-700 mb-1">Excerpt</label>
-              <textarea
-                name="excerpt"
-                value={blog.excerpt}
-                onChange={handleChange}
-                rows="2"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Short summary of the blog"
-              />
-            </div>
+          {/* SUB CATEGORY */}
 
-            {/* Meta Title */}
-            <div>
-              <label className="block text-gray-700 mb-1">Meta Title</label>
-              <input
-                type="text"
-                name="metaTitle"
-                value={blog.metaTitle}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter meta title"
-              />
-            </div>
+          <div className="flex flex-col">
+            <label className="mb-1">Subcategory</label>
+            <Controller
+              name="subCategoryId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Sub Category"
+                  options={
+                    subCategoryList?.length > 0
+                      ? subCategoryList?.map((item) => ({
+                          label: item?.name,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  value={field.value}
+                  onChange={(val) => {
+                    field.onChange(val);
+                    dispatch(getServiceBySubCategoryId(val));
+                  }}
+                />
+              )}
+            />
+            {errors.subCategoryId && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
 
-            {/* Meta Keyword */}
-            <div>
-              <label className="block text-gray-700 mb-1">Meta Keyword</label>
-              <input
-                type="text"
-                name="metaKeyword"
-                value={blog.metaKeyword}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter meta keywords (comma separated)"
-              />
-            </div>
+          {/* SERVICE */}
+          <div className="flex flex-col">
+            <label className="mb-1">Service</label>
+            <Controller
+              name="serviceId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={
+                    serviceList?.length > 0
+                      ? serviceList?.map((item) => ({
+                          label: item?.title,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            {errors.serviceId && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
 
-            {/* Meta Description */}
-            <div>
-              <label className="block text-gray-700 mb-1">
-                Meta Description
-              </label>
-              <textarea
-                name="metaDescription"
-                value={blog.metaDescription}
-                onChange={handleChange}
-                rows="2"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter meta description"
-              />
-            </div>
+          {/* EXCERPT */}
+          <div className="flex flex-col">
+            <label className="mb-1">Excerpt</label>
+            <Controller
+              name="excerpt"
+              control={control}
+              render={({ field }) => (
+                <textarea
+                  rows={2}
+                  placeholder="Excerpt"
+                  className="border p-2 w-full rounded"
+                  {...field}
+                />
+              )}
+            />
+            {errors.excerpt && <p className="text-red-600 text-sm">Required</p>}
+          </div>
 
-            {/* Slug */}
-            <div>
-              <label className="block text-gray-700 mb-1">Slug</label>
-              <input
-                type="text"
-                name="slug"
-                value={blog.slug}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter blog slug (URL-friendly)"
-              />
-            </div>
+          {/* META TITLE */}
+          <div className="flex flex-col">
+            <label className="mb-1">Meta Title</label>
+            <Controller
+              name="metaTitle"
+              control={control}
+              render={({ field }) => <Input {...field} />}
+            />
+            {errors.metaTitle && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
 
-            {/* Image */}
-            <div>
-              <label className="block text-gray-700 mb-1"> Image</label>
-              <ImageUploader />
-            </div>
+          {/* META KEYWORD */}
+          <div className="flex flex-col">
+            <label className="mb-1">Meta Keyword</label>
+            <Controller
+              name="metaKeyword"
+              control={control}
+              render={({ field }) => <Input {...field} />}
+            />
+            {errors.metaKeyword && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
 
-            {/* Active Checkbox */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="active"
-                checked={blog.active}
-                onChange={handleChange}
-                className="w-5 h-5 text-blue-600"
-              />
-              <label className="text-gray-700">Active</label>
-            </div>
+          {/* META DESCRIPTION */}
+          <div className="flex flex-col">
+            <label className="mb-1">Meta Description</label>
+            <Controller
+              name="metaDescription"
+              control={control}
+              render={({ field }) => (
+                <textarea
+                  className="border p-2 w-full rounded"
+                  rows={2}
+                  {...field}
+                />
+              )}
+            />
+            {errors.metaDescription && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
 
-            {/* Show on Home Checkbox */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="showOnHome"
-                checked={blog.showOnHome}
-                onChange={handleChange}
-                className="w-5 h-5 text-blue-600"
-              />
-              <label className="text-gray-700">Show on Home Page</label>
-            </div>
+          {/* SLUG */}
+          <div className="flex flex-col">
+            <label className="mb-1">Slug</label>
+            <Controller
+              name="slug"
+              control={control}
+              render={({ field }) => <Input {...field} />}
+            />
+            {errors.slug && <p className="text-red-600 text-sm">Required</p>}
+          </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"
-            >
-              Submit
-            </button>
-          </form>
-        </div>
-      )}
+          {/* IMAGE */}
+          <div className="flex flex-col">
+            <label className="mb-1">Thumbnail</label>
+            <Controller
+              name="thumbnailUrl"
+              control={control}
+              render={({ field }) => (
+                <ImageUploader value={field.value} onChange={field.onChange} />
+              )}
+            />
+            {errors.thumbnailUrl && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
+
+          {/* ACTIVE */}
+          <div className="flex flex-col">
+            {/* <label className="mb-1">Active</label> */}
+            <Controller
+              name="active"
+              control={control}
+              render={({ field }) => (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                  Active
+                </label>
+              )}
+            />
+            {errors.active && <p className="text-red-600 text-sm">Required</p>}
+          </div>
+
+          {/* SHOW ON HOME */}
+          <div className="flex flex-col">
+            {/* <label className="mb-1">Show on home page</label> */}
+            <Controller
+              name="showOnHome"
+              control={control}
+              render={({ field }) => (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                  Show On Home
+                </label>
+              )}
+            />
+            {errors.showOnHome && (
+              <p className="text-red-600 text-sm">Required</p>
+            )}
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

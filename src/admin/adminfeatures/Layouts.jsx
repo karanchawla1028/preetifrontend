@@ -37,9 +37,9 @@ const Layouts = ({ children }) => {
       url: "users",
     },
     {
-      name: "Settings",
-      icon: <Settings className="w-5 h-5" />,
-      url: "settings",
+      name: "Role",
+      icon: <User className="w-5 h-5" />,
+      url: "roles",
     },
     { name: "Logout", icon: <LogOut className="w-5 h-5" /> },
   ];

@@ -5,12 +5,14 @@ import authReducer from "./slices/authSlice";
 import enquiryReducer from "./slices/enquirySlice";
 import serviceReducer from "./slices/serviceSlice";
 import blogReducer from "./slices/blogSlice";
+import userReducer from "./slices/userSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   enquiry: enquiryReducer,
   service: serviceReducer,
   blogs: blogReducer,
+  user: userReducer,
 });
 
 const persistConfig = {

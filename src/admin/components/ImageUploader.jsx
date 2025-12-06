@@ -21,26 +21,25 @@ export default function ImageUploader({
   const imageTypes = "image/*";
 
   // Upload to API
-const handleUpload = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const formData = new FormData();
-  formData.append("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
 
-  try {
-    const res = await api.post("/images/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    try {
+      const res = await api.post("/images/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    onChange(res.data);
-  } catch (err) {
-    console.log("Upload error:", err.response || err);
-  }
-};
-
+      onChange(res.data);
+    } catch (err) {
+      console.log("Upload error:", err.response || err);
+    }
+  };
 
   return (
     <>
@@ -60,7 +59,12 @@ const handleUpload = async (e) => {
             <span className="text-gray-700">{fileData.name}</span>
           </div>
         ) : (
-          <span className="text-gray-500">{placeholder}</span>
+          <span className="text-gray-500">
+            <span className="text-white text-sm bg-blue-500 py-1 px-2 rounded-sm">
+              Choose file
+            </span>{" "}
+            {placeholder}
+          </span>
         )}
 
         {/* Preview Button */}

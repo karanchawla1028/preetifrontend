@@ -40,10 +40,13 @@ export const getBlogById = createAsyncThunk("getBlogById", async (id) => {
   return response.data;
 });
 
-export const deleteBlogById = createAsyncThunk("deleteBlogById", async (id) => {
-  const response = await api.delete(`/blogs/${id}`);
-  return response.data;
-});
+export const deleteBlogById = createAsyncThunk(
+  "deleteBlogById",
+  async ({ id, userId }) => {
+    const response = await api.delete(`/blogs/${id}?userId=${userId}`);
+    return response.data;
+  }
+);
 
 export const getBlogDetailBySlugName = createAsyncThunk(
   "getBlogDetailBySlugName",

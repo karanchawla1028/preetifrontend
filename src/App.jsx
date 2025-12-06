@@ -21,6 +21,7 @@ import Blog from "./admin/adminfeatures/Blog";
 import BlogsDetail from "./admin/adminfeatures/BlogsDetail";
 import Enquiry from "./features/enquiry/Enquiry";
 import BlogDetail from "./features/blogs/BlogDetail";
+import Role from "./admin/adminfeatures/Role";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
               />
               <Route path="enquiries" element={<Enquiry />} />
               <Route path="users" element={<User />} />
+              <Route path="roles" element={<Role />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>

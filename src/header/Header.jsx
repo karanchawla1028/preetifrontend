@@ -298,6 +298,8 @@ const Header = () => {
               >
                 Blogs
               </a>
+            </div>
+            <div className="relative">
               <a
                 href="/aboutus"
                 className="hover:text-[#D4AF37] transition font-medium cursor-pointer"
