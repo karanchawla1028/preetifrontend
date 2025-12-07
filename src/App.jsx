@@ -22,6 +22,7 @@ import BlogsDetail from "./admin/adminfeatures/BlogsDetail";
 import Enquiry from "./features/enquiry/Enquiry";
 import BlogDetail from "./features/blogs/BlogDetail";
 import Role from "./admin/adminfeatures/Role";
+import BlogsPage from "./features/blogs/BlogsPage";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               <Route path="/contactus" element={<ContactUs />} />
               <Route path="/aboutus" element={<AboutUs />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/blogs" element={<BlogsPage />} />
               <Route path=":blogSlug/blogs" element={<BlogPost />} />
               <Route path=":blogSlug/detail" element={<BlogDetail />} />
             </Route>
