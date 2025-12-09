@@ -60,6 +60,7 @@ const Blog = () => {
 
   useEffect(() => {
     dispatch(getBlogsList());
+    dispatch(getAllCategories());
   }, []);
 
   const filteredData = useMemo(() => {
@@ -215,10 +216,6 @@ const Blog = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getAllCategories());
-  }, []);
-
   // Submit handler
   const handleformSubmit = (data) => {
     e.preventDefault();
@@ -232,7 +229,7 @@ const Blog = () => {
               status: "success",
             });
             setIsForm(false);
-            dispatch(getAllCategories());
+            dispatch(getBlogsList());
             setRowItem(null);
           } else {
             showToast({
@@ -259,7 +256,7 @@ const Blog = () => {
               status: "success",
             });
             setIsForm(false);
-            dispatch(getAllCategories());
+            dispatch(getBlogsList());
           } else {
             showToast({
               title: "Error",
@@ -494,7 +491,10 @@ const Blog = () => {
               name="thumbnailUrl"
               control={control}
               render={({ field }) => (
-                <ImageUploader value={field.value} onChange={field.onChange} />
+                <ImageUploader
+                  value={field.value}
+                  onChange={(e) => field.onChange(e?.url)}
+                />
               )}
             />
             {errors.thumbnailUrl && (

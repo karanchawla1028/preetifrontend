@@ -16,7 +16,7 @@ import { ArrowLeft } from "lucide-react";
 const BlogsDetail = ({ onSubmit }) => {
   const dispatch = useDispatch();
   const { blogId } = useParams();
-  const blogList = useSelector((state) => state.blogs.blogList);
+  const blog = useSelector((state) => state.blogs.blogDetail);
   const [isForm, setIsForm] = useState(false);
   const [blogDetail, setBlogDetail] = useState({
     heading: "",
@@ -31,22 +31,6 @@ const BlogsDetail = ({ onSubmit }) => {
     dispatch(getBlogById(blogId));
   }, [blogId]);
 
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "id",
-    },
-    {
-      title: "Heading",
-      dataIndex: "heading",
-      render: (value, rowData) => <p>{value}</p>,
-    },
-    {
-      title: "Content",
-      dataIndex: "content",
-    },
-  ];
-
   // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -55,6 +39,12 @@ const BlogsDetail = ({ onSubmit }) => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+
+  const formattedDate = new Date(blog.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   // Submit handler
   const handleSubmit = (e) => {
@@ -85,12 +75,89 @@ const BlogsDetail = ({ onSubmit }) => {
     <div className="flex flex-col gap-2">
       {!isForm ? (
         <>
-          <h2 className="font-semibold font-sans text-xl">Blog details</h2>
           <div className="flex justify-between items-center">
-            <SearchInput />
-            <Button onClick={() => setIsForm(true)}>Add blog details</Button>
+            <h2 className="font-semibold font-sans text-xl">Blog details</h2>
+            <Button onClick={() => setIsForm(true)}>
+              {" "}
+              {Object.keys(blog)?.length > 0
+                ? "Update blog detail"
+                : "Add blog details"}
+            </Button>
           </div>
-          <DynamicTable columns={columns} data={blogList} />
+          <div className="w-full">
+            {/* 🔥 Hero Banner */}
+            <div className="relative w-full h-[350px] md:h-[420px]">
+              <img
+                src={blog.imageUrl}
+                alt={blog.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/40" />
+
+              <div className="absolute bottom-10 left-6 md:left-16 text-white max-w-4xl">
+                <h1 className="text-3xl md:text-5xl font-bold capitalize">
+                  {blog.title.replace(/-/g, " ")}
+                </h1>
+                <p className="mt-2 text-lg opacity-90">{blog.excerpt}</p>
+              </div>
+            </div>
+
+            {/* CONTENT WRAPPER */}
+            <div className="max-w-4xl mx-auto px-5 md:px-0 py-10 space-y-8">
+              {/* 🟦 BLOG META INFORMATION */}
+              <div className="text-gray-600 text-sm border-b pb-4">
+                <p>
+                  <strong>Published:</strong> {formattedDate}
+                </p>
+                <p>
+                  <strong>Slug:</strong> {blog.slug}
+                </p>
+                <p>
+                  <strong>Category ID:</strong> {blog.categoryId}
+                </p>
+              </div>
+
+              {/* 📝 RICH HTML CONTENT */}
+              <div
+                className="
+            prose 
+            prose-lg 
+            max-w-none 
+            prose-h1:font-semibold 
+            prose-h2:font-semibold 
+            prose-h3:font-semibold 
+            prose-img:rounded-xl 
+            prose-img:shadow-md 
+            prose-a:text-blue-600 
+            prose-a:underline
+          "
+                dangerouslySetInnerHTML={{ __html: blog.metaDescription }}
+              />
+
+              {/* 🟦 SEO INFORMATION */}
+              <div className="bg-gray-100 rounded-xl p-6 mt-10">
+                <h3 className="text-xl font-semibold mb-3">SEO Information</h3>
+                <p>
+                  <strong>Meta Title:</strong> {blog.metaTitle}
+                </p>
+                <p>
+                  <strong>Meta Keywords:</strong> {blog.metaKeyword}
+                </p>
+              </div>
+
+              {/* IMAGE PREVIEW */}
+              <div>
+                <h3 className="text-xl font-semibold mt-6">
+                  Thumbnail Preview
+                </h3>
+                <img
+                  src={blog.thumbnailUrl}
+                  alt="thumbnail"
+                  className="mt-4 rounded-lg shadow-md w-full max-w-md"
+                />
+              </div>
+            </div>
+          </div>
         </>
       ) : (
         <div className="w-[80%] mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">

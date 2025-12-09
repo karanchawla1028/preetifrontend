@@ -1,22 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DynamicTable from "../components/DynamicTable";
 import { categoryData, data } from "../../commons";
 import SearchInput from "../components/SearchInput";
 import Button from "../components/Button";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, EllipsisVertical } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCategories,
+  deleteCategory,
   getAllCategories,
+  updateCategory,
 } from "../../toolkit/slices/serviceSlice";
+import PopConfirm from "../components/Popconfirm";
+import Dropdown from "../components/Dropdown";
+import Input from "../components/Input";
+import Table from "../components/Table";
+import { useToast } from "../../features/components/ToastProvider";
 
 const Category = () => {
   const { userId } = useParams();
   const dispatch = useDispatch();
+  const { showToast } = useToast();
   const data = useSelector((state) => state.service.categoriesList);
   const [isForm, setIsForm] = useState(false);
-  const [category, setCategory] = useState({
+  const [search, setSearch] = useState("");
+  const [openDropdowns, setOpenDropdowns] = useState({});
+  const [rowItem, setRowItem] = useState(null);
+  const initialValues = {
     name: "",
     description: "",
     metaTitle: "",
@@ -24,15 +35,78 @@ const Category = () => {
     metaDescription: "",
     slug: "",
     active: true,
-  });
+  };
+
+  const [category, setCategory] = useState(initialValues);
 
   useEffect(() => {
     dispatch(getAllCategories());
   }, []);
 
+  const filteredData = useMemo(() => {
+    if (!search) return data;
+    return data?.filter((item) =>
+      Object.values(item).join(" ").toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search, data]);
+
+  const handleDelete = (rowData) => {
+    dispatch(deleteCategory({ id: rowData?.id, userId }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          showToast({
+            title: "Success",
+            description: "Category deleted successfully !.",
+            status: "success",
+          });
+          dispatch(getAllCategories());
+        } else {
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          });
+        }
+      })
+      .catch(() =>
+        showToast({
+          title: "Error",
+          description: "Something went wrong !.",
+          status: "error",
+        })
+      );
+  };
+
+  const handleEdit = (rowData) => {
+    setCategory({
+      name: rowData?.name,
+      description: rowData?.description,
+      metaTitle: rowData?.metaTitle,
+      metaKeyword: rowData?.metaKeyword,
+      metaDescription: rowData?.metaDescription,
+      slug: rowData?.slug,
+      active: rowData?.active,
+    });
+    setRowItem(rowData);
+    setIsForm(true);
+  };
+
   // Handle input change
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (name === "name") {
+      const generatedSlug = value
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9\-]/g, "");
+      setService((prev) => ({
+        ...prev,
+        name: value,
+        slug: generatedSlug,
+      }));
+      return;
+    }
     setCategory((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -48,53 +122,155 @@ const Category = () => {
       title: "Name",
       dataIndex: "name",
       render: (value, rowData) => (
-        <Link to={`${rowData?.id}/subcategory`}>{value}</Link>
+        <Link className="text-blue-600" to={`${rowData?.id}/subcategory`}>
+          {value}
+        </Link>
       ),
     },
     {
       title: "Meta title",
       dataIndex: "metaTitle",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Meta keyword",
       dataIndex: "metaKeyword",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Slug",
       dataIndex: "slug",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Description",
       dataIndex: "metaDescription",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (value, record, rowIndex) => {
+        const isOpen = openDropdowns[record.id] || false; // or record._id, whatever unique
+        return (
+          <Dropdown
+            open={isOpen}
+            onOpenChange={(open) =>
+              setOpenDropdowns((prev) => ({ ...prev, [record.id]: open }))
+            }
+            items={[
+              { key: 1, label: "edit", onClick: () => handleEdit(record) },
+              {
+                key: 2,
+                label: (
+                  <PopConfirm
+                    title="Are you sure you want to delete?"
+                    onConfirm={() => handleDelete(record)}
+                    onCancel={() => console.log("Cancel")}
+                  >
+                    <div className="text-red-600">Delete</div>
+                  </PopConfirm>
+                ),
+                noClose: true,
+              },
+            ]}
+          >
+            <Button size="small" variant="secondary">
+              <EllipsisVertical />
+            </Button>
+          </Dropdown>
+        );
+      },
     },
   ];
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (data) => {
     e.preventDefault();
-    dispatch(addCategories({ userId, data:category }))
-      .then((resp) => {
-        if (resp.meta.requestStatus === "fulfilled") {
-          alert("Category added successfully !.");
-          setIsForm(false);
-          dispatch(getAllCategories());
-        } else {
-          alert("Something went wrong !.");
-        }
-      })
-      .catch(() => alert("Something went wrong !."));
+    if (rowItem) {
+      dispatch(updateCategory({ id: rowItem?.id, userId, data: category }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            showToast({
+              title: "Category updated",
+              description: "Category updated successfully !.",
+              status: "success",
+            });
+            setIsForm(false);
+            dispatch(getAllCategories());
+            setRowItem(null);
+            setCategory(initialValues);
+          } else {
+            showToast({
+              title: "Error",
+              description: "Something went wrong !.",
+              status: "error",
+            });
+          }
+        })
+        .catch(() =>
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          })
+        );
+    } else {
+      dispatch(addCategories({ userId, data: category }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            showToast({
+              title: "Category added",
+              description: "Category added successfully !.",
+              status: "success",
+            });
+            setIsForm(false);
+            dispatch(getAllCategories());
+            setCategory(initialValues);
+          } else {
+            showToast({
+              title: "Error",
+              description: "Something went wrong !.",
+              status: "error",
+            });
+          }
+        })
+        .catch(() =>
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          })
+        );
+    }
   };
+
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex justify-between items-center">
+        <Input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          showIcon
+          onChange={(e) => setSearch(e.target.value)}
+          wrapperClassName="w-80"
+        />
+        <Button onClick={() => setIsForm(true)}>Add category</Button>
+      </div>
+    );
+  }, [search]);
 
   return (
     <div className="flex flex-col gap-2">
       {!isForm ? (
         <>
-          <h2 className="font-semibold font-sans text-xl">Category</h2>
-          <div className="flex justify-between items-center">
-            <SearchInput />
-            <Button onClick={() => setIsForm(true)}>Add Category</Button>
-          </div>
-          <DynamicTable columns={columns} data={data} />
+          <h2 className="text-lg font-semibold">Category list</h2>
+          <Table
+            columns={columns}
+            dataSource={filteredData}
+            topContent={topContent}
+            className="w-full"
+          />
         </>
       ) : (
         <div className="p-8">

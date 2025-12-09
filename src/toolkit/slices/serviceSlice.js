@@ -17,6 +17,22 @@ export const addCategories = createAsyncThunk(
   }
 );
 
+export const updateCategory = createAsyncThunk(
+  "updateCategory",
+  async ({ id, userId, data }) => {
+    const response = await api.put(`/categories/${id}?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
+export const deleteCategory = createAsyncThunk(
+  "deleteCategory",
+  async ({ id, userId }) => {
+    const response = await api.delete(`/categories/${id}?userId=${userId}`);
+    return response.data;
+  }
+);
+
 export const getAllSubCategories = createAsyncThunk(
   "getAllSubCategories",
   async () => {
@@ -29,6 +45,25 @@ export const addSubCategories = createAsyncThunk(
   "addSubCategories",
   async ({ userId, data }) => {
     const response = await api.post(`/subcategories?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
+export const updateSubcategory = createAsyncThunk(
+  "updateSubcategory",
+  async ({ id, userId, data }) => {
+    const response = await api.put(
+      `/subcategories/${id}?userId=${userId}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteSubcategory = createAsyncThunk(
+  "deleteSubcategory",
+  async ({ id, userId }) => {
+    const response = await api.delete(`/subcategories/${id}?userId=${userId}`);
     return response.data;
   }
 );
@@ -64,8 +99,8 @@ export const addService = createAsyncThunk(
 
 export const updateService = createAsyncThunk(
   "updateService",
-  async ({ id, userId }) => {
-    const response = await api.put(`/services/${id}?userId=${userId}`);
+  async ({ id, userId,data }) => {
+    const response = await api.put(`/services/${id}?userId=${userId}`,data);
     return response.data;
   }
 );
