@@ -56,6 +56,70 @@ export const getBlogDetailBySlugName = createAsyncThunk(
   }
 );
 
+export const addBlogDetails = createAsyncThunk(
+  "addBlogDetails",
+  async ({ userId, data }) => {
+    const response = await api.post(`/api/blog-details?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
+export const updateBlogDetail = createAsyncThunk(
+  "updateBlogDetail",
+  async ({ id, userId, data }) => {
+    const response = await api.put(
+      `/api/blog-details/${id}?userId=${userId}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteBlogDetail = createAsyncThunk(
+  "deleteBlogDetail",
+  async ({ id, userId }) => {
+    const response = await api.delete(
+      `/api/blog-details/${id}?userId=${userId}`
+    );
+    return response.data;
+  }
+);
+
+export const addBlogFAQS = createAsyncThunk(
+  "addBlogFAQS",
+  async ({ userId, data }) => {
+    const response = await api.post(`/api/blog-faqs?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
+export const updateBlogFAQS = createAsyncThunk(
+  "updateBlogFAQS",
+  async ({ id, userId, data }) => {
+    const response = await api.put(
+      `/api/blog-faqs/${id}?userId=${userId}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteBlogFAQS = createAsyncThunk(
+  "deleteBlogFAQS",
+  async ({ id, userId }) => {
+    const response = await api.delete(`/api/blog-faqs/${id}?userId=${userId}`);
+    return response.data;
+  }
+);
+
+export const getBlogFAQsByBlogId = createAsyncThunk(
+  "getBlogFAQsByBlogId",
+  async (blogId) => {
+    const response = await api.get(`/api/blog-faqs/blog/${blogId}`);
+    return response.data;
+  }
+);
+
 const blogSlice = createSlice({
   name: "blogs",
   initialState: {
@@ -63,6 +127,7 @@ const blogSlice = createSlice({
     blogList: [],
     blogListByServiceId: [],
     blogDetail: {},
+    blogFaqsList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getBlogsList.pending, (state) => {
@@ -106,6 +171,17 @@ const blogSlice = createSlice({
       state.blogDetail = action.payload;
     });
     builder.addCase(getBlogDetailBySlugName.rejected, (state) => {
+      state.loading = "rejected";
+    });
+
+    builder.addCase(getBlogFAQsByBlogId.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getBlogFAQsByBlogId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.blogFaqsList = action.payload;
+    });
+    builder.addCase(getBlogFAQsByBlogId.rejected, (state) => {
       state.loading = "rejected";
     });
   },

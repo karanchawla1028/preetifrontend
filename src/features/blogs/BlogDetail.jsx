@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getBlogDetailBySlugName } from "../../toolkit/slices/blogSlice";
+import { useParams } from "react-router-dom";
 
 export default function BlogDetail() {
+  const { blogSlug } = useParams();
+  const dispatch = useDispatch();
+  const detail=useSelector((state)=>state.blogs.blogDetail)
+
+  useEffect(() => {
+    dispatch(getBlogDetailBySlugName(blogSlug));
+  }, [dispatch, blogSlug]);
+
   return (
-    <div className="w-full bg-white text-gray-900 flex justify-center py-10">
+    <div className="w-full bg-white text-gray-900 flex justify-center py-10 mt-12">
       <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-10 px-4">
         {/* LEFT SIDE - CONTENT */}
         <div className="md:col-span-2">
           {/* Cover Image */}
           <div className="relative w-full mb-8">
             <img
-              src="https://via.placeholder.com/900x500"
+              src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Blog Cover"
               className="rounded shadow-lg w-full object-cover"
             />
@@ -21,17 +32,17 @@ export default function BlogDetail() {
 
           {/* Title */}
           <h1 className="text-4xl font-bold text-blue-900 mb-6">
-            How to Clean Precious Jewelry at Home
+            {detail?.title}
           </h1>
 
           {/* Paragraphs */}
           <div className="space-y-6 leading-7 text-gray-700">
             <p>
-              As gold and platinum are both commonly used interchangeably as settings
-              diamonds and gemstones, the same basic need to consider what other
-              jewellery you wear close by if you have a gold engagement ring,
-              then you would want to choose a gold wedding ring to wear alongside
-              it.
+              As gold and platinum are both commonly used interchangeably as
+              settings diamonds and gemstones, the same basic need to consider
+              what other jewellery you wear close by if you have a gold
+              engagement ring, then you would want to choose a gold wedding ring
+              to wear alongside it.
             </p>
             <p>
               But rinsing and rubbing fragile jewelry too much can cause
@@ -88,7 +99,9 @@ export default function BlogDetail() {
                     rubbing, brushing or wiping. You don’t want to be too rough
                     with your delicate treasures.
                   </p>
-                  <button className="text-blue-900 mt-2 font-semibold">Reply</button>
+                  <button className="text-blue-900 mt-2 font-semibold">
+                    Reply
+                  </button>
                 </div>
               </div>
             ))}
@@ -110,13 +123,19 @@ export default function BlogDetail() {
           <div>
             <h3 className="text-xl font-bold mb-4 text-blue-900">Categories</h3>
             <ul className="space-y-2 text-gray-700">
-              {["Earrings", "Rings", "Necklaces", "Bracelets", "Best Sellers", "Classic Jewelry", "Gifts Set"].map(
-                (cat) => (
-                  <li key={cat} className="cursor-pointer hover:text-blue-800">
-                    {cat.toUpperCase()}
-                  </li>
-                )
-              )}
+              {[
+                "Earrings",
+                "Rings",
+                "Necklaces",
+                "Bracelets",
+                "Best Sellers",
+                "Classic Jewelry",
+                "Gifts Set",
+              ].map((cat) => (
+                <li key={cat} className="cursor-pointer hover:text-blue-800">
+                  {cat.toUpperCase()}
+                </li>
+              ))}
             </ul>
           </div>
 

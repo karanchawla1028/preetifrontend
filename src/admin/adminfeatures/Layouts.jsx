@@ -27,7 +27,7 @@ const Layouts = ({ children }) => {
       url: "blogs",
     },
     {
-      name: "enquiries",
+      name: "Enquiries",
       icon: <SquareMenu className="w-5 h-5" />,
       url: "enquiries",
     },

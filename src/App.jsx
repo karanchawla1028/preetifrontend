@@ -23,6 +23,7 @@ import Enquiry from "./features/enquiry/Enquiry";
 import BlogDetail from "./features/blogs/BlogDetail";
 import Role from "./admin/adminfeatures/Role";
 import BlogsPage from "./features/blogs/BlogsPage";
+import BlogFaqs from "./admin/adminfeatures/BlogFaqs";
 
 function App() {
   return (
@@ -38,7 +39,7 @@ function App() {
               <Route path="/careers" element={<Careers />} />
               <Route path="/blogs" element={<BlogsPage />} />
               <Route path=":blogSlug/blogs" element={<BlogPost />} />
-              <Route path=":blogSlug/detail" element={<BlogDetail />} />
+              <Route path="blogs/:blogSlug/detail" element={<BlogDetail />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path=":userId/admin" element={<Layouts />}>
@@ -56,6 +57,10 @@ function App() {
               <Route
                 path="blogs/:blogId/blogDetail"
                 element={<BlogsDetail />}
+              />
+              <Route
+                path="blogs/:blogId/blogFaqs"
+                element={<BlogFaqs />}
               />
               <Route path="enquiries" element={<Enquiry />} />
               <Route path="users" element={<User />} />

@@ -191,9 +191,10 @@ const Blog = () => {
               setOpenDropdowns((prev) => ({ ...prev, [record.id]: open }))
             }
             items={[
-              { key: 1, label: "edit", onClick: () => handleEdit(record) },
+              { key: 1, label: <Link to={`${record?.id}/blogFaqs`} >FAQ's</Link>, },
+              { key: 2, label: "edit", onClick: () => handleEdit(record) },
               {
-                key: 2,
+                key: 3,
                 label: (
                   <PopConfirm
                     title="Are you sure you want to delete?"
@@ -218,7 +219,6 @@ const Blog = () => {
 
   // Submit handler
   const handleformSubmit = (data) => {
-    e.preventDefault();
     if (rowItem) {
       dispatch(updateBlog({ id: rowItem?.id, userId, data }))
         .then((resp) => {

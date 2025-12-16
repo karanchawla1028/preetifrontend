@@ -99,8 +99,8 @@ export const addService = createAsyncThunk(
 
 export const updateService = createAsyncThunk(
   "updateService",
-  async ({ id, userId,data }) => {
-    const response = await api.put(`/services/${id}?userId=${userId}`,data);
+  async ({ id, userId, data }) => {
+    const response = await api.put(`/services/${id}?userId=${userId}`, data);
     return response.data;
   }
 );
@@ -129,6 +129,43 @@ export const getServiceBySubCategoryId = createAsyncThunk(
   }
 );
 
+export const getServiceFAQsByServiceId = createAsyncThunk(
+  "getServiceFAQsByServiceId",
+  async (serviceId) => {
+    const response = await api.get(`/api/service-faqs/service/${serviceId}`);
+    return response.data;
+  }
+);
+
+export const addServiceFAQs = createAsyncThunk(
+  "addServiceFAQs",
+  async ({ userId, data }) => {
+    const response = await api.post(`/api/service-faqs?userId=${userId}`, data);
+    return response.data;
+  }
+);
+
+export const updateServiceFAQ = createAsyncThunk(
+  "updateServiceFAQ",
+  async ({ id, userId, data }) => {
+    const response = await api.put(
+      `/api/service-faqs/${id}?userId=${userId}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteServiceFAQ = createAsyncThunk(
+  "deleteServiceFAQ",
+  async ({ id, userId }) => {
+    const response = await api.delete(
+      `/api/service-faqs/${id}?userId=${userId}`
+    );
+    return response.data;
+  }
+);
+
 const serviceSlice = createSlice({
   name: "service",
   initialState: {
@@ -140,6 +177,7 @@ const serviceSlice = createSlice({
     subCategoriesList: [],
     subCategoryListByCategoryId: [],
     serviceListBySubCategoryId: [],
+    serviceFAQList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllServices.pending, (state) => {
@@ -227,6 +265,18 @@ const serviceSlice = createSlice({
     builder.addCase(getServiceBySubCategoryId.rejected, (state) => {
       state.loading = "rejected";
       state.serviceListBySubCategoryId = [];
+    });
+
+    builder.addCase(getServiceFAQsByServiceId.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getServiceFAQsByServiceId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.serviceFAQList = action.payload;
+    });
+    builder.addCase(getServiceFAQsByServiceId.rejected, (state) => {
+      state.loading = "rejected";
+      state.serviceFAQList = [];
     });
   },
 });

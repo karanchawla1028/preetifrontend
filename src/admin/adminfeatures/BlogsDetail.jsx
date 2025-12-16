@@ -4,6 +4,7 @@ import SearchInput from "../components/SearchInput";
 import DynamicTable from "../components/DynamicTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addBlogDetails,
   addBlogs,
   getBlogById,
   getBlogsList,
@@ -51,7 +52,7 @@ const BlogsDetail = ({ onSubmit }) => {
     e.preventDefault();
     if (onSubmit) onSubmit(blogDetail);
     console.log("blogDetail Data:", blogDetail);
-    dispatch(addBlogs({ userId: 1, data: blogDetail }))
+    dispatch(addBlogDetails({ userId, data: blogDetail }))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           alert("Blog posted successfully.");
@@ -96,7 +97,7 @@ const BlogsDetail = ({ onSubmit }) => {
 
               <div className="absolute bottom-10 left-6 md:left-16 text-white max-w-4xl">
                 <h1 className="text-3xl md:text-5xl font-bold capitalize">
-                  {blog.title.replace(/-/g, " ")}
+                  {blog?.title?.replace(/-/g, " ")}
                 </h1>
                 <p className="mt-2 text-lg opacity-90">{blog.excerpt}</p>
               </div>

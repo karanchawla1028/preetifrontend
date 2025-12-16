@@ -21,7 +21,7 @@ export default function BlogPage() {
   }, [dispatch]);
 
   return (
-    <div>
+    <div className="p-4">
       <BlogsLayout
         blogs={data?.length > 0 ? data : []}
         getCategoryName={getCategoryName}
