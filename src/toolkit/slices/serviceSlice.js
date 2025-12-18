@@ -166,6 +166,45 @@ export const deleteServiceFAQ = createAsyncThunk(
   }
 );
 
+export const getServiceDetailById = createAsyncThunk(
+  "getServiceDetailById",
+  async (serviceId) => {
+    const response = await api.get(`/api/service-details/service/${serviceId}`);
+    return response.data;
+  }
+);
+
+export const addServiceDetailById = createAsyncThunk(
+  "addServiceDetailById",
+  async ({ userId, data }) => {
+    const response = await api.post(
+      `/api/service-details?userId=${userId}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const updateServiceDetailById = createAsyncThunk(
+  "updateServiceDetailById",
+  async ({ id, userId, data }) => {
+    const response = await api.put(
+      `/api/service-details/${id}?userId=${userId}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteServiceDetailById = createAsyncThunk(
+  "deleteServiceDetailById",
+  async ({ id, userId }) => {
+    const response = await api.delete(
+      `/api/service-details/${id}?userId=${userId}`
+    );
+    return response.data;
+  })
+
 const serviceSlice = createSlice({
   name: "service",
   initialState: {
@@ -178,6 +217,7 @@ const serviceSlice = createSlice({
     subCategoryListByCategoryId: [],
     serviceListBySubCategoryId: [],
     serviceFAQList: [],
+    serviceDetail:{}
   },
   extraReducers: (builder) => {
     builder.addCase(getAllServices.pending, (state) => {
@@ -277,6 +317,18 @@ const serviceSlice = createSlice({
     builder.addCase(getServiceFAQsByServiceId.rejected, (state) => {
       state.loading = "rejected";
       state.serviceFAQList = [];
+    });
+
+    builder.addCase(getServiceDetailById.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getServiceDetailById.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.serviceDetail = action.payload;
+    });
+    builder.addCase(getServiceDetailById.rejected, (state) => {
+      state.loading = "rejected";
+      state.serviceDetail = {};
     });
   },
 });

@@ -22,6 +22,11 @@ const Layouts = ({ children }) => {
       url: "category",
     },
     {
+      name: "Services",
+      icon: <HandHelping className="w-5 h-5" />,
+      url: "services",
+    },
+    {
       name: "Blogs",
       icon: <Blocks className="w-5 h-5" />,
       url: "blogs",

@@ -56,6 +56,14 @@ export const getBlogDetailBySlugName = createAsyncThunk(
   }
 );
 
+export const getBlogDetailsByBlogId = createAsyncThunk(
+  "getBlogDetailsByBlogId",
+  async (blogId) => {
+    const response = await api.get(`/api/blog-details/blog/${blogId}`);
+    return response.data;
+  }
+);
+
 export const addBlogDetails = createAsyncThunk(
   "addBlogDetails",
   async ({ userId, data }) => {
@@ -128,6 +136,7 @@ const blogSlice = createSlice({
     blogListByServiceId: [],
     blogDetail: {},
     blogFaqsList: [],
+    blogDetailsList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getBlogsList.pending, (state) => {
@@ -182,6 +191,17 @@ const blogSlice = createSlice({
       state.blogFaqsList = action.payload;
     });
     builder.addCase(getBlogFAQsByBlogId.rejected, (state) => {
+      state.loading = "rejected";
+    });
+
+    builder.addCase(getBlogDetailsByBlogId.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getBlogDetailsByBlogId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.blogDetailsList = action.payload;
+    });
+    builder.addCase(getBlogDetailsByBlogId.rejected, (state) => {
       state.loading = "rejected";
     });
   },

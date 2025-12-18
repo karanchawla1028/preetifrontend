@@ -3,23 +3,12 @@ import Button from "../components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addBlogFAQS,
-  addBlogs,
-  deleteBlogById,
   deleteBlogFAQS,
   getBlogFAQsByBlogId,
-  getBlogsList,
-  updateBlog,
   updateBlogFAQS,
 } from "../../toolkit/slices/blogSlice";
-import Select from "../../features/components/Select";
-import {
-  getAllCategories,
-  getServiceBySubCategoryId,
-  getSubCategoryListByCategoryId,
-} from "../../toolkit/slices/serviceSlice";
 import { useToast } from "../../features/components/ToastProvider";
 import { EllipsisVertical } from "lucide-react";
-import ImageUploader from "../components/ImageUploader";
 import Table from "../components/Table";
 import PopConfirm from "../components/Popconfirm";
 import Input from "../components/Input";
@@ -41,7 +30,7 @@ const BlogFaqs = () => {
   const dispatch = useDispatch();
   const { userId, blogId } = useParams();
   const { showToast } = useToast();
-  const data = useSelector((state) => state.blogs.blogList);
+  const data = useSelector((state) => state.blogs.blogFaqsList);
   const [description, setDescription] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [search, setSearch] = useState("");
@@ -247,7 +236,7 @@ const BlogFaqs = () => {
           onChange={(e) => setSearch(e.target.value)}
           wrapperClassName="w-80"
         />
-        <Button onClick={() => setIsForm(true)}>Add blog</Button>
+        <Button onClick={() => setIsForm(true)}>Add blog FAQ</Button>
       </div>
     );
   }, [search]);

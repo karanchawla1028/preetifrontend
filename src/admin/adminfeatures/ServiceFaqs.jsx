@@ -4,30 +4,28 @@ import { ArrowLeft, EllipsisVertical } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addService,
+  addServiceFAQs,
+  deleteServiceFAQ,
   deleteSingleService,
   getAllServices,
-  getAllSubCategories,
+  getServiceFAQsByServiceId,
   updateService,
+  updateServiceFAQ,
 } from "../../toolkit/slices/serviceSlice";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TextEditor from "../../features/components/TextEditor";
 import Dropdown from "../components/Dropdown";
 import PopConfirm from "../components/Popconfirm";
 import Table from "../components/Table";
-import ImageUploader from "../components/ImageUploader";
 import Input from "../components/Input";
 import Modal from "../components/Modal";
 import { useToast } from "../../features/components/ToastProvider";
-import Select from "../../features/components/Select";
 
-const AdminServices = () => {
+const ServiceFaqs = () => {
   const dispatch = useDispatch();
   const { showToast } = useToast();
-  const { userId } = useParams();
-  const data = useSelector((state) => state.service.serviceList);
-  const subCategoryList = useSelector(
-    (state) => state.service.subCategoriesList
-  );
+  const { serviceId,userId } = useParams();
+  const data = useSelector((state) => state.service.serviceFAQList);
   const [isForm, setIsForm] = useState(false);
   const [search, setSearch] = useState("");
   const [openDropdowns, setOpenDropdowns] = useState({});
@@ -35,26 +33,18 @@ const AdminServices = () => {
   const [openModal, setOpenModal] = useState(false);
   const [description, setDescription] = useState(null);
   const initialValues = {
-    name: "",
-    description: "",
-    subCategoryId: null,
-    iconUrl: "",
-    image: "",
-    metaTitle: "",
-    metaKeyword: "",
-    metaDescription: "",
-    slug: "",
-    active: true,
-    inactive: true,
+    question: "",
+    answer: "",
+    displayOrder: 0,
+    serviceId: serviceId,
     displayStatus: true,
-    showOnHome: true,
+    active: true,
   };
-  const [service, setService] = useState(initialValues);
+  const [serviceFaqs, setServiceFaqs] = useState(initialValues);
 
   useEffect(() => {
-     dispatch(getAllSubCategories());
-    dispatch(getAllServices());
-  }, []);
+    dispatch(getServiceFAQsByServiceId(serviceId));
+  }, [serviceId]);
 
   const filteredData = useMemo(() => {
     if (!search) return data;
@@ -64,15 +54,15 @@ const AdminServices = () => {
   }, [search, data]);
 
   const handleDelete = (rowData) => {
-    dispatch(deleteSingleService({ id: rowData?.id, userId }))
+    dispatch(deleteServiceFAQ({ id: rowData?.id, userId }))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           showToast({
             title: "Success",
-            description: "Service deleted successfully !.",
+            description: "Service FAQ deleted successfully !.",
             status: "success",
           });
-          dispatch(getAllServices());
+          dispatch(getServiceFAQsByServiceId(serviceId));
         } else {
           showToast({
             title: "Error",
@@ -91,20 +81,13 @@ const AdminServices = () => {
   };
 
   const handleEdit = (rowData) => {
-    setService({
-      name: rowData?.name,
-      description: rowData?.description,
-      iconUrl: rowData?.iconUrl,
-      image: rowData?.image,
-      metaTitle: rowData?.metaTitle,
-      metaKeyword: rowData?.metaKeyword,
-      metaDescription: rowData?.metaDescription,
-      slug: rowData?.slug,
+    setServiceFaqs({
+      question: rowData?.question,
+      answer: rowData?.answer,
+      displayOrder: rowData?.displayOrder,
       active: rowData?.active,
-      inactive: rowData?.inactive,
       displayStatus: rowData?.displayStatus,
-      showOnHome: rowData?.showOnHome,
-      subCategoryId:rowData?.subCategoryId,
+      serviceId: serviceId,
     });
     setRowItem(rowData);
     setIsForm(true);
@@ -118,14 +101,14 @@ const AdminServices = () => {
         .trim()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9\-]/g, "");
-      setService((prev) => ({
+      setServiceFaqs((prev) => ({
         ...prev,
         name: value,
         slug: generatedSlug,
       }));
       return;
     }
-    setService((prev) => ({
+    setServiceFaqs((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -137,33 +120,13 @@ const AdminServices = () => {
       dataIndex: "id",
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Question",
+      dataIndex: "question",
       render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
-      title: "Slug",
-      dataIndex: "slug",
-      render: (value, rowData) => <p className="text-wrap">{value}</p>,
-    },
-    {
-      title: "Meta title",
-      dataIndex: "metaTitle",
-      render: (value, rowData) => <p className="text-wrap">{value}</p>,
-    },
-    {
-      title: "Meta keyword",
-      dataIndex: "metaKeyword",
-      render: (value, rowData) => <p className="text-wrap">{value}</p>,
-    },
-    {
-      title: "Meta description",
-      dataIndex: "metaDescription",
-      render: (value, rowData) => <p className="text-wrap">{value}</p>,
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
+      title: "Answer",
+      dataIndex: "answer",
       render: (value, rowData) => (
         <Button
           onClick={() => {
@@ -174,6 +137,11 @@ const AdminServices = () => {
           Show
         </Button>
       ),
+    },
+        {
+      title: "Display Order",
+      dataIndex: "displayOrder",
+      render: (value, rowData) => <p className="text-wrap">{value}</p>,
     },
     {
       title: "Actions",
@@ -187,11 +155,9 @@ const AdminServices = () => {
               setOpenDropdowns((prev) => ({ ...prev, [record.id]: open }))
             }
             items={[
-              { key: 1, label: <Link to={`${record?.id}/serviceFaq`} >FAQ's</Link>, },
-              { key: 2, label: <Link to={`${record?.id}/serviceDetail`} >Detail</Link>, },
-              { key: 3, label: "edit", onClick: () => handleEdit(record) },
+              { key: 1, label: "edit", onClick: () => handleEdit(record) },
               {
-                key: 4,
+                key: 2,
                 label: (
                   <PopConfirm
                     title="Are you sure you want to delete?"
@@ -217,18 +183,18 @@ const AdminServices = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (rowItem) {
-      dispatch(updateService({ id: rowItem?.id, userId, data: service }))
+      dispatch(updateServiceFAQ({ id: rowItem?.id, userId, data: serviceFaqs }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             showToast({
-              title: "Service updated",
-              description: "Service updated successfully !.",
+              title: "Service FAQ updated",
+              description: "Service FAQ updated successfully !.",
               status: "success",
             });
             setIsForm(false);
-            dispatch(getAllServices());
+            dispatch(getServiceFAQsByServiceId(serviceId));
             setRowItem(null);
-            setService(initialValues);
+            setServiceFaqs(initialValues);
           } else {
             showToast({
               title: "Error",
@@ -245,17 +211,17 @@ const AdminServices = () => {
           })
         );
     } else {
-      dispatch(addService({ userId, data: service }))
+      dispatch(addServiceFAQs({ userId, data: serviceFaqs }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             showToast({
-              title: "Service added",
-              description: "Service added successfully !.",
+              title: "Service FAQ added",
+              description: "Service FAQ added successfully !.",
               status: "success",
             });
             setIsForm(false);
-            dispatch(getAllServices());
-            setService(initialValues);
+            dispatch(getServiceFAQsByServiceId(serviceId));
+            setServiceFaqs(initialValues);
           } else {
             showToast({
               title: "Error",
@@ -285,7 +251,7 @@ const AdminServices = () => {
           onChange={(e) => setSearch(e.target.value)}
           wrapperClassName="w-80"
         />
-        <Button onClick={() => setIsForm(true)}>Add service</Button>
+        <Button onClick={() => setIsForm(true)}>Add service FAQ</Button>
       </div>
     );
   }, [search]);
@@ -294,7 +260,7 @@ const AdminServices = () => {
     <div className="flex flex-col gap-2">
       {!isForm ? (
         <>
-          <h2 className="text-lg font-semibold">Service list</h2>
+          <h2 className="text-lg font-semibold">Service FAQ list</h2>
           <Table
             columns={columns}
             dataSource={filteredData}
@@ -312,7 +278,9 @@ const AdminServices = () => {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="font-semibold font-sans text-2xl">Add Service</h1>
+            <h1 className="font-semibold font-sans text-2xl">
+              {rowItem ? "Update Service FAQ" : "Add Service FAQ"}
+            </h1>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
@@ -321,7 +289,7 @@ const AdminServices = () => {
               <input
                 type="text"
                 name="name"
-                value={service.name}
+                value={serviceFaqs.name}
                 onChange={handleChange}
                 placeholder="Enter service name"
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
@@ -329,113 +297,27 @@ const AdminServices = () => {
               />
             </div>
 
-            
-
-            {/* Slug */}
-            <div>
-              <label className="block text-gray-700 mb-1">Slug</label>
-              <input
-                type="text"
-                name="slug"
-                value={service.slug}
-                onChange={handleChange}
-                placeholder="Enter slug (URL-friendly name)"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* SUB CATEGORY */}
-
-            <div className="flex flex-col">
-              <label className="mb-1">Subcategory</label>
-              <Select
-                label="Sub Category"
-                options={
-                  subCategoryList?.length > 0
-                    ? subCategoryList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      }))
-                    : []
-                }
-                value={service.subCategoryId}
-                onChange={(val) => {
-                 setService((prev)=>({...prev,subCategoryId:val}));
-                }}
-              />
-            </div>
-
-            {/* Icon URL */}
-            <div>
-              <label className="block text-gray-700 mb-1">Icon</label>
-              <ImageUploader
-                value={service.iconUrl}
-                onChange={(e) =>
-                  setService((prev) => ({ ...prev, iconUrl: e?.url }))
-                }
-              />
-            </div>
-
-            {/* Image */}
-            <div>
-              <label className="block text-gray-700 mb-1"> Image</label>
-              <ImageUploader
-                value={service.image}
-                onChange={(e) =>
-                  setService((prev) => ({ ...prev, image: e?.url }))
-                }
-              />
-            </div>
-
-            {/* Meta Title */}
-            <div>
-              <label className="block text-gray-700 mb-1">Meta Title</label>
-              <input
-                type="text"
-                name="metaTitle"
-                value={service.metaTitle}
-                onChange={handleChange}
-                placeholder="Enter meta title"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* Meta Keyword */}
-            <div>
-              <label className="block text-gray-700 mb-1">Meta Keyword</label>
-              <input
-                type="text"
-                name="metaKeyword"
-                value={service.metaKeyword}
-                onChange={handleChange}
-                placeholder="Enter meta keywords"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* Meta Description */}
-            <div>
-              <label className="block text-gray-700 mb-1">
-                Meta Description
-              </label>
-              <textarea
-                name="metaDescription"
-                value={service.metaDescription}
-                onChange={handleChange}
-                rows="2"
-                placeholder="Enter meta description"
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
             {/* Description */}
             <div>
               <label className="block text-gray-700 mb-1">Description</label>
               <TextEditor
-                value={service.description}
+                value={serviceFaqs.description}
                 onChange={(e) =>
-                  setService((prev) => ({ ...prev, description: e }))
+                  setServiceFaqs((prev) => ({ ...prev, description: e }))
                 }
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-1">Display order</label>
+              <input
+                type="number"
+                name="displayOrder"
+                value={serviceFaqs.displayOrder}
+                onChange={handleChange}
+                placeholder="Enter display order"
+                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
 
@@ -445,7 +327,7 @@ const AdminServices = () => {
                 <input
                   type="checkbox"
                   name="active"
-                  checked={service.active}
+                  checked={serviceFaqs.active}
                   onChange={handleChange}
                   className="w-5 h-5 text-blue-600"
                 />
@@ -455,34 +337,12 @@ const AdminServices = () => {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  name="inactive"
-                  checked={service.inactive}
-                  onChange={handleChange}
-                  className="w-5 h-5 text-blue-600"
-                />
-                <span className="text-gray-700">Inactive</span>
-              </label>
-
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
                   name="displayStatus"
-                  checked={service.displayStatus}
+                  checked={serviceFaqs.displayStatus}
                   onChange={handleChange}
                   className="w-5 h-5 text-blue-600"
                 />
                 <span className="text-gray-700">Display Status</span>
-              </label>
-
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  name="showOnHome"
-                  checked={service.showOnHome}
-                  onChange={handleChange}
-                  className="w-5 h-5 text-blue-600"
-                />
-                <span className="text-gray-700">Show on Home</span>
               </label>
             </div>
 
@@ -525,4 +385,4 @@ const AdminServices = () => {
   );
 };
 
-export default AdminServices;
+export default ServiceFaqs;

@@ -150,14 +150,7 @@ const Blog = () => {
     {
       title: "Title",
       dataIndex: "title",
-      render: (value, rowData) => (
-        <Link
-          to={`${rowData?.id}/blogDetail`}
-          className="text-wrap text-blue-600"
-        >
-          {value}
-        </Link>
-      ),
+      render: (value, rowData) => <p className="text-wrap ">{value}</p>,
     },
     {
       title: "Meta title",
@@ -191,10 +184,17 @@ const Blog = () => {
               setOpenDropdowns((prev) => ({ ...prev, [record.id]: open }))
             }
             items={[
-              { key: 1, label: <Link to={`${record?.id}/blogFaqs`} >FAQ's</Link>, },
-              { key: 2, label: "edit", onClick: () => handleEdit(record) },
               {
-                key: 3,
+                key: 1,
+                label: <Link to={`${record?.id}/blogFaqs`}>FAQ's</Link>,
+              },
+              {
+                key: 2,
+                label: <Link to={`${record?.id}/blogDetail`}>Details</Link>,
+              },
+              { key: 3, label: "edit", onClick: () => handleEdit(record) },
+              {
+                key: 4,
                 label: (
                   <PopConfirm
                     title="Are you sure you want to delete?"

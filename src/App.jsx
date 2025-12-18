@@ -24,6 +24,8 @@ import BlogDetail from "./features/blogs/BlogDetail";
 import Role from "./admin/adminfeatures/Role";
 import BlogsPage from "./features/blogs/BlogsPage";
 import BlogFaqs from "./admin/adminfeatures/BlogFaqs";
+import ServiceFaqs from "./admin/adminfeatures/ServiceFaqs";
+import ServiceDetail from "./admin/adminfeatures/ServiceDetail";
 
 function App() {
   return (
@@ -50,8 +52,16 @@ function App() {
                 element={<Subcategory />}
               />
               <Route
-                path="category/:categoryId/subcategory/:subcategoryId/services"
+                path="services"
                 element={<AdminServices />}
+              />
+              <Route
+                path="services/:serviceId/serviceFaq"
+                element={<ServiceFaqs />}
+              />
+              <Route
+                path="services/:serviceId/serviceDetail"
+                element={<ServiceDetail />}
               />
               <Route path="blogs" element={<Blog />} />
               <Route
