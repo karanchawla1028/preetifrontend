@@ -395,7 +395,7 @@ const Blog = () => {
                   options={
                     serviceList?.length > 0
                       ? serviceList?.map((item) => ({
-                          label: item?.title,
+                          label: item?.name,
                           value: item?.id,
                         }))
                       : []

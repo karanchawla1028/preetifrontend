@@ -19,9 +19,11 @@ import Table from "../components/Table";
 import ImageUploader from "../components/ImageUploader";
 import Input from "../components/Input";
 import Modal from "../components/Modal";
+import { useToast } from "../../features/components/ToastProvider";
 
 const AdminServices = ({ onSubmit }) => {
   const dispatch = useDispatch();
+  const {showToast}=useToast()
   const { subcategoryId, userId } = useParams();
   const data = useSelector((state) => state.service.serviceList);
   const [isForm, setIsForm] = useState(false);
@@ -209,7 +211,7 @@ const AdminServices = ({ onSubmit }) => {
   const handleSubmit = (data) => {
     e.preventDefault();
     if (rowItem) {
-      dispatch(updateService({ id: rowItem?.id, userId, data: category }))
+      dispatch(updateService({ id: rowItem?.id, userId, data: service }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             showToast({
@@ -237,16 +239,16 @@ const AdminServices = ({ onSubmit }) => {
           })
         );
     } else {
-      dispatch(addService({ userId, data: category }))
+      dispatch(addService({ userId, data: service }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             showToast({
-              title: "Category added",
-              description: "Category added successfully !.",
+              title: "Service added",
+              description: "Service added successfully !.",
               status: "success",
             });
             setIsForm(false);
-            dispatch(getAllCategories());
+            dispatch(getAllServices());
             setService(initialValues);
           } else {
             showToast({
