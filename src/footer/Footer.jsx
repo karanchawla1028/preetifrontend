@@ -1,7 +1,10 @@
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import logo from "../assets/logo.png";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const serviceList = useSelector((state) => state.service.serviceList);
   return (
     <footer className="bg-[#0A2342] text-white pt-2 pb-8">
       <div className="container mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -80,31 +83,17 @@ const Footer = () => {
             Services
           </h4>
           <ul>
-            <li className="mb-2">
-              <a href="#" className="hover:underline text-gray-300">
-                Meeting Space Booking
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#" className="hover:underline text-gray-300">
-                Hotel Reservations
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#" className="hover:underline text-gray-300">
-                Corporate Travel Management
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#" className="hover:underline text-gray-300">
-                Event Coordination
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#" className="hover:underline text-gray-300">
-                Group Bookings
-              </a>
-            </li>
+            {serviceList?.length > 0 &&
+              serviceList?.map((service) => (
+                <li key={service.id} className="mb-2">
+                  <Link  
+                    to={`/${service?.slug}/service`}
+                    className="hover:underline text-gray-300"
+                  >
+                    {service?.name}
+                  </Link>
+                </li>
+              ))}
           </ul>
         </div>
 
