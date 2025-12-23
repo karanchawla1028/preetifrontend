@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBlogsList } from "../toolkit/slices/blogSlice";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-
 const HomePage = () => {
   const dispatch = useDispatch();
   const images = [blog1, blog2, blog3, blog4, blog5, blog6, blog7];
@@ -89,7 +88,6 @@ const HomePage = () => {
     },
   ];
 
-
   return (
     <main className="relative">
       <section className="relative w-full h-[500px] md:h-[650px] overflow-hidden">
@@ -128,7 +126,7 @@ const HomePage = () => {
 
         {/* DOTS */}
         <div className="absolute bottom-8 w-full flex justify-center gap-3 z-20">
-          {images.map((_, index) => (
+          {images?.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrent(index)}
@@ -177,7 +175,7 @@ const HomePage = () => {
 
           {/* Use the new 'solutions' array */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {solutions.map((solution) => (
+            {solutions?.map((solution) => (
               <div
                 key={solution.name}
                 className="relative rounded-lg overflow-hidden shadow-xl group hover:shadow-2xl transition duration-300"
@@ -216,27 +214,28 @@ const HomePage = () => {
 
           <div className="relative w-full overflow-hidden">
             <div className="flex gap-6 w-[200%] my-2 scroll-animation">
-              {[...blogs, ...blogs].map((blog, idx) => (
-                <a
-                  key={idx}
-                  href={`${blog?.slug}/detail`}
-                  className="min-w-[280px] max-w-[280px] bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
-                >
-                  <img
-                    src={blog?.image}
-                    alt={blog?.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-[#0A2342]">
-                      {blog?.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mt-2 line-clamp-2">
-                      {blog?.excerpt}
-                    </p>
-                  </div>
-                </a>
-              ))}
+              {blogs?.length > 0 &&
+                [...blogs, ...blogs].map((blog, idx) => (
+                  <a
+                    key={idx}
+                    href={`${blog?.slug}/detail`}
+                    className="min-w-[280px] max-w-[280px] bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
+                  >
+                    <img
+                      src={blog?.image}
+                      alt={blog?.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-[#0A2342]">
+                        {blog?.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                        {blog?.excerpt}
+                      </p>
+                    </div>
+                  </a>
+                ))}
             </div>
           </div>
         </div>
