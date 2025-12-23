@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { resetPassword } from "../../toolkit/slices/authSlice";
+import { updatePassword } from "../../toolkit/slices/authSlice";
+import { useToast } from "../../features/components/ToastProvider";
+import { useDispatch } from "react-redux";
 
 const ForgotPassword = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [detail, setDetail] = useState({
     email: "",
@@ -22,16 +24,36 @@ const ForgotPassword = () => {
       return;
     }
 
-    // dispatch(resetPassword(detail)).then((resp) => {
-    //   if (resp.meta.requestStatus === "fulfilled") {
-    //     alert("Password reset successfully!");
-    //     navigate("/login");
-    //   } else {
-    //     alert("Something went wrong!");
-    //   }
-    // });
-
-    console.log("Reset Password Data:", detail);
+    dispatch(updatePassword(detail))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          showToast({
+            title: "Success",
+            description:
+              "Password reset successfully! Please login with your new password.",
+            status: "success",
+          });
+          setDetail({
+            email: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+          navigate("/login");
+        } else {
+          showToast({
+            title: "Error",
+            description: "Something went wrong!",
+            status: "error",
+          });
+        }
+      })
+      .catch((error) => {
+        showToast({
+          title: "Error",
+          description: "Something went wrong!",
+          status: "error",
+        });
+      });
   };
 
   return (
