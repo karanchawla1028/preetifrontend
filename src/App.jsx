@@ -26,6 +26,7 @@ import BlogsPage from "./features/blogs/BlogsPage";
 import BlogFaqs from "./admin/adminfeatures/BlogFaqs";
 import ServiceFaqs from "./admin/adminfeatures/ServiceFaqs";
 import ServiceDetail from "./admin/adminfeatures/ServiceDetail";
+import ForgotPassword from "./admin/login/ForgotPassword";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
               <Route path="blogs/:blogSlug/detail" element={<BlogDetail />} />
             </Route>
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path=":userId/admin" element={<Layouts />}>
               <Route index path="dashboard" element={<Dashboard />} />
               <Route path="category" element={<Category />} />

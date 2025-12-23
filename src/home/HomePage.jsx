@@ -16,49 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBlogsList } from "../toolkit/slices/blogSlice";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const blogs = [
-  {
-    title: "How Same-Day Boardroom Booking Boosts Productivity",
-    slug: "same-day-boardroom-booking-productivity",
-    excerpt:
-      "Discover how quick access to conference rooms improves workflow efficiency.",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Corporate Event Planning – Ultimate Guide 2025",
-    slug: "corporate-event-planning-guide",
-    excerpt: "Everything you need to know to plan seamless corporate events.",
-    image:
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
-  },
-  {
-    title: "Managing Multi-City Conferences Effectively",
-    slug: "multi-city-conference-management",
-    excerpt:
-      "A step-by-step guide to coordinating events across multiple cities.",
-    image:
-      "https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG90ZWwlMjBib29raW5nfGVufDB8fDB8fHww",
-  },
-  {
-    title: "Benefits of Executive Travel Itinerary Management",
-    slug: "executive-travel-itinerary-benefits",
-    excerpt: "Learn why CEOs rely on itinerary management services.",
-    image:
-      "https://images.unsplash.com/photo-1444201983204-c43cbd584d93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhvdGVsJTIwYm9va2luZ3xlbnwwfHwwfHx8MA%3D%3D",
-  },
-];
-
-const wordsToType = [
-  "Corporate Events",
-  "Team Offsites",
-  "Hotel Bookings",
-  "Conference Venues",
-];
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const images = [blog1, blog2, blog3, blog4, blog5, blog6, blog7];
+  const blogs = useSelector((state) => state.blogs.blogsList);
   const [current, setCurrent] = useState(0);
 
   const prevSlide = () => {
@@ -71,7 +33,7 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(getBlogsList());
-  }, []);
+  }, [dispatch]);
 
   const features = [
     {
@@ -257,20 +219,20 @@ const HomePage = () => {
               {[...blogs, ...blogs].map((blog, idx) => (
                 <a
                   key={idx}
-                  href={`${blog.slug}/detail`}
+                  href={`${blog?.slug}/detail`}
                   className="min-w-[280px] max-w-[280px] bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
                 >
                   <img
-                    src={blog.image}
-                    alt={blog.title}
+                    src={blog?.image}
+                    alt={blog?.title}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
                     <h3 className="text-lg font-semibold text-[#0A2342]">
-                      {blog.title}
+                      {blog?.title}
                     </h3>
                     <p className="text-gray-600 text-sm mt-2 line-clamp-2">
-                      {blog.excerpt}
+                      {blog?.excerpt}
                     </p>
                   </div>
                 </a>

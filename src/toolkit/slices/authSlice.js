@@ -2,10 +2,20 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../httpcommon";
 
 export const userLogin = createAsyncThunk("userLogin", async (data) => {
-  const response = await api.post(`/login`,data);
+  const response = await api.post(`/login`, data);
   return response.data;
 });
 
+export const updatePassword = createAsyncThunk(
+  "updatePassword",
+  async (data) => {
+    const response = await api.put(
+      `/users/change-password?email=${data.email}&newPassword=${data.newPassword}&confirmPassword=${data.confirmPassword}`,
+      data
+    );
+    return response.data;
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",

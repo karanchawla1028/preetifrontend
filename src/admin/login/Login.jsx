@@ -3,8 +3,10 @@ import logo from "../../assets/logo.png"; // Replace with your logo path
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userLogin } from "../../toolkit/slices/authSlice";
+import { useToast } from "../../features/components/ToastProvider";
 
 const Login = () => {
+  const { showToast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [detail, setDetail] = useState({
@@ -14,14 +16,30 @@ const Login = () => {
 
   const handleUserLogin = (e) => {
     e.preventDefault();
-    dispatch(userLogin(detail)).then((resp) => {
-      if (resp.meta.requestStatus === "fulfilled") {
-        alert("User logged in successfully !.");
-        navigate(`/${resp.payload?.id}/admin/dashboard`);
-      }else{
-        alert("something went wrong !.")
-      }
-    });
+    dispatch(userLogin(detail))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          showToast({
+            title: "Success",
+            description: "User logged in successfully !.",
+            status: "success",
+          });
+          navigate(`/${resp.payload?.id}/admin/dashboard`);
+        } else {
+          showToast({
+            title: "Error",
+            description: "Something went wrong !.",
+            status: "error",
+          });
+        }
+      })
+      .catch((error) => {
+        showToast({
+          title: "Error",
+          description: "Something went wrong !.",
+          status: "error",
+        });
+      });
   };
 
   return (
@@ -58,6 +76,12 @@ const Login = () => {
               setDetail((prev) => ({ ...prev, password: e.target.value }))
             }
           />
+          <Link
+            to="/forgot-password"
+            className="text-sm text-blue-600 hover:underline self-end"
+          >
+            Forgot Password?
+          </Link>
           <button
             type="submit"
             className="cursor-pointer bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"

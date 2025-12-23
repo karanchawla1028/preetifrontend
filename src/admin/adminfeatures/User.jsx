@@ -50,6 +50,8 @@ const User = ({ onSubmit }) => {
     dispatch(getAllRoles());
   }, [dispatch]);
 
+  console.log("data", data);
+
   const filteredData = useMemo(() => {
     if (!search) return data;
     return data?.filter((item) =>
@@ -121,21 +123,6 @@ const User = ({ onSubmit }) => {
       title: "Email",
       dataIndex: "email",
       width: "35%",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (value) => (
-        <span
-          className={`px-2 py-1 text-xs rounded ${
-            value === "Active"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {value}
-        </span>
-      ),
     },
     {
       title: "Actions",
@@ -252,7 +239,7 @@ const User = ({ onSubmit }) => {
         <Table
           scroll={{ y: "60vh" }}
           columns={columns}
-          data={data}
+          dataSource={data}
           topContent={topContent}
         />
         <Modal
